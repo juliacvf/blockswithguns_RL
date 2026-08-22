@@ -1,0 +1,4 @@
+pygame>=2.6
+numpy>=1.26
+gymnasium>=0.29
+pettingzoo>=1.27
