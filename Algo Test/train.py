@@ -21,7 +21,9 @@ sys.path.insert(0, str(HERE))
 
 from algo1 import Agent, NUM_OPTIONS, state_key  # noqa: E402
 from bots import BOT_NAMES  # noqa: E402
+from core import constants as C  # noqa: E402
 from rl.bot_training_env import BlocksWithGunsBotTrainingEnv  # noqa: E402
+from rl.progress import TrainingProgress  # noqa: E402
 
 DEFAULT_WEIGHTS = HERE / "weights" / "qtable.npz"
 
@@ -82,6 +84,15 @@ def train(episodes: int, opponent: str, max_seconds: float, seed: int,
     visits = np.zeros_like(q, dtype=np.uint16)
     env = BlocksWithGunsBotTrainingEnv(opponent=opponent, max_seconds=max_seconds)
     gamma = 0.985
+    progress = TrainingProgress(episodes)
+    print(f"training Algo Test Q-policy vs {opponent} "
+          f"({episodes} full games, checkpoint after every game)")
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    def save_checkpoint(played: int) -> None:
+        np.savez_compressed(
+            output, q=q.astype(np.float32), episodes=np.asarray(played),
+            opponent=np.asarray(opponent), seed=np.asarray(seed))
 
     for episode in range(episodes):
         obs, info = env.reset(seed=seed + episode)
@@ -107,18 +118,16 @@ def train(episodes: int, opponent: str, max_seconds: float, seed: int,
             total_reward += reward
             obs = next_obs
             done = terminated or truncated
-        if (episode + 1) % 10 == 0 or episode == 0:
-            print(
-                f"episode {episode + 1:4d}/{episodes}  opponent={info['opponent']:<8} "
-                f"return={total_reward:+7.2f}  winner={step_info['winner']}  "
-                f"epsilon={epsilon:.3f}", flush=True)
-
-    env.close()
-    output.parent.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(
-        output, q=q.astype(np.float32), episodes=np.asarray(episodes),
-        opponent=np.asarray(opponent), seed=np.asarray(seed))
+        wins10 = progress.record(step_info["winner"])
+        progress.show(episode + 1, wins10,
+                      f"opp {info['opponent']:<8}",
+                      f"return {total_reward:+8.2f}",
+                      f"eps {epsilon:.3f}")
+        save_checkpoint(episode + 1)
+    progress.finish()
+    print("result:", progress.summary())
     print(f"saved trained weights -> {output}")
+    env.close()
     return q
 
 
@@ -127,7 +136,9 @@ def main() -> None:
         description="Train the Algo Test tactical Q-table (Dijkstra by default)")
     parser.add_argument("--episodes", type=int, default=100)
     parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default="dijkstra")
-    parser.add_argument("--max-seconds", type=float, default=45.0)
+    parser.add_argument("--max-seconds", type=float, default=C.MAX_EPISODE_SECONDS,
+                        help="safety cap; games normally end by KO or the engine's "
+                             "own %.0fs limit" % C.MAX_EPISODE_SECONDS)
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--output", type=Path, default=DEFAULT_WEIGHTS)
     parser.add_argument("--resume", action="store_true")

@@ -184,11 +184,13 @@ class BlocksWithGunsEnv(gym.Env):
         # local grid crop, padded with walls
         cx, cy = int(me.x), int(me.y)
         local = np.ones((2 * LOCAL_R + 1, 2 * LOCAL_R + 1), dtype=np.float32)
-        for ix in range(-LOCAL_R, LOCAL_R + 1):
-            for iy in range(-LOCAL_R, LOCAL_R + 1):
-                gx, gy = cx + ix, cy + iy
-                if 0 <= gx < C.GRID_SIZE and 0 <= gy < C.GRID_SIZE:
-                    local[ix + LOCAL_R, iy + LOCAL_R] = float(eng.map.solid[gx, gy])
+        gx0, gy0 = max(0, cx - LOCAL_R), max(0, cy - LOCAL_R)
+        gx1 = min(C.GRID_SIZE, cx + LOCAL_R + 1)
+        gy1 = min(C.GRID_SIZE, cy + LOCAL_R + 1)
+        if gx0 < gx1 and gy0 < gy1:
+            local[gx0 - (cx - LOCAL_R):gx1 - (cx - LOCAL_R),
+                  gy0 - (cy - LOCAL_R):gy1 - (cy - LOCAL_R)] = \
+                eng.map.solid[gx0:gx1, gy0:gy1]
 
         # nearest bullets, relative
         bl = sorted(eng.bullets,

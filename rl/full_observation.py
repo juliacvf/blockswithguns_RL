@@ -68,7 +68,13 @@ def full_observation_space() -> spaces.Dict:
 
 
 def _signed(value: float, maximum: float) -> float:
-    return float(np.clip(value / maximum, 0.0, 1.0) * 2.0 - 1.0)
+    # plain float math: np.clip on scalars dominates encode() otherwise
+    scaled = value / maximum
+    if scaled <= 0.0:
+        return -1.0
+    if scaled >= 1.0:
+        return 1.0
+    return scaled * 2.0 - 1.0
 
 
 class FullObservationEncoder:
@@ -150,8 +156,8 @@ class FullObservationEncoder:
             (MAX_FULL_POWERUPS, len(POWERUP_FEATURE_NAMES)), dtype=np.float32)
         powerup_mask = np.zeros(MAX_FULL_POWERUPS, dtype=np.float32)
         for row, powerup in enumerate(items):
-            one_hot = np.zeros(len(C.POWERUP_TYPES), dtype=np.float32)
             kind_idx = C.POWERUP_TYPES.index(powerup.kind)
+            one_hot = [0.0] * len(C.POWERUP_TYPES)
             one_hot[kind_idx] = 1.0
             powerups[row] = (
                 powerup.x / C.WORLD * 2.0 - 1.0,

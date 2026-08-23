@@ -74,6 +74,9 @@ O executor alterna os lados de spawn entre os episódios. Seeds, pastas e açõe
 .venv/bin/python -m rl.visualize --player1 human --player2 custom
 ```
 
+Como argumentos de `player1` tem-se {human, custom, dijkstra, astar, strafe, camper, markov} e para `player` tem-se {custom, dijkstra, astar, strafe,
+camper, markov}
+
 Use `--algo1-folder` e `--algo2-folder` para selecionar outras pastas de concurso extraídas. Os controles humanos são WASD, mira com o mouse e clique ou E para atirar.
 
 ## Algo Test: treine e jogue um exemplo de RL
@@ -292,11 +295,6 @@ Para teste de fumaça dos renderizadores:
 ```bash
 .venv/bin/python tools/smoke_render.py
 ```
-
-## Segurança e hospedagem do concurso
-
-Scripts de concurso são Python comum e **não são isolados em sandbox**. As verificações de pasta impõem a estrutura esperada, rejeitam links simbólicos, limitam as entradas a 1.000 arquivos e 512 MB, e validam ações, mas não tornam Python hostil seguro. Execute submissões não confiáveis em contêineres ou máquinas virtuais isoladas, com limites de CPU, memória, tempo de parede, sistema de arquivos, processos e rede.
-
 ## Estrutura do projeto
 
 ```text

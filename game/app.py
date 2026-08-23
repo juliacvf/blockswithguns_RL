@@ -11,6 +11,9 @@ import pygame
 from bots import BOT_NAMES, make_bot, make_view
 from core import constants as C
 from core.engine import Action, Engine
+from rl.actions import to_engine_action
+from rl.agent_interface import load_agent
+from rl.full_observation import FullObservationEncoder
 
 from .animations import Flash, ParticleSystem, ScreenShake
 from .hud import Hud
@@ -18,7 +21,8 @@ from .render_poly import SplitScreenPoly
 from .render_topdown import Minimap, TopdownRenderer
 from . import textures as T
 
-ASSETS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "sfx")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ASSETS = os.path.join(ROOT, "assets", "sfx")
 
 
 class Sounds:
@@ -137,6 +141,38 @@ class BotController:
 
     def build(self, engine: Engine, ppc: float = 4.0, origin=(0, 0)) -> Action:
         return self.bot.act(make_view(engine, self.player))
+
+
+# Menu choices that load a contest-style folder (script + weights/) instead
+# of a deterministic bot. Each folder must contain algo<slot>.py for the
+# selected slot; folders shipping only algo1.py (e.g. 'Algo Test') reuse it.
+CONTEST_FOLDERS = {"algo1": "algo1", "algo2": "algo2", "algo test": "Algo Test"}
+P1_ALGOS = ("algo1", "algo test", *BOT_NAMES)
+P2_ALGOS = ("algo2", "algo test", *BOT_NAMES)
+
+
+class ContestController:
+    """Contest-folder policy (algo1 / algo2 / Algo Test) driving one player."""
+
+    def __init__(self, name: str, player: int, encoder: FullObservationEncoder):
+        slot = player + 1
+        root = os.path.join(ROOT, CONTEST_FOLDERS[name])
+        script = os.path.join(root, f"algo{slot}.py")
+        if not os.path.isfile(script):
+            script = os.path.join(root, "algo1.py")
+        self.loaded = load_agent(
+            script, weights_path=os.path.join(root, "weights"),
+            name=f"{name}:p{slot}")
+        self.name = f"{name} p{slot}"
+        self.player = player
+        self.encoder = encoder
+
+    def reset(self) -> None:
+        self.loaded.reset()
+
+    def build(self, engine: Engine, ppc: float = 4.0, origin=(0, 0)) -> Action:
+        raw = self.loaded.act(self.encoder.encode(self.player))
+        return to_engine_action(raw, name=self.name)
 
 
 MODES = ["poly", "topdown"]
@@ -299,16 +335,24 @@ class App:
         return s
 
     # ------------------------------------------------------------------ #
+    def _make_controller(self, name: str, player: int,
+                         encoder: FullObservationEncoder):
+        if name in CONTEST_FOLDERS:
+            return ContestController(name, player, encoder)
+        seed = self.cfg["seed"] * 7 + (3 if player == 0 else 1)
+        return BotController(name, player, seed=seed)
+
     def start_match(self) -> None:
         cfg = self.cfg
         self.engine = Engine(seed=cfg["seed"], scale=cfg["scale"],
                              octaves=cfg["octaves"], threshold=cfg["threshold"])
         self.human_p0 = cfg["players"] == "HUMAN VS ALGO"
+        encoder = FullObservationEncoder(self.engine)
         if self.human_p0:
             self.controllers = [HumanController(cfg["mode"])]
         else:
-            self.controllers = [BotController(cfg["algo1"], 0, seed=cfg["seed"] * 7 + 3)]
-        self.controllers.append(BotController(cfg["algo2"], 1, seed=cfg["seed"] * 7 + 1))
+            self.controllers = [self._make_controller(cfg["algo1"], 0, encoder)]
+        self.controllers.append(self._make_controller(cfg["algo2"], 1, encoder))
         self.topdown = TopdownRenderer(self.engine, px_per_cell=6)
         # split-screen views: full width, P1 top half, P2 bottom half
         sw, sh = self.screen.get_size()
@@ -369,11 +413,11 @@ class App:
                 i = (PLAYER_SETUPS.index(self.cfg["players"]) + d) % len(PLAYER_SETUPS)
                 self.cfg["players"] = PLAYER_SETUPS[i]
             elif item == "algo1" and self.cfg["players"] == "ALGO VS ALGO":
-                i = (BOT_NAMES.index(self.cfg[item]) + d) % len(BOT_NAMES)
-                self.cfg[item] = BOT_NAMES[i]
+                i = (P1_ALGOS.index(self.cfg[item]) + d) % len(P1_ALGOS)
+                self.cfg[item] = P1_ALGOS[i]
             elif item == "algo2":
-                i = (BOT_NAMES.index(self.cfg[item]) + d) % len(BOT_NAMES)
-                self.cfg[item] = BOT_NAMES[i]
+                i = (P2_ALGOS.index(self.cfg[item]) + d) % len(P2_ALGOS)
+                self.cfg[item] = P2_ALGOS[i]
             elif item == "seed":
                 self.cfg["seed"] = max(0, self.cfg["seed"] + d)
             elif item == "scale":
