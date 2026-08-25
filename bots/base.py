@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
+from core import constants as C
 from core.engine import Action, Bullet, PlayerState
 from core.pathfinding import path_direction
 from core.powerups import Powerup
@@ -120,6 +121,45 @@ class Bot:
         dx, dy = nx + 0.5 - x, ny + 0.5 - y
         mag = math.hypot(dx, dy)
         return (dx / mag, dy / mag) if mag > 1e-9 else (0.0, 0.0)
+
+    @staticmethod
+    def _circle_blocked(solid: np.ndarray, x: float, y: float, r: float) -> bool:
+        """Same circle-vs-solid-cells test the engine applies to movement."""
+        n = solid.shape[0]
+        x0, x1 = int(math.floor(x - r)), int(math.floor(x + r))
+        y0, y1 = int(math.floor(y - r)), int(math.floor(y + r))
+        for cx in range(x0, x1 + 1):
+            for cy in range(y0, y1 + 1):
+                if cx < 0 or cy < 0 or cx >= n or cy >= n or solid[cx, cy]:
+                    nx = min(max(x, cx), cx + 1.0)
+                    ny = min(max(y, cy), cy + 1.0)
+                    if (x - nx) ** 2 + (y - ny) ** 2 < r * r:
+                        return True
+        return False
+
+    def slide_move(self, view: View, mx: float, my: float) -> tuple[float, float]:
+        """Direction closest to (mx, my) that the collision circle allows.
+
+        The engine blocks each axis separately, so a diagonal push into a
+        convex corner can freeze a bot completely; rotating the intent in
+        45-degree steps until one fits lets it slide along walls instead.
+        """
+        if math.hypot(mx, my) <= 1e-6:
+            return 0.0, 0.0
+        me = view.me
+        step = me.speed * C.FIXED_DT
+        if view.mud[int(me.x), int(me.y)]:
+            step *= C.MUD_SLOW
+        base = math.atan2(my, mx)
+        quarter = math.pi / 4.0
+        for offset in (0.0, quarter, -quarter, 2 * quarter, -2 * quarter,
+                       3 * quarter, -3 * quarter, math.pi):
+            dx, dy = math.cos(base + offset), math.sin(base + offset)
+            if not self._circle_blocked(
+                    view.solid, me.x + dx * step, me.y + dy * step,
+                    C.PLAYER_RADIUS):
+                return dx, dy
+        return 0.0, 0.0
 
     @staticmethod
     def lead_angle(me: PlayerState, ex: float, ey: float, evx: float, evy: float,

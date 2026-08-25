@@ -341,9 +341,11 @@ def test_algo_test_example():
 
     with tempfile.TemporaryDirectory() as tmp:
         output = os.path.join(tmp, "qtable.npz")
+        # one full-length training match plus one full evaluation match;
+        # episodes only ever end when the engine decides the match
         subprocess.check_call([
             sys.executable, os.path.join("Algo Test", "train.py"),
-            "--episodes", "1", "--max-seconds", "0.1",
+            "--episodes", "1",
             "--eval-episodes", "1", "--output", output,
         ], stdout=subprocess.DEVNULL)
         q = np.load(output, allow_pickle=False)["q"]

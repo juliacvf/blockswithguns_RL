@@ -1,5 +1,7 @@
 """Map generation: Perlin-noise walls, spawn carving, torch placement,
-mud ponds and solid trees."""
+mud ponds and solid trees. The two spawns are always mutually reachable
+(trees can never reseal the route), and random_free_cell only picks cells
+inside that spawn-connected region so teleports never strand a player."""
 
 from __future__ import annotations
 
@@ -28,12 +30,15 @@ class GameMap:
     octaves: int = 3
     threshold: float = 0.62
     solid: np.ndarray = field(init=False)  # walls | tree cells (snapshot at build time)
+    main_region: np.ndarray = field(init=False)  # walkable cells connected to the spawns
 
     def __post_init__(self) -> None:
         tree_cells = np.zeros_like(self.grid)
         for tx, ty in self.trees:
             tree_cells[int(tx), int(ty)] = 1
         self.solid = (self.grid | tree_cells).astype(np.uint8)
+        # Resolved at call time: _flood_reachable is defined further down.
+        self.main_region = _flood_reachable(self.solid, SPAWN_CELLS[0])
 
     def is_wall(self, cx: int, cy: int) -> bool:
         if cx < 0 or cy < 0 or cx >= GRID_SIZE or cy >= GRID_SIZE:
@@ -54,10 +59,12 @@ class GameMap:
         return bool(self.mud[cx, cy])
 
     def random_free_cell(self, rng: random.Random) -> tuple[int, int]:
+        # Only cells in the spawn-connected region: teleports (retreat) must
+        # never drop a player into a sealed pocket with no way out.
         while True:
             x = rng.randrange(1, GRID_SIZE - 1)
             y = rng.randrange(1, GRID_SIZE - 1)
-            if not self.solid[x, y]:
+            if not self.solid[x, y] and self.main_region[x, y]:
                 return x, y
 
 
@@ -169,6 +176,20 @@ def generate_map(
             if trng.random() < C.TREE_DENSITY:
                 trees.append((x + 0.5 + trng.uniform(-0.25, 0.25),
                               y + 0.5 + trng.uniform(-0.25, 0.25)))
+
+    # The wall grid guarantees connected spawns, but trees are placed
+    # afterwards and can seal the route again. When that happens, drop the
+    # trees standing on one wall-free spawn-to-spawn path so both players
+    # can always reach each other. Seeds without a seal are untouched.
+    tree_cells = np.zeros_like(grid)
+    for tx, ty in trees:
+        tree_cells[int(tx), int(ty)] = 1
+    if not _flood_reachable(grid | tree_cells, SPAWN_CELLS[0])[SPAWN_CELLS[1]]:
+        from .pathfinding import dijkstra
+        path = dijkstra(grid, SPAWN_CELLS[0][0] + 0.5, SPAWN_CELLS[0][1] + 0.5,
+                        SPAWN_CELLS[1][0] + 0.5, SPAWN_CELLS[1][1] + 0.5)
+        on_path = {(cx, cy) for cx, cy in path}
+        trees = [t for t in trees if (int(t[0]), int(t[1])) not in on_path]
 
     return GameMap(grid=grid, torches=torches, mud=mud, trees=trees, seed=seed,
                    scale=scale, octaves=octaves, threshold=threshold)

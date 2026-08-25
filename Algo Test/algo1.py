@@ -1,4 +1,12 @@
-"""Trainable contest example: a small Q-table selects tactical behaviors."""
+"""Trainable contest example: a small Q-table selects tactical behaviors.
+
+The state key compresses the full observation into features that matter:
+distance and line of sight to the opponent, incoming-bullet threat with
+flight direction (not just proximity), mud underfoot, health and lives
+balance, heat-zone margin, powerup proximity, and whether either player's
+aim is aligned with the other. ``default_q`` seeds each feature's
+contribution as a heuristic prior that Q-learning is free to override.
+"""
 
 from __future__ import annotations
 
@@ -7,6 +15,7 @@ import os
 
 import numpy as np
 
+from core import constants as C
 from core.pathfinding import astar
 
 NUM_OPTIONS = 8
@@ -17,9 +26,10 @@ OPTION_NAMES = (
     "powerup", "evade", "hold", "safe_center",
 )
 
-# distance, line of sight, bullet threat, mud, health band, lives difference,
-# heat, any powerup, tactical option
-STATE_SHAPE = (5, 2, 2, 2, 3, 3, 2, 2)
+# distance band, line of sight, bullet threat (none/approaching/imminent),
+# on mud, health band, lives difference, heat margin, powerup proximity,
+# own aim aligned on the target, opponent aiming at us; then the option.
+STATE_SHAPE = (5, 2, 3, 2, 3, 3, 3, 3, 2, 2)
 Q_SHAPE = STATE_SHAPE + (NUM_OPTIONS,)
 
 
@@ -37,50 +47,139 @@ def _distance(obs: dict) -> float:
     return math.hypot(ex - sx, ey - sy)
 
 
-def _bullet_threat(obs: dict) -> bool:
+def _aim_error(aim_sin: float, aim_cos: float, dx: float, dy: float) -> float:
+    """Absolute wrapped angle between a player's aim and a direction."""
+    angle = math.atan2(float(aim_sin), float(aim_cos))
+    target = math.atan2(dy, dx)
+    return abs((angle - target + math.pi) % (2 * math.pi) - math.pi)
+
+
+def _aim_tolerance(distance: float) -> float:
+    """Angular slack that still lands a bullet on a 0.5-block target."""
+    return max(0.05, min(0.12, math.asin(min(0.5 / max(distance, 1e-6), 0.99))))
+
+
+def _threatening_bullets(obs: dict):
+    """Enemy bullets whose flight line passes near us before the range cap.
+
+    Yields (closing_distance, row) for each genuine threat: the bullet must
+    be flying toward us, miss by less than 2 blocks at closest approach, and
+    still have enough of its 20-block range left to get there.
+    """
     sx, sy = _world_xy(obs["self"])
     for row, valid in zip(obs["bullets"], obs["bullet_mask"]):
         if valid < 0.5 or row[4] > 0.0:
-            continue
+            continue  # no bullet here, or one of ours
         bx, by = float(row[0] + 1.0) * 50.0, float(row[1] + 1.0) * 50.0
-        if (bx - sx) ** 2 + (by - sy) ** 2 <= 8.0 ** 2:
-            return True
-    return False
+        vx, vy = float(row[2]) * C.BULLET_SPEED, float(row[3]) * C.BULLET_SPEED
+        rx, ry = sx - bx, sy - by
+        vv = vx * vx + vy * vy
+        if vv < 1e-6:
+            continue
+        t_star = (rx * vx + ry * vy) / vv
+        if t_star <= 0.0:
+            continue  # already flying away from us
+        travelled = (float(row[6]) + 1.0) * 0.5 * C.BULLET_RANGE
+        closing = t_star * C.BULLET_SPEED
+        if closing > C.BULLET_RANGE - travelled:
+            continue  # fizzles out before reaching us
+        mx, my = rx - vx * t_star, ry - vy * t_star
+        if mx * mx + my * my > 2.0 ** 2:
+            continue  # passes wide
+        yield closing, row
+
+
+def _bullet_threat(obs: dict) -> int:
+    level = 0
+    for closing, _row in _threatening_bullets(obs):
+        level = max(level, 2 if closing < 8.0 else 1)
+    return level
+
+
+def _heat_band(obs: dict) -> int:
+    """0 = burning outside the safe zone, 1 = safe but near the edge,
+    2 = comfortably inside."""
+    if obs["self"][12] > 0.0:
+        return 0
+    sx, sy = _world_xy(obs["self"])
+    safe_half = float(obs["game"][3]) * C.WORLD * 0.5
+    margin = safe_half - max(abs(sx - C.WORLD * 0.5), abs(sy - C.WORLD * 0.5))
+    return 1 if margin < 6.0 else 2
+
+
+def _powerup_band(obs: dict) -> int:
+    """0 = none on the map, 1 = nearest is far, 2 = nearest is close."""
+    sx, sy = _world_xy(obs["self"])
+    best = None
+    for row, valid in zip(obs["powerups"], obs["powerup_mask"]):
+        if valid < 0.5:
+            continue
+        px, py = float(row[0] + 1.0) * 50.0, float(row[1] + 1.0) * 50.0
+        d2 = (px - sx) ** 2 + (py - sy) ** 2
+        if best is None or d2 < best:
+            best = d2
+    if best is None:
+        return 0
+    return 2 if best <= 15.0 ** 2 else 1
 
 
 def state_key(obs: dict) -> tuple[int, ...]:
     """Compress the full observation into a deliberately small RL state."""
-    distance = _distance(obs)
+    sx, sy = _world_xy(obs["self"])
+    ex, ey = _world_xy(obs["opponent"])
+    distance = math.hypot(ex - sx, ey - sy)
     distance_bin = next(
         (idx for idx, edge in enumerate((8.0, 14.0, 20.0, 35.0))
          if distance < edge), 4)
     visible = int(obs["self"][14] > 0.0)
-    threat = int(_bullet_threat(obs))
-    sx, sy = _world_xy(obs["self"])
+    threat = _bullet_threat(obs)
     on_mud = int(obs["map"][2, int(sx), int(sy)] > 0.5)
     my_lives, other_lives = _lives(obs["self"]), _lives(obs["opponent"])
     health = 0 if my_lives <= 3 else (1 if my_lives <= 5 else 2)
     lives_difference = 1 + (my_lives > other_lives) - (my_lives < other_lives)
-    in_heat = int(obs["self"][12] > 0.0)
-    has_powerup = int(np.any(obs["powerup_mask"] > 0.5))
+    heat = _heat_band(obs)
+    powerup = _powerup_band(obs)
+    aligned = int(
+        visible
+        and _aim_error(obs["self"][2], obs["self"][3], ex - sx, ey - sy)
+        <= _aim_tolerance(distance))
+    enemy_aiming = int(
+        visible
+        and _aim_error(obs["opponent"][2], obs["opponent"][3], sx - ex, sy - ey)
+        <= 0.25)
     return (distance_bin, visible, threat, on_mud, health,
-            lives_difference, in_heat, has_powerup)
+            lives_difference, heat, powerup, aligned, enemy_aiming)
 
 
 def default_q() -> np.ndarray:
-    """Untrained tactical priors; Q-learning is free to replace them."""
+    """Heuristic priors: every state feature adds its weight to each option.
+
+    Q-learning starts from these educated guesses and is free to replace
+    them with whatever the reward stream actually supports.
+    """
     q = np.zeros(Q_SHAPE, dtype=np.float32)
     for key in np.ndindex(STATE_SHAPE):
-        distance, visible, threat, mud, health, lives_diff, heat, powerup = key
+        (distance, visible, threat, mud, health, lives_diff,
+         heat, powerup, aligned, enemy_aiming) = key
+        close = distance <= 2
         q[key + (CHASE,)] = 0.12 if distance >= 2 else 0.04
-        q[key + (STRAFE_LEFT,)] = 0.10 if visible and distance <= 2 else 0.0
-        q[key + (STRAFE_RIGHT,)] = 0.09 if visible and distance <= 2 else 0.0
-        # HOLD becomes an aim-alignment behavior when a target is visible.
-        q[key + (HOLD,)] = 0.24 if visible and distance <= 2 else 0.0
-        q[key + (POWERUP,)] = (0.16 if health < 2 else 0.03) if powerup else 0.0
+        q[key + (STRAFE_LEFT,)] = 0.10 if visible and close else 0.0
+        q[key + (STRAFE_RIGHT,)] = 0.09 if visible and close else 0.0
+        # HOLD is an aim-alignment behavior: worth most when already aligned.
+        q[key + (HOLD,)] = (0.30 if aligned else 0.16) if visible and close else 0.0
+        # EVADE scales with how real the incoming fire is.
+        q[key + (EVADE,)] = (0.32 if threat == 2 else
+                             0.15 if threat == 1 else 0.0)
+        if enemy_aiming and visible and close:
+            q[key + (EVADE,)] += 0.08
+        # POWERUP scales with proximity; hurt players want it more.
+        q[key + (POWERUP,)] = ((0.24 if health < 2 else 0.12) if powerup == 2 else
+                               (0.10 if health < 2 else 0.04) if powerup == 1 else 0.0)
         q[key + (RETREAT,)] = 0.13 if health == 0 or lives_diff == 0 else 0.0
-        q[key + (EVADE,)] = 0.30 if threat else 0.0
-        q[key + (SAFE_CENTER,)] = 0.35 if heat else 0.0
+        if threat == 2 and health == 0:
+            q[key + (RETREAT,)] += 0.08
+        # SAFE_CENTER matters when burning and stays relevant near the edge.
+        q[key + (SAFE_CENTER,)] = 0.40 if heat == 0 else (0.15 if heat == 1 else 0.0)
         if mud:
             q[key + (POWERUP,)] -= 0.03
             q[key + (CHASE,)] += 0.03
@@ -179,6 +278,27 @@ class Agent:
                 best = candidate
         return None if best is None else (best[1], best[2])
 
+    def _evade_move(self, obs: dict) -> tuple[int, int]:
+        """Step perpendicular to the most imminent incoming bullet, on the
+        side that widens its miss; strafe around a staring opponent instead."""
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        threats = sorted(_threatening_bullets(obs), key=lambda item: item[0])
+        if not threats:
+            dx, dy = ex - sx, ey - sy
+            return self._safe_move(obs, int(np.sign(-dy)), int(np.sign(dx)))
+        _closing, row = threats[0]
+        vx, vy = float(row[2]), float(row[3])
+        bx, by = float(row[0] + 1.0) * 50.0, float(row[1] + 1.0) * 50.0
+        rx, ry = sx - bx, sy - by
+        vv = vx * vx + vy * vy
+        t_star = (rx * vx + ry * vy) / vv
+        # miss vector at closest approach; move along it, away from the lane
+        mx, my = rx - vx * t_star, ry - vy * t_star
+        if mx * mx + my * my < 1e-6:  # dead-center hit incoming: pick a side
+            mx, my = -vy, vx
+        return self._safe_move(obs, int(np.sign(mx)), int(np.sign(my)))
+
     def action_for_option(self, obs: dict, option: int) -> np.ndarray:
         sx, sy = _world_xy(obs["self"])
         ex, ey = _world_xy(obs["opponent"])
@@ -216,20 +336,7 @@ class Agent:
             mx, my = (self._path_move(obs, target, "powerup")
                       if target is not None else self._path_move(obs, (ex, ey), "enemy"))
         elif option == EVADE:
-            nearest = None
-            for row, valid in zip(obs["bullets"], obs["bullet_mask"]):
-                if valid < 0.5 or row[4] > 0.0:
-                    continue
-                bx, by = float(row[0] + 1.0) * 50.0, float(row[1] + 1.0) * 50.0
-                candidate = ((bx - sx) ** 2 + (by - sy) ** 2, row)
-                if nearest is None or candidate[0] < nearest[0]:
-                    nearest = candidate
-            if nearest is None:
-                mx, my = self._safe_move(obs, int(np.sign(-dy)), int(np.sign(dx)))
-            else:
-                row = nearest[1]
-                mx, my = self._safe_move(
-                    obs, int(np.sign(-row[3])), int(np.sign(row[2])))
+            mx, my = self._evade_move(obs)
         elif option == SAFE_CENTER:
             mx, my = self._path_move(obs, (50.0, 50.0), "safe")
         elif option == HOLD and obs["self"][14] > 0.0:

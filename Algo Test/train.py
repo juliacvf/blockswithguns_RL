@@ -1,7 +1,12 @@
 """Train or evaluate the Algo Test Q-policy.
 
+Training is headless and runs as fast as the simulator allows — no
+rendering, no real-time pacing. Every episode is a complete match: it ends
+only when the engine itself decides the game (knockout, or the lives
+tiebreak at the built-in 120 s cap). There is no shorter time limit.
+
 Run from the project root:
-    .venv/bin/python "Algo Test/train.py" --episodes 250
+    .venv/bin/python "Algo Test/train.py" --episodes 100
     .venv/bin/python "Algo Test/train.py" --evaluate-only --opponent all
 """
 
@@ -21,7 +26,6 @@ sys.path.insert(0, str(HERE))
 
 from algo1 import Agent, NUM_OPTIONS, state_key  # noqa: E402
 from bots import BOT_NAMES  # noqa: E402
-from core import constants as C  # noqa: E402
 from rl.bot_training_env import BlocksWithGunsBotTrainingEnv  # noqa: E402
 from rl.progress import TrainingProgress  # noqa: E402
 
@@ -46,12 +50,11 @@ def _shaping(previous: dict, current: dict) -> float:
 
 
 def evaluate(q: np.ndarray, opponent: str, episodes: int,
-             max_seconds: float, base_seed: int = 10_000) -> dict:
+             base_seed: int = 10_000) -> dict:
     opponents = BOT_NAMES if opponent == "all" else [opponent]
     results = {}
     for bot_name in opponents:
-        env = BlocksWithGunsBotTrainingEnv(
-            opponent=bot_name, max_seconds=max_seconds)
+        env = BlocksWithGunsBotTrainingEnv(opponent=bot_name)
         policy = Agent()
         policy.q = q.copy()
         wins = losses = draws = 0
@@ -76,17 +79,17 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
     return results
 
 
-def train(episodes: int, opponent: str, max_seconds: float, seed: int,
+def train(episodes: int, opponent: str, seed: int,
           output: Path, resume: bool) -> np.ndarray:
     rng = np.random.default_rng(seed)
     policy = Agent(str(output.parent) if resume else None)
     q = policy.q
     visits = np.zeros_like(q, dtype=np.uint16)
-    env = BlocksWithGunsBotTrainingEnv(opponent=opponent, max_seconds=max_seconds)
-    gamma = 0.985
+    env = BlocksWithGunsBotTrainingEnv(opponent=opponent)
+    gamma = 0.99
     progress = TrainingProgress(episodes)
-    print(f"training Algo Test Q-policy vs {opponent} "
-          f"({episodes} full games, checkpoint after every game)")
+    print(f"training Algo Test Q-policy vs {opponent}: {episodes} full matches, "
+          f"headless at full speed, checkpoint after every match")
     output.parent.mkdir(parents=True, exist_ok=True)
 
     def save_checkpoint(played: int) -> None:
@@ -111,7 +114,9 @@ def train(episodes: int, opponent: str, max_seconds: float, seed: int,
             learned_reward = reward + _shaping(obs, next_obs)
             next_key = state_key(next_obs)
             visits[key + (option,)] = min(65535, visits[key + (option,)] + 1)
-            alpha = max(0.06, 0.35 / (1.0 + visits[key + (option,)] * 0.015))
+            # gentle learning rate: noisy long-episode targets must not
+            # trample the heuristic priors in rarely visited states
+            alpha = max(0.03, 0.12 / (1.0 + visits[key + (option,)] * 0.01))
             future = 0.0 if terminated or truncated else float(np.max(q[next_key]))
             target = learned_reward + gamma * future
             q[key + (option,)] += alpha * (target - q[key + (option,)])
@@ -133,12 +138,10 @@ def train(episodes: int, opponent: str, max_seconds: float, seed: int,
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Train the Algo Test tactical Q-table (Dijkstra by default)")
+        description="Train the Algo Test tactical Q-table over full matches "
+                    "(Dijkstra by default)")
     parser.add_argument("--episodes", type=int, default=100)
     parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default="dijkstra")
-    parser.add_argument("--max-seconds", type=float, default=C.MAX_EPISODE_SECONDS,
-                        help="safety cap; games normally end by KO or the engine's "
-                             "own %.0fs limit" % C.MAX_EPISODE_SECONDS)
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--output", type=Path, default=DEFAULT_WEIGHTS)
     parser.add_argument("--resume", action="store_true")
@@ -151,10 +154,10 @@ def main() -> None:
             parser.error(f"weights not found: {args.output}; train first")
         q = np.load(args.output, allow_pickle=False)["q"]
     else:
-        q = train(args.episodes, args.opponent, args.max_seconds,
-                  args.seed, args.output, args.resume)
+        q = train(args.episodes, args.opponent, args.seed,
+                  args.output, args.resume)
     print("evaluation:")
-    results = evaluate(q, args.opponent, args.eval_episodes, args.max_seconds)
+    results = evaluate(q, args.opponent, args.eval_episodes)
     for opponent, stats in results.items():
         print(f"  {opponent:<9} {stats}")
 
