@@ -227,6 +227,8 @@ class Agent:
         self._path_age = 10**9
         self._last_enemy: tuple[float, float] | None = None
         self._enemy_velocity = (0.0, 0.0)
+        self._path_origin = None
+        self._blocked_cells = set()
 
     def option(self, obs: dict) -> int:
         return int(np.argmax(self.q[state_key(obs)]))
@@ -251,16 +253,40 @@ class Agent:
     def _path_move(self, obs: dict, goal: tuple[float, float], mode: str) -> tuple[int, int]:
         sx, sy = _world_xy(obs["self"])
         goal_cell = (int(goal[0]), int(goal[1]))
+
+        # Se uma rota inteira passou sem avanço, evite o próximo trecho dela.
+        if (
+            mode == self._path_mode
+            and self._path_age >= 18
+            and self._path_origin is not None
+            and len(self._path) > 1
+            and math.hypot(sx - self._path_origin[0],
+                        sy - self._path_origin[1]) < 0.4
+        ):
+            blocked = self._path[1]
+            if blocked != goal_cell:
+                self._blocked_cells.add(blocked)
+                self._path = []
+
         target_moved = (
             self._path_goal is None
-            or abs(goal_cell[0] - self._path_goal[0]) + abs(goal_cell[1] - self._path_goal[1]) > 3
+            or abs(goal_cell[0] - self._path_goal[0])
+            + abs(goal_cell[1] - self._path_goal[1]) > 3
         )
+
         if mode != self._path_mode or not self._path or self._path_age >= 18 or target_moved:
             solid = np.logical_or(obs["map"][0], obs["map"][1]).astype(np.uint8)
+
+            for bx, by in self._blocked_cells:
+                if (bx, by) != (int(sx), int(sy)) and (bx, by) != goal_cell:
+                    solid[bx, by] = 1
+
             self._path = astar(solid, sx, sy, goal[0], goal[1])
             self._path_mode = mode
             self._path_goal = goal_cell
             self._path_age = 0
+            self._path_origin = (sx, sy)
+
         self._path_age += 1
         while len(self._path) > 1:
             reached_x = self._path[1][0] + 0.5 - sx
@@ -268,8 +294,10 @@ class Agent:
             if reached_x * reached_x + reached_y * reached_y >= 0.35 ** 2:
                 break
             self._path.pop(0)
+
         if len(self._path) < 2:
             return 0, 0
+
         nx, ny = self._path[1]
         target_x, target_y = nx + 0.5, ny + 0.5
         move_x = 0 if abs(target_x - sx) < 0.08 else (target_x > sx) - (target_x < sx)

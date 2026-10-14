@@ -68,6 +68,9 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
                 total_reward += reward
                 done = terminated or truncated
             winner = info["winner"]
+            if bot_name == "camper" and winner != 0:
+                resultado = "derrota" if winner == 1 else "empate"
+                print(f"seed {base_seed + episode}: {resultado}")
             wins += winner == 0
             losses += winner == 1
             draws += winner == -1
