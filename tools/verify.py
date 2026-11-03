@@ -416,6 +416,191 @@ def test_sounds():
     ok("8-bit audio assets present (11 wavs)")
 
 
+
+def test_specialist_policies():
+    import unittest
+    from pathlib import Path
+    import numpy as np
+    from core import constants as C
+    from core.engine import Engine, Action
+    from rl.full_observation import FullObservationEncoder
+    from rl.actions import validate_action, MOVE_LUT
+    from MeuAlgo.algo1 import StrafeAgent as Agent, STRAFE_PROFILE as PROFILE, intercept_time, CHASE, EVADE
+    ROOT = Path(__file__).resolve().parents[1]
+
+    class StrafeTests(unittest.TestCase):
+        def test_interception_meets_moving_target(self):
+            for dx, dy, vx, vy in ((14, 0, 0, 3.5), (10, 8, -3, 1), (8, 0, 3.5, 0)):
+                t = intercept_time(dx, dy, vx, vy)
+                self.assertAlmostEqual(math.hypot(dx + vx * t, dy + vy * t), C.BULLET_SPEED * t)
+
+        def test_motion_reversal_teleport_and_reset(self):
+            eng = Engine(seed=10000)
+            encoder = FullObservationEncoder(eng)
+            agent = Agent()
+            def observe(tick, x, y):
+                obs = encoder.encode(0)
+                obs["game"][0] = tick * C.FIXED_DT / C.MAX_EPISODE_SECONDS
+                obs["game"][2] = tick / 3600
+                obs["self"][:2] = np.asarray([40., 40.]) / 50 - 1
+                obs["opponent"][:2] = np.asarray([50., y]) / 50 - 1
+                obs["opponent"][0] = x / 50 - 1
+                agent.observe(obs)
+                return obs
+            observe(0, 50, 40)
+            obs = observe(1, 50, 40.1)
+            self.assertEqual(agent._lateral, 2)
+            velocity = agent._motion_velocity
+            agent.observe(obs)
+            self.assertEqual(agent._motion_velocity, velocity)
+            observe(2, 50, 40)
+            self.assertEqual(agent._lateral, 0)
+            self.assertLess(agent._motion_velocity[1], 0)
+            self.assertGreater(agent._turn_until, agent._previous_time)
+            observe(3, 80, 80)
+            self.assertEqual(agent._motion_velocity, (0., 0.))
+            agent.reset()
+            self.assertIsNone(agent._observed_tick)
+            self.assertEqual(agent._motion_velocity, (0., 0.))
+
+        def test_movement_prediction_matches_engine_with_mud_and_body_radius(self):
+            eng = Engine(seed=10000)
+            encoder = FullObservationEncoder(eng)
+            agent = Agent()
+            # Include free, muddy, and wall-adjacent starts from an actual map.
+            points = [(15.5, 15.5)]
+            for x in range(2, 98):
+                for y in range(2, 98):
+                    if not eng._circle_hits_solid(x + .5, y + .5, C.PLAYER_RADIUS):
+                        if eng.map.is_mud(x, y) or eng.map.is_solid(x + 1, y):
+                            points.append((x + .5, y + .5))
+                    if len(points) >= 10:
+                        break
+                if len(points) >= 10:
+                    break
+            for x, y in points:
+                for mx, my in MOVE_LUT:
+                    player = eng.players[0]
+                    player.x, player.y = x, y
+                    obs = encoder.encode(0)
+                    expected = agent._step_position(obs, mx, my)
+                    eng._move_player(player, Action(move_x=mx, move_y=my), C.FIXED_DT)
+                    self.assertAlmostEqual(player.x, expected[0], places=4)
+                    self.assertAlmostEqual(player.y, expected[1], places=4)
+
+        def test_commitment_interrupts_on_new_bullet_threat(self):
+            eng = Engine(seed=10000)
+            obs = FullObservationEncoder(eng).encode(0)
+            agent = Agent()
+            agent.q.fill(0)
+            agent.q[..., CHASE] = 1
+            self.assertEqual(agent.option(obs), CHASE)
+            agent.q[..., EVADE] = 2
+            self.assertEqual(agent.option(obs), CHASE)
+            obs["game"][0] += C.FIXED_DT / C.MAX_EPISODE_SECONDS
+            obs["game"][2] += 1 / 3600
+            sx, sy = eng.players[0].x, eng.players[0].y
+            obs["bullet_mask"][0] = 1
+            obs["bullets"][0] = [(sx + 4) / 50 - 1, sy / 50 - 1, -1, 0, -1, 1, -1]
+            self.assertEqual(agent.option(obs), EVADE)
+
+        def test_checkpoint_profile_and_real_match_actions(self):
+            agent = Agent()
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / "qtable.npz"
+                np.savez_compressed(path, q=agent.q, profile=np.asarray(PROFILE))
+                restored = Agent(tmp)
+                self.assertTrue(np.array_equal(agent.q, restored.q))
+                from rl.agent_interface import load_agent
+                loaded = load_agent(str(ROOT / "MeuAlgo/algo1.py"), weights_path=str(path))
+                obs = FullObservationEncoder(Engine(seed=10000)).encode(0)
+                validate_action(loaded.act(obs))
+                np.savez_compressed(path, q=agent.q)
+                with self.assertRaises(ValueError):
+                    Agent(tmp)
+            from rl.bot_training_env import BlocksWithGunsBotTrainingEnv
+            env = BlocksWithGunsBotTrainingEnv(opponent="strafe")
+            try:
+                obs, _ = env.reset(seed=10008)
+                for _ in range(240):
+                    action = validate_action(agent.act(obs))
+                    obs, _, terminated, truncated, _ = env.step(action)
+                    if terminated or truncated:
+                        break
+            finally:
+                env.close()
+
+        def test_visualizer_loads_explicit_specialist(self):
+            os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
+            os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
+            from rl.visualize import run_visual_match
+            result = run_visual_match(player1="custom", player2="strafe",
+                                      algo1_script=str(ROOT / "MeuAlgo/algo1.py"),
+                                      algo1_weights=str(ROOT / "MeuAlgo/weights/especialistas/strafe.npz"),
+                                      seed=30000, max_seconds=0.2, fps=240, linger=False)
+            self.assertGreaterEqual(result["time"], 0.2)
+
+        def test_evaluation_swaps_spawns_without_changing_map_or_bot_rng(self):
+            from MeuAlgo.train import reset_evaluation_match as reset_match
+            from rl.bot_training_env import BlocksWithGunsBotTrainingEnv
+            env = BlocksWithGunsBotTrainingEnv(opponent="strafe")
+            try:
+                normal, _ = reset_match(env, 50000)
+                bot_rng = env._opponent.rng.getstate()
+                engine_rng = env.engine.rng.getstate()
+                swapped, _ = reset_match(env, 50000, swapped=True)
+                np.testing.assert_array_equal(normal["map"][:3], swapped["map"][:3])
+                np.testing.assert_array_equal(normal["self"][:2], swapped["opponent"][:2])
+                np.testing.assert_array_equal(normal["opponent"][:2], swapped["self"][:2])
+                self.assertEqual(bot_rng, env._opponent.rng.getstate())
+                self.assertEqual(engine_rng, env.engine.rng.getstate())
+                normal_again, _ = reset_match(env, 50000)
+                np.testing.assert_array_equal(normal["self"], normal_again["self"])
+            finally:
+                env.close()
+
+        def test_false_obstacle_memory_cannot_disconnect_a_valid_escape(self):
+            eng = Engine(seed=50037)
+            player = eng.players[0]
+            player.x, player.y = 58.709086698298144, 19.347529462032504
+            obs = FullObservationEncoder(eng).encode(0)
+            agent = Agent()
+            # Actual failure observed in the swapped-spawn evaluation at 78 seconds.
+            agent._blocked_cells = {(50, 13), (50, 15), (51, 14), (51, 16),
+                                    (52, 15), (53, 16), (53, 17), (54, 16),
+                                    (54, 18), (55, 18), (56, 17), (56, 19),
+                                    (57, 18), (57, 19), (58, 20), (59, 19)}
+            mx, my = agent._path_move(obs, (50., 50.), "safe")
+            self.assertEqual(agent._route_recoveries, 1)
+            self.assertTrue(agent._path)
+            start = player.x, player.y
+            eng._move_player(player, Action(move_x=mx, move_y=my), C.FIXED_DT)
+            self.assertGreater(math.dist(start, (player.x, player.y)), 0.05)
+
+
+        def test_unified_training_roundtrip_for_both_profiles(self):
+            from contextlib import redirect_stdout
+            from io import StringIO
+            from MeuAlgo.train import train
+            from MeuAlgo.algo1 import make_agent
+            with tempfile.TemporaryDirectory() as tmp:
+                for profile in ("general", PROFILE):
+                    path = Path(tmp) / (profile + ".npz")
+                    with redirect_stdout(StringIO()):
+                        q = train(1, "strafe", 70000, path, False, 0., 0.01, profile=profile)
+                    restored = make_agent(path)
+                    self.assertEqual(restored.profile, profile)
+                    np.testing.assert_array_equal(restored.q, q)
+                    with np.load(path, allow_pickle=False) as checkpoint:
+                        self.assertEqual(int(checkpoint["episodes"]), 1)
+                        self.assertGreater(int(checkpoint["visits"].sum()), 0)
+
+    result = unittest.TextTestRunner(verbosity=0).run(
+        unittest.defaultTestLoader.loadTestsFromTestCase(StrafeTests))
+    assert result.wasSuccessful(), "specialist policy regressions failed"
+    ok(f"unified specialist profiles and training ({result.testsRun} regressions)")
+
+
 if __name__ == "__main__":
     test_engine_powerups()
     test_engine_combat()
@@ -432,4 +617,5 @@ if __name__ == "__main__":
     test_determinism()
     test_tournament()
     test_sounds()
+    test_specialist_policies()
     print(f"\nALL {len(PASS)} CHECKS PASSED")

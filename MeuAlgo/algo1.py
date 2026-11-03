@@ -12,11 +12,13 @@ from __future__ import annotations
 
 import math
 import os
+from pathlib import Path
 
 import numpy as np
 
 from core import constants as C
 from core.pathfinding import astar
+from core.los import has_line_of_sight
 
 NUM_OPTIONS = 8
 CHASE, RETREAT, STRAFE_LEFT, STRAFE_RIGHT, POWERUP, EVADE, HOLD, SAFE_CENTER = range(
@@ -208,10 +210,18 @@ def default_q() -> np.ndarray:
 class Agent:
     """A compact Q-policy with deterministic movement and aiming helpers."""
 
+    profile = "general"
+    decision_ticks = 1
+
+    def state_key(self, obs):
+        return state_key(obs)
+
     def __init__(self, weights_path=None):
         self.q = default_q()
         if weights_path:
-            model_path = os.path.join(weights_path, "qtable.npz")
+            model_path = os.fspath(weights_path)
+            if os.path.isdir(model_path):
+                model_path = os.path.join(model_path, "qtable.npz")
             if os.path.isfile(model_path):
                 loaded = np.load(model_path, allow_pickle=False)["q"]
                 if loaded.shape != Q_SHAPE:
@@ -228,6 +238,7 @@ class Agent:
         self._last_enemy: tuple[float, float] | None = None
         self._enemy_velocity = (0.0, 0.0)
         self._path_origin = None
+        self._progress_age = 0
         self._blocked_cells = set()
 
     def option(self, obs: dict) -> int:
@@ -254,19 +265,21 @@ class Agent:
         sx, sy = _world_xy(obs["self"])
         goal_cell = (int(goal[0]), int(goal[1]))
 
-        # Se uma rota inteira passou sem avanço, evite o próximo trecho dela.
-        if (
-            mode == self._path_mode
-            and self._path_age >= 18
-            and self._path_origin is not None
-            and len(self._path) > 1
-            and math.hypot(sx - self._path_origin[0],
-                        sy - self._path_origin[1]) < 0.4
-        ):
-            blocked = self._path[1]
-            if blocked != goal_cell:
-                self._blocked_cells.add(blocked)
-                self._path = []
+        # Track progress across goal changes too: alternating tactics must
+        # not reset the stuck detector on every tick.
+        if self._path_origin is None:
+            self._path_origin = (sx, sy)
+        if self._progress_age >= 18:
+            if (len(self._path) > 1
+                    and math.hypot(sx - self._path_origin[0],
+                                   sy - self._path_origin[1]) < 0.4):
+                blocked = self._path[1]
+                if blocked not in (goal_cell, (int(sx), int(sy))):
+                    self._blocked_cells.add(blocked)
+                    self._path = []
+            self._path_origin = (sx, sy)
+            self._progress_age = 0
+        self._progress_age += 1
 
         target_moved = (
             self._path_goal is None
@@ -285,7 +298,6 @@ class Agent:
             self._path_mode = mode
             self._path_goal = goal_cell
             self._path_age = 0
-            self._path_origin = (sx, sy)
 
         self._path_age += 1
         while len(self._path) > 1:
@@ -302,6 +314,10 @@ class Agent:
         target_x, target_y = nx + 0.5, ny + 0.5
         move_x = 0 if abs(target_x - sx) < 0.08 else (target_x > sx) - (target_x < sx)
         move_y = 0 if abs(target_y - sy) < 0.08 else (target_y > sy) - (target_y < sy)
+        # Centering inside our current free cell does not enter a neighbor.
+        # Checking that neighbor can reject this move beside a wall forever.
+        if (nx, ny) == (int(sx), int(sy)):
+            return move_x, move_y
         return self._safe_move(obs, move_x, move_y)
 
     @staticmethod
@@ -408,3 +424,289 @@ class Agent:
 
     def act(self, obs: dict) -> np.ndarray:
         return self.action_for_option(obs, self.option(obs))
+
+
+STRAFE_PROFILE = "strafe_v1"
+# distance, sight, incoming threat, health, score, heat, lateral motion,
+# recent reversal, late match. Keep the state smaller than the general table.
+STRAFE_STATE_SHAPE = (5, 2, 3, 3, 3, 3, 3, 2, 2)
+STRAFE_Q_SHAPE = STRAFE_STATE_SHAPE + (NUM_OPTIONS,)
+STRAFE_DECISION_TICKS = 6
+
+
+def strafe_default_q():
+    q = np.zeros(STRAFE_Q_SHAPE, dtype=np.float32)
+    for key in np.ndindex(STRAFE_STATE_SHAPE):
+        distance, sight, threat, health, score, heat, lateral, turning, late = key
+        close = distance in (1, 2)
+        q[key + (CHASE,)] = 0.50 if distance >= 3 or not sight else 0.16
+        q[key + (RETREAT,)] = 0.55 if distance == 0 else 0.02
+        q[key + (STRAFE_LEFT,)] = 0.32 if sight and close else 0.04
+        q[key + (STRAFE_RIGHT,)] = 0.32 if sight and close else 0.04
+        # Follow the observed tangent to reduce relative lateral motion.
+        if lateral != 1 and sight and close:
+            q[key + (STRAFE_LEFT if lateral == 2 else STRAFE_RIGHT,)] += 0.10
+        q[key + (HOLD,)] = 0.46 if sight and close and not turning else 0.08
+        q[key + (EVADE,)] = (0.10, 0.55, 1.10)[threat]
+        q[key + (POWERUP,)] = 0.40 if health == 0 else 0.12
+        q[key + (SAFE_CENTER,)] = (1.40, 0.60, 0.02)[heat]
+        if late and score <= 1:
+            q[key + (CHASE,)] += 0.10
+    return q
+
+
+def intercept_time(dx, dy, vx, vy):
+    """Positive root for a constant-speed bullet meeting a moving target."""
+    a = vx * vx + vy * vy - C.BULLET_SPEED ** 2
+    b = 2.0 * (dx * vx + dy * vy)
+    c = dx * dx + dy * dy
+    disc = b * b - 4.0 * a * c
+    if disc < 0.0 or abs(a) < 1e-9:
+        return math.hypot(dx, dy) / C.BULLET_SPEED
+    roots = [t for t in ((-b + math.sqrt(disc)) / (2 * a),
+                         (-b - math.sqrt(disc)) / (2 * a)) if t >= 0]
+    return min(roots) if roots else math.hypot(dx, dy) / C.BULLET_SPEED
+
+
+class StrafeAgent(Agent):
+    profile = STRAFE_PROFILE
+    decision_ticks = STRAFE_DECISION_TICKS
+    navigation_options = (CHASE, POWERUP, SAFE_CENTER)
+
+    def __init__(self, weights_path=None):
+        self.q = strafe_default_q()
+        if weights_path is not None:
+            path = Path(weights_path)
+            if path.is_dir():
+                path /= "qtable.npz"
+            with np.load(path, allow_pickle=False) as checkpoint:
+                if "profile" not in checkpoint.files or str(checkpoint["profile"].item()) != STRAFE_PROFILE:
+                    raise ValueError("checkpoint is not a Strafe v1 specialist")
+                q = checkpoint["q"]
+                if q.shape != STRAFE_Q_SHAPE or not np.isfinite(q).all():
+                    raise ValueError("invalid Strafe v1 Q-table")
+                self.q = q.astype(np.float32)
+        self.reset()
+
+    def reset(self):
+        super().reset()
+        self._observed_tick = None
+        self._previous_time = None
+        self._motion_velocity = (0.0, 0.0)
+        self._lateral = 1
+        self._turn_until = -1.0
+        self._decision_time = -1.0
+        self._selected_option = CHASE
+        self._last_context = None
+        self._route_recoveries = 0
+
+    def _path_move(self, obs, goal, mode):
+        move = super()._path_move(obs, goal, mode)
+        if not self._path and self._blocked_cells:
+            # Avoidance memory is provisional. If it disconnects us, retry
+            # against actual obstacles instead of treating it as permanent walls.
+            self._blocked_cells.clear()
+            self._route_recoveries += 1
+            move = super()._path_move(obs, goal, mode)
+        return move
+
+    def observe(self, obs):
+        tick = float(obs["game"][2])
+        if tick == self._observed_tick:
+            return
+        now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
+        ex, ey = _world_xy(obs["opponent"])
+        if self._last_enemy is not None and self._previous_time is not None:
+            dt = now - self._previous_time
+            displacement = math.dist((ex, ey), self._last_enemy)
+            if dt > 1e-5 and displacement <= 6.0 * dt + 1e-3:
+                velocity = ((ex - self._last_enemy[0]) / dt,
+                            (ey - self._last_enemy[1]) / dt)
+                sx, sy = _world_xy(obs["self"])
+                distance = max(math.hypot(ex - sx, ey - sy), 1e-6)
+                lateral_speed = ((ex - sx) * velocity[1] - (ey - sy) * velocity[0]) / distance
+                lateral = 0 if lateral_speed < -0.5 else (2 if lateral_speed > 0.5 else 1)
+                reversal = lateral != 1 and self._lateral != 1 and lateral != self._lateral
+                if reversal:
+                    self._turn_until = now + 0.4
+                gain = 1.0 if reversal else 0.65
+                self._motion_velocity = tuple(
+                    gain * v + (1 - gain) * old
+                    for v, old in zip(velocity, self._motion_velocity))
+                self._lateral = lateral
+            else:
+                # SWAP/retreat teleports are not enemy movement velocities.
+                self._motion_velocity = (0.0, 0.0)
+                self._lateral = 1
+                self._turn_until = now + 0.4
+        self._last_enemy = (ex, ey)
+        self._previous_time = now
+        self._observed_tick = tick
+
+    def state_key(self, obs):
+        self.observe(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        distance = math.hypot(ex - sx, ey - sy)
+        band = next((i for i, edge in enumerate((8., 12., 17., 22.)) if distance < edge), 4)
+        mine, enemy = _lives(obs["self"]), _lives(obs["opponent"])
+        return (band, int(obs["self"][14] > 0), _bullet_threat(obs),
+                0 if mine <= 3 else (1 if mine <= 5 else 2),
+                1 + int(mine > enemy) - int(mine < enemy), _heat_band(obs),
+                self._lateral, int(self._previous_time < self._turn_until),
+                int(obs["game"][0] >= 0.8))
+
+    def option(self, obs):
+        key = self.state_key(obs)
+        context = (key[1], key[2], key[5], key[7])
+        now = self._previous_time
+        # Commit for 0.2 s; reconsider immediately on threat/visibility/heat changes.
+        if now - self._decision_time >= STRAFE_DECISION_TICKS * C.FIXED_DT - 1e-5 or context != self._last_context:
+            self._selected_option = int(np.argmax(self.q[key]))
+            self._decision_time = now
+            self._last_context = context
+        return self._selected_option
+
+    @staticmethod
+    def _step_position(obs, mx, my):
+        """Predict legal movement including body radius and wall sliding."""
+        x, y = _world_xy(obs["self"])
+        mag = math.hypot(mx, my)
+        if not mag:
+            return x, y
+        # Feature 13 is signed-normalized against the maximum buffed speed.
+        speed = (float(obs["self"][13]) + 1) * 0.5 * C.PLAYER_SPEED * C.SPEED_MULTIPLIER
+        step = speed * C.FIXED_DT
+        if obs["map"][2, int(x), int(y)] > 0.5:
+            step *= C.MUD_SLOW
+        solid = obs["map"][0] + obs["map"][1]
+
+        def blocked(px, py):
+            r = C.PLAYER_RADIUS
+            for cx in range(math.floor(px - r), math.floor(px + r) + 1):
+                for cy in range(math.floor(py - r), math.floor(py + r) + 1):
+                    if not (0 <= cx < C.GRID_SIZE and 0 <= cy < C.GRID_SIZE):
+                        return True
+                    if solid[cx, cy] and ((px - min(max(px, cx), cx + 1)) ** 2
+                                         + (py - min(max(py, cy), cy + 1)) ** 2 < r * r):
+                        return True
+            return False
+
+        nx = x + mx / mag * step
+        if not blocked(nx, y):
+            x = nx
+        ny = y + my / mag * step
+        if not blocked(x, ny):
+            y = ny
+        return x, y
+
+    @staticmethod
+    def _safe_move(obs, move_x, move_y):
+        if move_x == move_y == 0:
+            return 0, 0
+        sx, sy = _world_xy(obs["self"])
+        candidates = []
+        for my in (-1, 0, 1):
+            for mx in (-1, 0, 1):
+                x, y = StrafeAgent._step_position(obs, mx, my)
+                dx, dy = x - sx, y - sy
+                score = dx * move_x + dy * move_y
+                score -= 0.05 * abs(dx * move_y - dy * move_x)
+                candidates.append((score, -(mx * mx + my * my), mx, my))
+        _, _, mx, my = max(candidates)
+        return mx, my
+
+    def _shot(self, obs, sx, sy):
+        ex, ey = _world_xy(obs["opponent"])
+        vx, vy = self._motion_velocity
+        t = intercept_time(ex - sx, ey - sy, vx, vy)
+        px, py = ex + vx * t, ey + vy * t
+        angle = math.atan2(py - sy, px - sx)
+        aim = round(angle * 16 / (2 * math.pi)) % 16
+        a = aim * 2 * math.pi / 16
+        rvx, rvy = vx - C.BULLET_SPEED * math.cos(a), vy - C.BULLET_SPEED * math.sin(a)
+        closest = max(0., -( (ex - sx) * rvx + (ey - sy) * rvy) / max(rvx * rvx + rvy * rvy, 1e-9))
+        miss = math.hypot(ex - sx + rvx * closest, ey - sy + rvy * closest)
+        in_range = closest <= C.BULLET_RANGE / C.BULLET_SPEED
+        shoot = bool(obs["self"][14] > 0 and in_range and miss <= C.PLAYER_RADIUS + C.BULLET_RADIUS
+                     and 0 <= px < C.WORLD and 0 <= py < C.WORLD
+                     and has_line_of_sight(obs["map"][0], sx, sy, px, py))
+        return int(aim), int(shoot), miss
+
+    def action_for_option(self, obs, option):
+        self.observe(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        if option == CHASE:
+            if not obs["self"][14] > 0 or distance > 22:
+                mx, my = self._path_move(obs, (ex, ey), "enemy")
+            else:
+                vx, vy = self._motion_velocity
+                horizon = min(0.6, distance / C.BULLET_SPEED)
+                mx, my = self._safe_move(obs, dx + vx * horizon, dy + vy * horizon)
+        elif option in (STRAFE_LEFT, STRAFE_RIGHT):
+            side = 1 if option == STRAFE_LEFT else -1
+            radial = max(-1., min(1., (distance - 11.) / 5.))
+            mx, my = self._safe_move(obs, radial * dx / distance - side * dy / distance,
+                                    radial * dy / distance + side * dx / distance)
+        elif option == HOLD and obs["self"][14] > 0:
+            candidates = []
+            for cy in (-1, 0, 1):
+                for cx in (-1, 0, 1):
+                    x, y = self._step_position(obs, cx, cy)
+                    _, _, miss = self._shot(obs, x, y)
+                    score = -min(miss, 5.) - 0.015 * abs(math.hypot(ex - x, ey - y) - 11.)
+                    candidates.append((score, -(cx * cx + cy * cy), cx, cy))
+            _, _, mx, my = max(candidates)
+        elif option == RETREAT:
+            mx, my = self._safe_move(obs, -dx, -dy)
+        elif option == EVADE:
+            mx, my = self._evade_move(obs)
+        elif option == POWERUP:
+            target = self._powerup_target(obs)
+            mx, my = self._path_move(obs, target or (ex, ey), "powerup" if target else "enemy")
+        elif option == SAFE_CENTER:
+            mx, my = self._path_move(obs, (50., 50.), "safe")
+        else:
+            mx, my = self._path_move(obs, (ex, ey), "enemy")
+        aim, shoot, _ = self._shot(obs, sx, sy)
+        return np.asarray([(my + 1) * 3 + mx + 1, aim, shoot], dtype=np.int64)
+
+
+def strafe_potential(obs):
+    """Bounded positioning hint; differencing prevents farming proximity."""
+    sx, sy = _world_xy(obs["self"])
+    ex, ey = _world_xy(obs["opponent"])
+    distance = math.hypot(ex - sx, ey - sy)
+    value = -0.15 * min(abs(distance - 11.) / 20., 1.)
+    if obs["self"][14] > 0 and distance < 20:
+        value += 0.10
+    if obs["self"][12] > 0:
+        value -= 0.25
+    return value
+
+
+def policy_class(profile):
+    """Select an implementation by checkpoint schema, never by opponent identity."""
+    if profile == "general":
+        return Agent
+    if profile in ("strafe", STRAFE_PROFILE):
+        return StrafeAgent
+    raise ValueError(f"unsupported policy profile: {profile}")
+
+
+def make_agent(weights_path=None):
+    """Load an original weights directory or an official specialist NPZ file."""
+    if weights_path is None:
+        return Agent()
+    path = Path(weights_path)
+    model = path / "qtable.npz" if path.is_dir() else path
+    if not model.is_file():
+        if path.suffix == ".npz":
+            raise FileNotFoundError(path)
+        return Agent(weights_path)
+    with np.load(model, allow_pickle=False) as checkpoint:
+        profile = str(checkpoint["profile"].item()) if "profile" in checkpoint.files else "general"
+    return policy_class(profile)(model)

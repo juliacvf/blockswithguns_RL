@@ -16,17 +16,25 @@ from core.engine import Action, Engine
 from game.app import HumanController
 from game.render_topdown import PLAYER_COLORS, TopdownRenderer
 from rl.actions import to_engine_action
+from rl.agent_interface import LoadedAgent, load_agent
 from rl.contest import ContestEntry, load_contest_entry
 from rl.full_observation import FullObservationEncoder
 from rl.rewards import winner_from_lives
 
 
-def _controller(spec: str, idx: int, folder: str, seed: int):
+def _controller(spec: str, idx: int, folder: str, seed: int,
+                script: str | None = None, weights: str | None = None):
+    if script is not None and spec != "custom":
+        raise ValueError("an explicit agent script requires a custom player")
+    if weights is not None and script is None:
+        raise ValueError("explicit weights require an explicit agent script")
     if spec == "human":
         if idx != 0:
             raise ValueError("the human controller is supported in player 1 only")
         return HumanController("topdown")
     if spec == "custom":
+        if script is not None:
+            return load_agent(script, weights_path=weights, name=f"algo{idx + 1}")
         return load_contest_entry(folder, idx + 1)
     if spec in BOT_NAMES:
         return make_bot(spec, seed=seed)
@@ -37,6 +45,9 @@ def _action(controller, engine: Engine, encoder: FullObservationEncoder,
             idx: int, origin: tuple[int, int]) -> Action:
     if isinstance(controller, HumanController):
         return controller.build(engine, ppc=6.0, origin=origin)
+    if isinstance(controller, LoadedAgent):
+        return to_engine_action(
+            controller.agent.act(encoder.encode(idx)), name=f"algo{idx + 1}")
     if isinstance(controller, ContestEntry):
         return to_engine_action(
             controller.act(encoder.encode(idx)), name=f"algo{idx + 1}")
@@ -52,6 +63,10 @@ def run_visual_match(
     max_seconds: float = C.MAX_EPISODE_SECONDS,
     fps: int = 60,
     linger: bool = True,
+    algo1_script: str | None = None,
+    algo1_weights: str | None = None,
+    algo2_script: str | None = None,
+    algo2_weights: str | None = None,
 ) -> dict:
     """Run one rendered match and return its winner/lives summary."""
     import pygame
@@ -65,8 +80,8 @@ def run_visual_match(
     engine = Engine(seed=seed, map_seed=seed)
     encoder = FullObservationEncoder(engine, max_seconds)
     controllers = [
-        _controller(player1, 0, algo1_folder, seed + 11),
-        _controller(player2, 1, algo2_folder, seed + 22),
+        _controller(player1, 0, algo1_folder, seed + 11, algo1_script, algo1_weights),
+        _controller(player2, 1, algo2_folder, seed + 22, algo2_script, algo2_weights),
     ]
     for controller in controllers:
         if hasattr(controller, "reset"):
@@ -152,6 +167,10 @@ def main() -> None:
     parser.add_argument("--player2", choices=choices, default="custom")
     parser.add_argument("--algo1-folder", default="algo1")
     parser.add_argument("--algo2-folder", default="algo2")
+    parser.add_argument("--algo1-script", help="Explicit custom policy script (outside a contest folder)")
+    parser.add_argument("--algo1-weights", help="Weights passed to the explicit player 1 script")
+    parser.add_argument("--algo2-script", help="Explicit custom policy script (outside a contest folder)")
+    parser.add_argument("--algo2-weights", help="Weights passed to the explicit player 2 script")
     parser.add_argument("--seed", type=int, default=100)
     parser.add_argument("--max-seconds", type=float, default=C.MAX_EPISODE_SECONDS)
     parser.add_argument("--fps", type=int, default=60)
@@ -160,6 +179,8 @@ def main() -> None:
     summary = run_visual_match(
         player1=args.player1, player2=args.player2,
         algo1_folder=args.algo1_folder, algo2_folder=args.algo2_folder,
+        algo1_script=args.algo1_script, algo1_weights=args.algo1_weights,
+        algo2_script=args.algo2_script, algo2_weights=args.algo2_weights,
         seed=args.seed, max_seconds=args.max_seconds, fps=args.fps,
         linger=not args.exit_on_finish)
     print(summary)

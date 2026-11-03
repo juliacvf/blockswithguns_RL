@@ -1,4 +1,4 @@
-"""Train or evaluate the Algo Test Q-policy.
+"""Train or evaluate MeuAlgo and its official specialist checkpoint profiles.
 
 Training is headless and runs as fast as the simulator allows — no
 rendering, no real-time pacing. Every episode is a complete match: it ends
@@ -6,8 +6,9 @@ only when the engine itself decides the game (knockout, or the lives
 tiebreak at the built-in 120 s cap). There is no shorter time limit.
 
 Run from the project root:
-    .venv/bin/python "Algo Test/train.py" --episodes 100
-    .venv/bin/python "Algo Test/train.py" --evaluate-only --opponent all
+    .venv/Scripts/python.exe MeuAlgo/train.py --evaluate-only --opponent all
+    .venv/Scripts/python.exe MeuAlgo/train.py --evaluate-only --opponent strafe \
+        --output MeuAlgo/weights/especialistas/strafe.npz --eval-sides both
 """
 
 from __future__ import annotations
@@ -24,7 +25,8 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(HERE))
 
-from algo1 import Agent, NUM_OPTIONS, state_key  # noqa: E402
+from algo1 import (Agent, NUM_OPTIONS, STRAFE_PROFILE, CHASE, POWERUP, SAFE_CENTER,
+                   policy_class, strafe_potential, _world_xy)  # noqa: E402
 from bots import BOT_NAMES  # noqa: E402
 from rl.bot_training_env import BlocksWithGunsBotTrainingEnv  # noqa: E402
 from rl.progress import TrainingProgress  # noqa: E402
@@ -49,44 +51,87 @@ def _shaping(previous: dict, current: dict) -> float:
     return float(shaped)
 
 
+def reset_evaluation_match(env, seed, swapped=False):
+    """Swap spawn sides without changing map or initial bot RNG state."""
+    obs, info = env.reset(seed=seed)
+    if swapped:
+        env.engine.reset(swap_spawns=True)
+        obs = env._encoder.encode(0)
+    return obs, info
+
+
 def evaluate(q: np.ndarray, opponent: str, episodes: int,
-             base_seed: int = 10_000) -> dict:
+             base_seed: int = 10_000, profile: str = "general",
+             sides: str = "normal") -> dict:
+    if episodes < 1 or sides not in ("normal", "swapped", "both"):
+        raise ValueError("positive map count and valid spawn sides are required")
     opponents = BOT_NAMES if opponent == "all" else [opponent]
+    spawn_sides = ("normal", "swapped") if sides == "both" else (sides,)
     results = {}
     for bot_name in opponents:
         env = BlocksWithGunsBotTrainingEnv(opponent=bot_name)
-        policy = Agent()
+        policy = policy_class(profile)()
+        if q.shape != policy.q.shape or not np.isfinite(q).all():
+            raise ValueError("checkpoint does not match the selected policy profile")
         policy.q = q.copy()
         wins = losses = draws = 0
         total_reward = 0.0
-        for episode in range(episodes):
-            obs, _ = env.reset(seed=base_seed + episode)
-            policy.reset()
-            done = False
-            while not done:
-                obs, reward, terminated, truncated, info = env.step(policy.act(obs))
-                total_reward += reward
-                done = terminated or truncated
-            winner = info["winner"]
-            if bot_name == "camper" and winner != 0:
-                resultado = "derrota" if winner == 1 else "empate"
-                print(f"seed {base_seed + episode}: {resultado}")
-            wins += winner == 0
-            losses += winner == 1
-            draws += winner == -1
-        env.close()
+        hits = damage = heat = alerts = recoveries = 0
+        by_side = {side: dict(wins=0, draws=0, losses=0) for side in spawn_sides}
+        try:
+            for seed, side in ((base_seed + episode, side)
+                               for episode in range(episodes) for side in spawn_sides):
+                obs, _ = reset_evaluation_match(env, seed, swapped=side == "swapped")
+                policy.reset()
+                origin = _world_xy(obs["self"])
+                ticks = navigation_intent = 0
+                done = False
+                while not done:
+                    option = policy.option(obs)
+                    action = policy.action_for_option(obs, option)
+                    navigation_intent += int(option in (CHASE, POWERUP, SAFE_CENTER))
+                    obs, reward, terminated, truncated, info = env.step(action)
+                    for event in info["events"]:
+                        hits += int(event[0] == "hit" and event[2] == 0)
+                        damage += int(event[0] == "hit" and event[1] == 0)
+                        heat += int(event[0] == "heat_hit" and event[1] == 0)
+                    total_reward += reward
+                    ticks += 1
+                    if ticks % 90 == 0:
+                        current = _world_xy(obs["self"])
+                        alerts += int(navigation_intent >= 72 and
+                                      ((current[0] - origin[0]) ** 2 +
+                                       (current[1] - origin[1]) ** 2) < 0.4 ** 2)
+                        origin, navigation_intent = current, 0
+                    done = terminated or truncated
+                winner = info["winner"]
+                wins += winner == 0
+                losses += winner == 1
+                draws += winner == -1
+                by_side[side]["wins" if winner == 0 else "losses" if winner == 1 else "draws"] += 1
+                recoveries += getattr(policy, "_route_recoveries", 0)
+        finally:
+            env.close()
+        if not np.array_equal(q, policy.q):
+            raise AssertionError("evaluation modified the policy weights")
         results[bot_name] = {
             "wins": wins, "losses": losses, "draws": draws,
-            "avg_reward": round(total_reward / episodes, 3),
+            "avg_reward": round(total_reward / (episodes * len(spawn_sides)), 3),
+            "hits": hits, "damage": damage, "heat": heat,
+            "navigation_alerts": alerts, "route_recoveries": recoveries,
+            "by_side": by_side,
         }
     return results
 
 
 def train(episodes: int, opponent: str, seed: int,
-          output: Path, resume: bool, epsilon_start: float,  alpha_start: float) -> np.ndarray:
-    policy = Agent()
+          output: Path, resume: bool, epsilon_start: float, alpha_start: float,
+          profile: str = "general") -> np.ndarray:
+    policy = policy_class(profile)()
+    profile = policy.profile
+    specialist = profile == STRAFE_PROFILE
     q = policy.q
-    visits = np.zeros_like(q, dtype=np.uint16)
+    visits = np.zeros_like(q, dtype=np.uint32 if specialist else np.uint16)
     completed_episodes = 0
 
     if resume:
@@ -108,7 +153,7 @@ def train(episodes: int, opponent: str, seed: int,
                 saved_visits = checkpoint["visits"]
 
                 if saved_visits.shape == q.shape:
-                    visits = saved_visits.astype(np.uint16)
+                    visits = saved_visits.astype(visits.dtype)
 
             if "episodes" in checkpoint.files:
                 completed_episodes = int(checkpoint["episodes"])
@@ -117,7 +162,7 @@ def train(episodes: int, opponent: str, seed: int,
     env = BlocksWithGunsBotTrainingEnv(opponent=opponent)
     gamma = 0.99
     progress = TrainingProgress(episodes)
-    print(f"training Algo Test Q-policy vs {opponent}: {episodes} full matches, "
+    print(f"training MeuAlgo ({profile}) vs {opponent}: {episodes} full matches, "
           f"headless at full speed, checkpoint after every match")
     output.parent.mkdir(parents=True, exist_ok=True)
 
@@ -131,6 +176,8 @@ def train(episodes: int, opponent: str, seed: int,
             seed=np.asarray(seed),
             epsilon_start=np.asarray(epsilon_start),
             alpha_start=np.asarray(alpha_start),
+            profile=np.asarray(profile),
+            decision_ticks=np.asarray(policy.decision_ticks),
         )
     for episode in range(episodes):
         global_episode = completed_episodes + episode
@@ -140,29 +187,52 @@ def train(episodes: int, opponent: str, seed: int,
 
         epsilon = max(
             0.04,
-            epsilon_start * (0.995 ** global_episode),
+            epsilon_start * ((0.97 if specialist else 0.995) ** global_episode),
         )
         total_reward = 0.0
         done = False
         while not done:
-            key = state_key(obs)
+            key = policy.state_key(obs)
             if rng.random() < epsilon:
                 option = int(rng.integers(NUM_OPTIONS))
             else:
                 option = int(np.argmax(q[key]))
-            action = policy.action_for_option(obs, option)
-            next_obs, reward, terminated, truncated, step_info = env.step(action)
-            learned_reward = reward + _shaping(obs, next_obs)
-            next_key = state_key(next_obs)
-            visits[key + (option,)] = min(65535, visits[key + (option,)] + 1)
+            learned_reward = episode_reward = 0.0
+            discount = 1.0
+            before_potential = strafe_potential(obs) if specialist else 0.0
+            context = (key[1], key[2], key[5], key[7]) if specialist else None
+            for _ in range(policy.decision_ticks):
+                action = policy.action_for_option(obs, option)
+                next_obs, reward, terminated, truncated, step_info = env.step(action)
+                extra = 0.0
+                if specialist:
+                    for event in step_info["events"]:
+                        if event[0] == "hit":
+                            extra += 0.5 if event[2] == 0 else -0.5
+                        elif event[0] == "heat_hit" and event[1] == 0:
+                            extra -= 0.5
+                else:
+                    extra = _shaping(obs, next_obs)
+                learned_reward += discount * (reward + extra)
+                episode_reward += reward
+                discount *= gamma
+                obs = next_obs
+                next_key = policy.state_key(obs)
+                next_context = (next_key[1], next_key[2], next_key[5], next_key[7]) if specialist else None
+                if terminated or truncated or next_context != context:
+                    break
+            if specialist:
+                learned_reward += discount * (0.0 if terminated or truncated else strafe_potential(obs)) - before_potential
+            index = key + (option,)
+            visits[index] = min(np.iinfo(visits.dtype).max, int(visits[index]) + 1)
             # gentle learning rate: noisy long-episode targets must not
             # trample the heuristic priors in rarely visited states
-            alpha = max(0.03, alpha_start / (1.0 + visits[key + (option,)] * 0.01),)
+            alpha = max(0.005 if specialist else 0.03,
+                        alpha_start / (1.0 + int(visits[index]) * (0.02 if specialist else 0.01)))
             future = 0.0 if terminated or truncated else float(np.max(q[next_key]))
-            target = learned_reward + gamma * future
+            target = learned_reward + discount * future
             q[key + (option,)] += alpha * (target - q[key + (option,)])
-            total_reward += reward
-            obs = next_obs
+            total_reward += episode_reward
             done = terminated or truncated
         wins10 = progress.record(step_info["winner"])
         progress.show(episode + 1, wins10,
@@ -179,28 +249,45 @@ def train(episodes: int, opponent: str, seed: int,
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Train the Algo Test tactical Q-table over full matches "
+        description="Train or evaluate MeuAlgo checkpoint profiles over full matches "
                     "(Dijkstra by default)")
     parser.add_argument("--episodes", type=int, default=100)
     parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default="dijkstra")
     parser.add_argument("--seed", type=int, default=123)
-    parser.add_argument("--output", type=Path, default=DEFAULT_WEIGHTS)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--profile", choices=("auto", "general", "strafe"), default="auto")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--eval-episodes", type=int, default=10)
-    parser.add_argument("--epsilon", type=float, default=0.25)
-    parser.add_argument("--alpha", type=float, default=0.12)
+    parser.add_argument("--eval-seed", type=int, default=10000)
+    parser.add_argument("--eval-sides", choices=("normal", "swapped", "both"), default="normal")
+    parser.add_argument("--epsilon", type=float)
+    parser.add_argument("--alpha", type=float)
     args = parser.parse_args()
 
-    if args.evaluate_only:
+    if min(args.episodes, args.eval_episodes) < 1:
+        parser.error("episode counts must be positive")
+    args.output = args.output or (HERE / "weights/especialistas/strafe.npz" if args.profile == "strafe" else DEFAULT_WEIGHTS)
+    profile = STRAFE_PROFILE if args.profile == "strafe" else "general"
+    if args.evaluate_only or args.resume:
         if not args.output.is_file():
             parser.error(f"weights not found: {args.output}; train first")
+        with np.load(args.output, allow_pickle=False) as checkpoint:
+            saved_profile = str(checkpoint["profile"].item()) if "profile" in checkpoint.files else "general"
+        if args.profile != "auto" and saved_profile != profile:
+            parser.error("selected profile does not match the checkpoint")
+        profile = saved_profile
+    epsilon = args.epsilon if args.epsilon is not None else (0.20 if profile == STRAFE_PROFILE else 0.25)
+    alpha = args.alpha if args.alpha is not None else (0.04 if profile == STRAFE_PROFILE else 0.12)
+
+    if args.evaluate_only:
         q = np.load(args.output, allow_pickle=False)["q"]
     else:
         q = train(args.episodes, args.opponent, args.seed,
-                  args.output, args.resume, args.epsilon, args.alpha)
+                  args.output, args.resume, epsilon, alpha, profile=profile)
     print("evaluation:")
-    results = evaluate(q, args.opponent, args.eval_episodes)
+    results = evaluate(q, args.opponent, args.eval_episodes,
+                       base_seed=args.eval_seed, profile=profile, sides=args.eval_sides)
     for opponent, stats in results.items():
         print(f"  {opponent:<9} {stats}")
 
