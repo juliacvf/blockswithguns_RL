@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import math
 import os
+import heapq
+from collections import deque
 from pathlib import Path
 
 import numpy as np
@@ -212,9 +214,24 @@ class Agent:
 
     profile = "general"
     decision_ticks = 1
+    learned_tactics = False
 
     def state_key(self, obs):
         return state_key(obs)
+
+    def available_options(self, obs):
+        return np.arange(NUM_OPTIONS)
+
+    def best_option(self, obs, key=None):
+        key = self.state_key(obs) if key is None else key
+        options = self.available_options(obs)
+        return int(options[np.argmax(self.q[key][options])])
+
+    def learning_context(self, key):
+        return None
+
+    def _plan_path(self, solid, obs, sx, sy, gx, gy):
+        return astar(solid, sx, sy, gx, gy)
 
     def __init__(self, weights_path=None):
         self.q = default_q()
@@ -294,7 +311,7 @@ class Agent:
                 if (bx, by) != (int(sx), int(sy)) and (bx, by) != goal_cell:
                     solid[bx, by] = 1
 
-            self._path = astar(solid, sx, sy, goal[0], goal[1])
+            self._path = self._plan_path(solid, obs, sx, sy, goal[0], goal[1])
             self._path_mode = mode
             self._path_goal = goal_cell
             self._path_age = 0
@@ -471,20 +488,26 @@ def intercept_time(dx, dy, vx, vy):
 class StrafeAgent(Agent):
     profile = STRAFE_PROFILE
     decision_ticks = STRAFE_DECISION_TICKS
+    learned_tactics = True
+    q_shape = STRAFE_Q_SHAPE
+    preferred_range = 11.0
     navigation_options = (CHASE, POWERUP, SAFE_CENTER)
 
+    def initial_q(self):
+        return strafe_default_q()
+
     def __init__(self, weights_path=None):
-        self.q = strafe_default_q()
+        self.q = self.initial_q()
         if weights_path is not None:
             path = Path(weights_path)
             if path.is_dir():
                 path /= "qtable.npz"
             with np.load(path, allow_pickle=False) as checkpoint:
-                if "profile" not in checkpoint.files or str(checkpoint["profile"].item()) != STRAFE_PROFILE:
-                    raise ValueError("checkpoint is not a Strafe v1 specialist")
+                if "profile" not in checkpoint.files or str(checkpoint["profile"].item()) != self.profile:
+                    raise ValueError(f"checkpoint does not match {self.profile}")
                 q = checkpoint["q"]
-                if q.shape != STRAFE_Q_SHAPE or not np.isfinite(q).all():
-                    raise ValueError("invalid Strafe v1 Q-table")
+                if q.shape != self.q_shape or not np.isfinite(q).all():
+                    raise ValueError(f"invalid {self.profile} Q-table")
                 self.q = q.astype(np.float32)
         self.reset()
 
@@ -556,13 +579,28 @@ class StrafeAgent(Agent):
                 self._lateral, int(self._previous_time < self._turn_until),
                 int(obs["game"][0] >= 0.8))
 
+    def learning_context(self, key):
+        return key[1], key[2], key[5], key[7]
+
+    def learning_potential(self, obs):
+        return strafe_potential(obs)
+
+    def learning_extra_reward(self, events):
+        reward = 0.0
+        for event in events:
+            if event[0] == "hit":
+                reward += 0.5 if event[2] == 0 else -0.5
+            elif event[0] == "heat_hit" and event[1] == 0:
+                reward -= 0.5
+        return reward
+
     def option(self, obs):
         key = self.state_key(obs)
-        context = (key[1], key[2], key[5], key[7])
+        context = self.learning_context(key), tuple(self.available_options(obs))
         now = self._previous_time
         # Commit for 0.2 s; reconsider immediately on threat/visibility/heat changes.
-        if now - self._decision_time >= STRAFE_DECISION_TICKS * C.FIXED_DT - 1e-5 or context != self._last_context:
-            self._selected_option = int(np.argmax(self.q[key]))
+        if now - self._decision_time >= self.decision_ticks * C.FIXED_DT - 1e-5 or context != self._last_context:
+            self._selected_option = self.best_option(obs, key)
             self._decision_time = now
             self._last_context = context
         return self._selected_option
@@ -648,7 +686,7 @@ class StrafeAgent(Agent):
                 mx, my = self._safe_move(obs, dx + vx * horizon, dy + vy * horizon)
         elif option in (STRAFE_LEFT, STRAFE_RIGHT):
             side = 1 if option == STRAFE_LEFT else -1
-            radial = max(-1., min(1., (distance - 11.) / 5.))
+            radial = max(-1., min(1., (distance - self.preferred_range) / 5.))
             mx, my = self._safe_move(obs, radial * dx / distance - side * dy / distance,
                                     radial * dy / distance + side * dx / distance)
         elif option == HOLD and obs["self"][14] > 0:
@@ -657,7 +695,7 @@ class StrafeAgent(Agent):
                 for cx in (-1, 0, 1):
                     x, y = self._step_position(obs, cx, cy)
                     _, _, miss = self._shot(obs, x, y)
-                    score = -min(miss, 5.) - 0.015 * abs(math.hypot(ex - x, ey - y) - 11.)
+                    score = -min(miss, 5.) - 0.015 * abs(math.hypot(ex - x, ey - y) - self.preferred_range)
                     candidates.append((score, -(cx * cx + cy * cy), cx, cy))
             _, _, mx, my = max(candidates)
         elif option == RETREAT:
@@ -688,12 +726,427 @@ def strafe_potential(obs):
     return value
 
 
+DIJKSTRA_PROFILE = "dijkstra_v1"
+# distance, sight, bullet threat, health, score, heat, enemy radial motion,
+# enemy outside the safe zone, late match, nearby useful pickup.
+DIJKSTRA_STATE_SHAPE = (5, 2, 3, 2, 3, 3, 3, 2, 2, 2)
+DIJKSTRA_Q_SHAPE = DIJKSTRA_STATE_SHAPE + (NUM_OPTIONS,)
+
+
+def dijkstra_default_q():
+    q = np.zeros(DIJKSTRA_Q_SHAPE, dtype=np.float32)
+    for key in np.ndindex(DIJKSTRA_STATE_SHAPE):
+        distance, sight, threat, health, score, heat, radial, enemy_heat, late, pickup = key
+        firing_range = sight and distance in (1, 2)
+        q[key + (CHASE,)] = 0.65 if not sight or distance >= 2 else 0.25
+        if radial == 2 and distance >= 2:
+            q[key + (CHASE,)] += 0.13
+        q[key + (HOLD,)] = 0.60 if firing_range else 0.02
+        q[key + (STRAFE_LEFT,)] = 0.34 if sight and distance <= 2 else 0.08
+        q[key + (STRAFE_RIGHT,)] = 0.34 if sight and distance <= 2 else 0.08
+        q[key + (EVADE,)] = (0.08, 0.55, 1.10)[threat]
+        q[key + (RETREAT,)] = 0.35 if health == 0 and threat else 0.02
+        q[key + (POWERUP,)] = (0.55 if health == 0 or radial == 2 else 0.20) if pickup else 0.01
+        q[key + (SAFE_CENTER,)] = (1.40, 0.85, 0.02)[heat]
+        if enemy_heat and score >= 1:
+            q[key + (SAFE_CENTER,)] += 0.20
+            q[key + (CHASE,)] -= 0.25
+        if late and score == 0:
+            q[key + (CHASE,)] += 0.15
+            q[key + (HOLD,)] += 0.10
+    return q
+
+
+class DijkstraAgent(StrafeAgent):
+    """Intercept observed retreats while retaining reachable, safe routes."""
+    profile = DIJKSTRA_PROFILE
+    q_shape = DIJKSTRA_Q_SHAPE
+    preferred_range = 13.0
+
+    def initial_q(self):
+        return dijkstra_default_q()
+
+    def reset(self):
+        super().reset()
+        self._reachable = None
+        self._reachable_centers = None
+        self._combat_tick = None
+        self._combat_history = deque()
+        self._combat_shots = 0
+        self._combat_cooldown = None
+        self._combat_enemy_lives = None
+        self._combat_previous_positions = None
+        self._reposition_goal = None
+        self._reposition_until = -1.
+        self._combat_repositions = 0
+        self._return_checked = -1e9
+        self._returning = False
+        self._return_goal = None
+        self._return_path = []
+        self._return_forecasts = 0
+
+    def _forecast_return(self, obs, allow_heat=False):
+        """Earliest return with cell deadlines imposed by the shrinking zone."""
+        sx, sy = _world_xy(obs["self"])
+        start = int(sx), int(sy)
+        solid = np.logical_or(obs["map"][0], obs["map"][1])
+        mud = obs["map"][2]
+        speed = min(C.PLAYER_SPEED, (float(obs["self"][13]) + 1) * .5 *
+                    C.PLAYER_SPEED * C.SPEED_MULTIPLIER)
+        speed = max(speed, .1)
+        now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
+        lookahead = min(20., max(0., C.MAX_EPISODE_SECONDS - now))
+        target_margin = 8. + C.HEAT_SHRINK_RATE * lookahead
+        arrival = {start: 0.}
+        came = {}
+        queue = [(0., start)]
+        while queue:
+            seconds, cell = heapq.heappop(queue)
+            if seconds != arrival[cell]:
+                continue
+            x, y = cell
+            margin = self._safe_margin(obs, x + .5, y + .5) - C.HEAT_SHRINK_RATE * seconds
+            if margin >= target_margin:
+                path = [cell]
+                while cell in came:
+                    cell = came[cell]
+                    path.append(cell)
+                path.reverse()
+                slack = self._safe_margin(obs, sx, sy) / C.HEAT_SHRINK_RATE
+                if len(path) > 1:
+                    slack = min(slack, min(self._safe_margin(obs, px + .5, py + .5) /
+                                          C.HEAT_SHRINK_RATE - arrival[(px, py)]
+                                          for px, py in path[1:]))
+                return path, slack
+            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if not (0 <= nx < C.GRID_SIZE and 0 <= ny < C.GRID_SIZE) or solid[nx, ny]:
+                    continue
+                # Half of each edge is spent in each cell's terrain.
+                cost = (.5 / (C.MUD_SLOW if mud[x, y] else 1.) +
+                        .5 / (C.MUD_SLOW if mud[nx, ny] else 1.)) / speed
+                eta = seconds + cost
+                future_margin = self._safe_margin(obs, nx + .5, ny + .5) - C.HEAT_SHRINK_RATE * eta
+                if not allow_heat and future_margin < .5:
+                    continue
+                if eta < arrival.get((nx, ny), float("inf")):
+                    arrival[nx, ny] = eta
+                    came[(nx, ny)] = (x, y)
+                    heapq.heappush(queue, (eta, (nx, ny)))
+        return [], -float("inf")
+
+    def _return_needed(self, obs):
+        now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
+        sx, sy = _world_xy(obs["self"])
+        margin = self._safe_margin(obs, sx, sy)
+        if now - self._return_checked < .75 and (self._returning or margin >= 2.):
+            return self._returning
+        self._return_checked = now
+        if margin >= 16. and not self._returning:
+            return False
+        path, slack = self._forecast_return(obs)
+        needed = slack < 8. or margin < 2. or (self._returning and margin < 8.)
+        if needed and not path:
+            path, _ = self._forecast_return(obs, allow_heat=True)
+        if needed and not self._returning:
+            self._return_forecasts += 1
+        self._returning = needed
+        self._return_path = path
+        self._return_goal = (path[-1][0] + .5, path[-1][1] + .5) if path else (50., 50.)
+        return needed
+
+    def _aim_after_move(self, obs, mx, my):
+        # The engine moves the shooter before creating its bullet.
+        x, y = self._step_position(obs, mx, my)
+        aim, shoot, _ = self._shot(obs, x, y)
+        return np.asarray([(my + 1) * 3 + mx + 1, aim, shoot], dtype=np.int64)
+
+    def observe(self, obs):
+        super().observe(obs)
+        if self._combat_tick == self._observed_tick:
+            return
+        self._combat_tick = self._observed_tick
+        now = self._previous_time
+        position, enemy = _world_xy(obs["self"]), _world_xy(obs["opponent"])
+        lives = _lives(obs["opponent"])
+        teleported = (self._combat_previous_positions is not None and
+                      any(math.dist(a, b) > 1. for a, b in
+                          zip((position, enemy), self._combat_previous_positions)))
+        if lives != self._combat_enemy_lives or teleported:
+            self._combat_history.clear()
+            self._reposition_goal = None
+        if teleported:
+            self._return_checked = -1e9
+        cooldown = float(obs["self"][5])
+        if self._combat_cooldown is not None and cooldown > self._combat_cooldown + .1:
+            self._combat_shots += 1
+        self._combat_cooldown = cooldown
+        self._combat_enemy_lives = lives
+        self._combat_previous_positions = position, enemy
+        self._combat_history.append((now, position, self._combat_shots,
+                                     math.dist(position, enemy) <= C.BULLET_RANGE,
+                                     enemy, obs["self"][14] > 0))
+        while len(self._combat_history) > 1 and self._combat_history[1][0] < now - 6.:
+            self._combat_history.popleft()
+
+    def _shot(self, obs, sx, sy, velocity=None):
+        # Grid visibility does not describe the actual quantized bullet lane.
+        ex, ey = _world_xy(obs["opponent"])
+        if velocity is None:
+            velocity = self._motion_velocity
+            recent = [row[4] for row in self._combat_history
+                      if row[0] >= self._previous_time - .5]
+            # Tiny wall-induced reversals do not imply sustained future motion.
+            if len(recent) >= 12 and max(math.dist(p, recent[0]) for p in recent) < .5:
+                velocity = (0., 0.)
+        vx, vy = velocity
+        t = intercept_time(ex - sx, ey - sy, vx, vy)
+        aim = round(math.atan2(ey + vy * t - sy, ex + vx * t - sx) * 16 / (2 * math.pi)) % 16
+        angle = aim * 2 * math.pi / 16
+        ux, uy = math.cos(angle), math.sin(angle)
+        rvx, rvy = vx - C.BULLET_SPEED * ux, vy - C.BULLET_SPEED * uy
+        closest = max(0., -((ex - sx) * rvx + (ey - sy) * rvy) /
+                      max(rvx * rvx + rvy * rvy, 1e-9))
+        miss = math.hypot(ex - sx + rvx * closest, ey - sy + rvy * closest)
+        allowed_miss = C.PLAYER_RADIUS + C.BULLET_RADIUS - .15 * min(closest, 1.)
+        shoot = closest <= C.BULLET_RANGE / C.BULLET_SPEED and miss <= allowed_miss
+        if shoot:
+            muzzle = C.PLAYER_RADIUS + C.BULLET_RADIUS + .05
+            bx, by = sx + ux * muzzle, sy + uy * muzzle
+            walls = obs["map"][0]
+            if walls[min(99, max(0, int(bx))), min(99, max(0, int(by)))]:
+                bx, by = sx, sy
+            length = max(0., closest * C.BULLET_SPEED - math.dist((sx, sy), (bx, by)))
+            steps = max(1, math.ceil(length / .15))
+            for i in range(steps + 1):
+                x, y = bx + ux * length * i / steps, by + uy * length * i / steps
+                if not (0 <= x < C.WORLD and 0 <= y < C.WORLD) or walls[int(x), int(y)]:
+                    shoot = False
+                    break
+        return aim, int(shoot), miss
+
+    def _firing_position(self, obs):
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        self._safe_goal(obs, (sx, sy))  # Populate the static reachable component.
+        solid = np.logical_or(obs["map"][0], obs["map"][1])
+        candidates = set()
+        for radius in (3., 5., 7.):
+            for direction in range(16):
+                angle = direction * math.pi / 8
+                candidates.add((int(sx + math.cos(angle) * radius),
+                                int(sy + math.sin(angle) * radius)))
+        best = None
+        for cx, cy in sorted(candidates):
+            x, y = cx + .5, cy + .5
+            if not (0 <= cx < C.GRID_SIZE and 0 <= cy < C.GRID_SIZE):
+                continue
+            if not self._reachable[cx, cy] or self._safe_margin(obs, x, y) < 3.:
+                continue
+            distance = math.hypot(ex - x, ey - y)
+            if not 5. <= distance <= 18.:
+                continue
+            _, shoot, miss = self._shot(obs, x, y, velocity=(0., 0.))
+            if not shoot:
+                continue
+            path = self._plan_path(solid, obs, sx, sy, x, y)
+            if len(path) < 2:
+                continue
+            cost = len(path) + sum(float(obs["map"][2, px, py]) for px, py in path)
+            cost += .25 * abs(distance - self.preferred_range) + miss
+            candidate = cost, x, y
+            if best is None or candidate < best:
+                best = candidate
+        return None if best is None else (best[1], best[2])
+
+    def _combat_move(self, obs):
+        now = self._previous_time
+        sx, sy = _world_xy(obs["self"])
+        if self._safe_margin(obs, sx, sy) < 3.:
+            self._reposition_goal = None
+            return None
+        if self._reposition_goal is not None:
+            goal = self._reposition_goal
+            if (now >= self._reposition_until or math.dist((sx, sy), goal) < .6
+                    or self._safe_margin(obs, *goal) < 2.):
+                self._reposition_goal = None
+                self._combat_history.clear()
+            else:
+                if _bullet_threat(obs) == 2:
+                    return self._evade_move(obs)
+                return self._path_move(obs, goal, "firing_position")
+        history = self._combat_history
+        if (len(history) < 2 or now - history[0][0] < 5.9
+                or (self._combat_shots - history[0][2] < 3
+                    and sum(row[5] for row in history) < .5 * len(history))
+                or sum(row[3] for row in history) < .7 * len(history)
+                or max(math.dist(row[1], history[0][1]) for row in history) > 3.5):
+            return None
+        goal = self._firing_position(obs)
+        history.clear()
+        if goal is None:
+            return None
+        self._reposition_goal = goal
+        self._reposition_until = now + 5.
+        self._combat_repositions += 1
+        return self._path_move(obs, goal, "firing_position")
+
+    @staticmethod
+    def _safe_margin(obs, x, y):
+        return float(obs["game"][3]) * C.WORLD * 0.5 - max(abs(x - 50.), abs(y - 50.))
+
+    def available_options(self, obs):
+        sx, sy = _world_xy(obs["self"])
+        if self._safe_margin(obs, sx, sy) < 2.0 or self._return_needed(obs):
+            return np.asarray([SAFE_CENTER])
+        return super().available_options(obs)
+
+    def _powerup_target(self, obs):
+        sx, sy = _world_xy(obs["self"])
+        lives = _lives(obs["self"])
+        best = None
+        for row, valid in zip(obs["powerups"], obs["powerup_mask"]):
+            if valid < 0.5:
+                continue
+            x, y = _world_xy(row)
+            distance = math.hypot(x - sx, y - sy)
+            if distance > 24. or self._safe_margin(obs, x, y) < 3.:
+                continue
+            benefit = 0.
+            if row[3] > 0.5 and lives < C.PLAYER_LIVES:
+                benefit = 10. if lives <= 3 else 6.
+            elif row[5] > 0.5 and obs["self"][7] <= -0.99:
+                benefit = 8.
+            elif row[4] > 0.5 and obs["self"][6] <= -0.99:
+                benefit = 3.
+            if not benefit:
+                continue
+            candidate = (distance - benefit, x, y)
+            if best is None or candidate < best:
+                best = candidate
+        return None if best is None else (best[1], best[2])
+
+    def state_key(self, obs):
+        self.observe(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        band = next((i for i, edge in enumerate((8., 14., 20., 30.)) if distance < edge), 4)
+        radial_speed = (dx * self._motion_velocity[0] + dy * self._motion_velocity[1]) / distance
+        radial = 0 if radial_speed < -0.5 else 2 if radial_speed > 0.5 else 1
+        mine, enemy = _lives(obs["self"]), _lives(obs["opponent"])
+        target = self._powerup_target(obs)
+        return (band, int(obs["self"][14] > 0), _bullet_threat(obs), int(mine > 3),
+                1 + int(mine > enemy) - int(mine < enemy), _heat_band(obs), radial,
+                int(obs["opponent"][12] > 0), int(obs["game"][0] >= 0.8),
+                int(target is not None and math.dist((sx, sy), target) <= 12.))
+
+    def learning_context(self, key):
+        return key[1], key[2], key[5], key[6], key[7]
+
+    def learning_potential(self, obs):
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        distance = math.hypot(ex - sx, ey - sy)
+        value = -0.15 * min(abs(distance - self.preferred_range) / 25., 1.)
+        if obs["self"][14] > 0 and distance < C.BULLET_RANGE:
+            value += 0.10
+        value -= (0.75, 0.10, 0.)[_heat_band(obs)]
+        return value
+
+    def learning_extra_reward(self, events):
+        reward = super().learning_extra_reward(events)
+        reward -= 1.5 * sum(event[0] == "heat_hit" and event[1] == 0 for event in events)
+        return reward
+
+    def _safe_goal(self, obs, goal):
+        sx, sy = _world_xy(obs["self"])
+        if self._reachable is None:
+            solid = np.logical_or(obs["map"][0], obs["map"][1])
+            reachable = np.zeros_like(solid, dtype=bool)
+            start = int(sx), int(sy)
+            queue = deque([start])
+            reachable[start] = True
+            while queue:
+                x, y = queue.popleft()
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if (0 <= nx < C.GRID_SIZE and 0 <= ny < C.GRID_SIZE
+                            and not solid[nx, ny] and not reachable[nx, ny]):
+                        reachable[nx, ny] = True
+                        queue.append((nx, ny))
+            self._reachable = reachable
+            self._reachable_centers = np.argwhere(reachable).astype(float) + 0.5
+        cells = self._reachable_centers
+        half = max(0., float(obs["game"][3]) * 50. - 2.)
+        safe = np.max(np.abs(cells - 50.), axis=1) <= half
+        candidates = cells[safe] if np.any(safe) else cells
+        target = np.clip(np.asarray(goal, dtype=float), 50. - half, 50. + half)
+        score = np.sum((candidates - target) ** 2, axis=1)
+        point = candidates[int(np.argmin(score))]
+        return float(point[0]), float(point[1])
+
+    def _plan_path(self, solid, obs, sx, sy, gx, gy):
+        if self._returning and self._return_path:
+            cell = int(sx), int(sy)
+            if cell in self._return_path:
+                return self._return_path[self._return_path.index(cell):]
+        mud = obs["map"][2]
+        if self._safe_margin(obs, sx, sy) >= 0:
+            centers = np.arange(C.GRID_SIZE) + 0.5
+            half = float(obs["game"][3]) * 50.
+            axis = np.abs(centers - 50.) <= half
+            confined = np.logical_or(solid, ~np.logical_and(axis[:, None], axis[None, :]))
+            path = astar(confined, sx, sy, gx, gy, mud, 1.0)
+            if path:
+                return path
+        return astar(solid, sx, sy, gx, gy, mud, 1.0)
+
+    def _path_move(self, obs, goal, mode):
+        sx, sy = _world_xy(obs["self"])
+        if mode == "safe" and self._safe_margin(obs, sx, sy) < 0:
+            goal = sx, sy  # Reach the nearest safe area before heading inward.
+        return super()._path_move(obs, self._safe_goal(obs, goal), mode)
+
+    def action_for_option(self, obs, option):
+        self.observe(obs)
+        options = self.available_options(obs)
+        if option not in options:
+            option = int(options[0])
+        if self._return_needed(obs):
+            self._reposition_goal = None
+            mx, my = super()._path_move(obs, self._return_goal, "future_safe")
+            return self._aim_after_move(obs, mx, my)
+        move = self._combat_move(obs)
+        if move is not None:
+            mx, my = move
+            return self._aim_after_move(obs, mx, my)
+        if option == CHASE:
+            sx, sy = _world_xy(obs["self"])
+            ex, ey = _world_xy(obs["opponent"])
+            distance = math.hypot(ex - sx, ey - sy)
+            horizon = min(1.2, max(0.3, distance / C.BULLET_SPEED))
+            vx, vy = self._motion_velocity
+            goal = self._safe_goal(obs, (ex + vx * horizon, ey + vy * horizon))
+            mx, my = self._safe_move(obs, goal[0] - sx, goal[1] - sy)
+            nx, ny = self._step_position(obs, mx, my)
+            if obs["self"][14] <= 0 or distance > 20. or math.hypot(nx - sx, ny - sy) < 0.05:
+                mx, my = self._path_move(obs, goal, "intercept")
+            return self._aim_after_move(obs, mx, my)
+        if option == HOLD and obs["self"][14] <= 0:
+            option = SAFE_CENTER if obs["opponent"][12] > 0 else CHASE
+            return self.action_for_option(obs, option)
+        action = super().action_for_option(obs, option)
+        return self._aim_after_move(obs, int(action[0]) % 3 - 1, int(action[0]) // 3 - 1)
+
+
 def policy_class(profile):
     """Select an implementation by checkpoint schema, never by opponent identity."""
     if profile == "general":
         return Agent
     if profile in ("strafe", STRAFE_PROFILE):
         return StrafeAgent
+    if profile in ("dijkstra", DIJKSTRA_PROFILE):
+        return DijkstraAgent
     raise ValueError(f"unsupported policy profile: {profile}")
 
 

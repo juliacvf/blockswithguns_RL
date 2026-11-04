@@ -425,10 +425,126 @@ def test_specialist_policies():
     from core.engine import Engine, Action
     from rl.full_observation import FullObservationEncoder
     from rl.actions import validate_action, MOVE_LUT
-    from MeuAlgo.algo1 import StrafeAgent as Agent, STRAFE_PROFILE as PROFILE, intercept_time, CHASE, EVADE
+    from MeuAlgo.algo1 import (StrafeAgent as Agent, DijkstraAgent, STRAFE_PROFILE as PROFILE,
+                              DIJKSTRA_PROFILE, intercept_time, CHASE, EVADE, SAFE_CENTER)
     ROOT = Path(__file__).resolve().parents[1]
 
-    class StrafeTests(unittest.TestCase):
+    class SpecialistTests(unittest.TestCase):
+        def test_dijkstra_return_destination_remains_safe_after_arrival(self):
+            obs = FullObservationEncoder(Engine(seed=85000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([35.5, 50.5]) / 50 - 1
+            obs["game"][3] = .5
+            policy = DijkstraAgent()
+            path, _ = policy._forecast_return(obs)
+            self.assertGreater(len(path), 1)
+            eta = (len(path) - 1) / C.PLAYER_SPEED
+            x, y = path[-1]
+            future_margin = policy._safe_margin(obs, x + .5, y + .5) - C.HEAT_SHRINK_RATE * (eta + 20.)
+            self.assertGreaterEqual(future_margin, 8.)
+            # A quick return is still available, so this position may be held.
+            self.assertFalse(policy._return_needed(obs))
+
+        def test_dijkstra_long_flights_require_more_room_for_prediction_error(self):
+            obs = FullObservationEncoder(Engine(seed=85017)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40.5, 40.5]) / 50 - 1
+            policy = DijkstraAgent()
+            obs["opponent"][:2] = np.asarray([54.5, 40.91]) / 50 - 1
+            self.assertEqual(policy._shot(obs, 40.5, 40.5)[1], 0)
+            obs["opponent"][:2] = np.asarray([43.5, 40.91]) / 50 - 1
+            self.assertEqual(policy._shot(obs, 40.5, 40.5)[1], 1)
+
+        def test_dijkstra_leaves_early_for_a_detour_without_forbidding_safe_bait(self):
+            obs = FullObservationEncoder(Engine(seed=85000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([30.5, 50.5]) / 50 - 1
+            obs["game"][3] = .5
+            self.assertFalse(DijkstraAgent()._return_needed(obs))
+            # Same distance to the zone boundary, but reaching the interior
+            # requires a long detour around the wall.
+            obs["map"][0, 31, 25:74] = 1
+            policy = DijkstraAgent()
+            self.assertGreater(policy._safe_margin(obs, 30.5, 50.5), 2.)
+            self.assertTrue(policy._return_needed(obs))
+            self.assertTrue(policy._return_path)
+            self.assertEqual(list(policy.available_options(obs)), [SAFE_CENTER])
+
+        def test_dijkstra_escape_forecast_accounts_for_mud(self):
+            obs = FullObservationEncoder(Engine(seed=85000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([30.5, 50.5]) / 50 - 1
+            obs["game"][3] = .5
+            obs["map"][0, 31, 30:70] = 1
+            self.assertFalse(DijkstraAgent()._return_needed(obs))
+            obs["map"][2] = 1
+            self.assertTrue(DijkstraAgent()._return_needed(obs))
+
+        def test_dijkstra_aim_uses_shooter_position_after_movement(self):
+            obs = FullObservationEncoder(Engine(seed=85000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40.5, 40.5]) / 50 - 1
+            obs["opponent"][:2] = np.asarray([43., 41.]) / 50 - 1
+            policy = DijkstraAgent()
+            self.assertEqual(policy._shot(obs, 40.5, 40.5)[0], 1)
+            action = policy._aim_after_move(obs, 0, 1)
+            self.assertEqual(int(action[1]), 0)
+            self.assertEqual(int(action[2]), 1)
+
+        def test_dijkstra_checks_quantized_bullet_lane_not_only_visibility(self):
+            obs = FullObservationEncoder(Engine(seed=83005)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40.05, 40.95]) / 50 - 1
+            obs["opponent"][:2] = np.asarray([50.05, 44.95]) / 50 - 1
+            obs["self"][14] = 1
+            policy = DijkstraAgent()
+            self.assertEqual(policy._shot(obs, 40.05, 40.95)[1], 1)
+            # The coarse visibility line is clear, but the 22.5-degree bullet
+            # crosses this wall before reaching the opponent.
+            obs["map"][0, 45, 43] = 1
+            from core.los import has_line_of_sight
+            self.assertTrue(has_line_of_sight(obs["map"][0], 40.05, 40.95, 50.05, 44.95))
+            self.assertEqual(policy._shot(obs, 40.05, 40.95)[1], 0)
+
+        def test_dijkstra_does_not_extrapolate_tiny_trapped_enemy_reversals(self):
+            engine = Engine(seed=83005)
+            encoder = FullObservationEncoder(engine)
+            policy = DijkstraAgent()
+            for tick in range(18):
+                obs = encoder.encode(0)
+                obs["map"][:3] = 0
+                obs["game"][0] = tick / 3600
+                obs["game"][2] = tick / 3600
+                obs["self"][:2] = np.asarray([40., 40.]) / 50 - 1
+                obs["opponent"][:2] = np.asarray([50., 40. + (.08 if tick % 2 else -.08)]) / 50 - 1
+                policy.observe(obs)
+            self.assertGreater(policy._motion_velocity[1], .5)
+            self.assertEqual(policy._shot(obs, 40., 40.)[0], 0)
+
+        def test_dijkstra_commits_to_another_firing_position_after_failed_combat(self):
+            obs = FullObservationEncoder(Engine(seed=83005)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40., 40.]) / 50 - 1
+            obs["opponent"][:2] = np.asarray([50., 42.]) / 50 - 1
+            obs["self"][14] = 1
+            policy = DijkstraAgent()
+            policy._previous_time = 6.
+            policy._combat_shots = 4
+            policy._combat_history.extend([(0., (40., 40.), 0, True, (50., 42.), True),
+                                           (6., (40., 40.), 4, True, (50., 42.), True)])
+            move = policy._combat_move(obs)
+            self.assertIsNotNone(move)
+            self.assertNotEqual(move, (0, 0))
+            goal = policy._reposition_goal
+            self.assertIsNotNone(goal)
+            self.assertGreater(math.dist((40., 40.), goal), 2.)
+            policy._previous_time = 6.1
+            policy._combat_move(obs)
+            self.assertEqual(policy._reposition_goal, goal)
+            obs["game"][3] = .1
+            self.assertIsNone(policy._combat_move(obs))
+            self.assertIsNone(policy._reposition_goal)
+
         def test_interception_meets_moving_target(self):
             for dx, dy, vx, vy in ((14, 0, 0, 3.5), (10, 8, -3, 1), (8, 0, 3.5, 0)):
                 t = intercept_time(dx, dy, vx, vy)
@@ -584,10 +700,11 @@ def test_specialist_policies():
             from MeuAlgo.train import train
             from MeuAlgo.algo1 import make_agent
             with tempfile.TemporaryDirectory() as tmp:
-                for profile in ("general", PROFILE):
+                for profile in ("general", PROFILE, DIJKSTRA_PROFILE):
                     path = Path(tmp) / (profile + ".npz")
                     with redirect_stdout(StringIO()):
-                        q = train(1, "strafe", 70000, path, False, 0., 0.01, profile=profile)
+                        q = train(1, "dijkstra" if profile == DIJKSTRA_PROFILE else "strafe",
+                                  70000, path, False, 0., 0.01, profile=profile)
                     restored = make_agent(path)
                     self.assertEqual(restored.profile, profile)
                     np.testing.assert_array_equal(restored.q, q)
@@ -595,8 +712,77 @@ def test_specialist_policies():
                         self.assertEqual(int(checkpoint["episodes"]), 1)
                         self.assertGreater(int(checkpoint["visits"].sum()), 0)
 
+        def test_dijkstra_safety_mask_overrides_an_offensive_q_value(self):
+            eng = Engine(seed=81000)
+            obs = FullObservationEncoder(eng).encode(0)
+            obs["game"][3] = 0.4
+            agent = DijkstraAgent()
+            agent.q.fill(0)
+            agent.q[..., CHASE] = 1000
+            self.assertEqual(agent.option(obs), SAFE_CENTER)
+            self.assertEqual(agent.available_options(obs).tolist(), [SAFE_CENTER])
+            validate_action(agent.action_for_option(obs, CHASE))
+
+        def test_dijkstra_interrupts_a_committed_chase_before_leaving_safety(self):
+            obs = FullObservationEncoder(Engine(seed=81000)).encode(0)
+            obs["game"][3] = 0.4
+            obs["self"][:2] = np.asarray([32.1, 50.5]) / 50 - 1
+            agent = DijkstraAgent()
+            agent.q.fill(0)
+            agent.q[..., CHASE] = 1000
+            key = agent.state_key(obs)
+            self.assertEqual(agent.option(obs), CHASE)
+            obs["self"][0] = 31.9 / 50 - 1
+            obs["game"][0] += C.FIXED_DT / C.MAX_EPISODE_SECONDS
+            obs["game"][2] += 1 / 3600
+            self.assertEqual(agent.state_key(obs)[5], key[5])
+            self.assertEqual(agent.option(obs), SAFE_CENTER)
+
+        def test_dijkstra_goal_is_reachable_and_inside_the_safe_area(self):
+            obs = FullObservationEncoder(Engine(seed=81000)).encode(0)
+            obs["map"][:2] = 0
+            # A free center cell surrounded by walls is not a reachable goal.
+            obs["map"][0, 49:52, 49] = 1
+            obs["map"][0, 49:52, 51] = 1
+            obs["map"][0, 49, 49:52] = 1
+            obs["map"][0, 51, 49:52] = 1
+            obs["game"][3] = 0.4
+            agent = DijkstraAgent()
+            x, y = agent._safe_goal(obs, (50.5, 50.5))
+            self.assertNotEqual((x, y), (50.5, 50.5))
+            self.assertTrue(agent._reachable[int(x), int(y)])
+            self.assertGreaterEqual(agent._safe_margin(obs, x, y), 2.)
+            self.assertIsNone(DijkstraAgent()._reachable)
+            agent.reset()
+            self.assertIsNone(agent._reachable)
+
+        def test_dijkstra_route_prefers_a_safe_detour(self):
+            from core.pathfinding import astar
+            obs = FullObservationEncoder(Engine(seed=81000)).encode(0)
+            obs["map"][:3] = 0
+            obs["map"][0, 50, 30:56] = 1
+            obs["game"][3] = 0.4
+            solid = obs["map"][0].astype(bool)
+            shortcut = astar(solid, 40.5, 31.5, 60.5, 31.5)
+            self.assertTrue(any(y < 30 for _, y in shortcut))
+            route = DijkstraAgent()._plan_path(solid, obs, 40.5, 31.5, 60.5, 31.5)
+            self.assertTrue(route)
+            self.assertTrue(all(30 <= x <= 69 and 30 <= y <= 69 for x, y in route))
+
+        def test_dijkstra_pickups_do_not_lure_it_outside_the_safe_zone(self):
+            obs = FullObservationEncoder(Engine(seed=81000)).encode(0)
+            obs["self"][:2] = np.asarray([40., 40.]) / 50 - 1
+            obs["self"][4] = 0.
+            obs["game"][3] = 0.4
+            obs["powerup_mask"][0] = 1
+            obs["powerups"][0] = [20.5 / 50 - 1, 40.5 / 50 - 1, 1, 1, 0, 0, 0]
+            agent = DijkstraAgent()
+            self.assertIsNone(agent._powerup_target(obs))
+            obs["powerups"][0, 0] = 42.5 / 50 - 1
+            self.assertIsNotNone(agent._powerup_target(obs))
+
     result = unittest.TextTestRunner(verbosity=0).run(
-        unittest.defaultTestLoader.loadTestsFromTestCase(StrafeTests))
+        unittest.defaultTestLoader.loadTestsFromTestCase(SpecialistTests))
     assert result.wasSuccessful(), "specialist policy regressions failed"
     ok(f"unified specialist profiles and training ({result.testsRun} regressions)")
 

@@ -67,6 +67,8 @@ def run_visual_match(
     algo1_weights: str | None = None,
     algo2_script: str | None = None,
     algo2_weights: str | None = None,
+    bot2_seed: int | None = None,
+    swap_spawns: bool = False,
 ) -> dict:
     """Run one rendered match and return its winner/lives summary."""
     import pygame
@@ -78,10 +80,13 @@ def run_visual_match(
     font = pygame.font.Font(None, 28)
     small = pygame.font.Font(None, 22)
     engine = Engine(seed=seed, map_seed=seed)
+    if swap_spawns:
+        engine.reset(swap_spawns=True)
     encoder = FullObservationEncoder(engine, max_seconds)
     controllers = [
         _controller(player1, 0, algo1_folder, seed + 11, algo1_script, algo1_weights),
-        _controller(player2, 1, algo2_folder, seed + 22, algo2_script, algo2_weights),
+        _controller(player2, 1, algo2_folder, seed + 22 if bot2_seed is None else bot2_seed,
+                    algo2_script, algo2_weights),
     ]
     for controller in controllers:
         if hasattr(controller, "reset"):
@@ -172,6 +177,8 @@ def main() -> None:
     parser.add_argument("--algo2-script", help="Explicit custom policy script (outside a contest folder)")
     parser.add_argument("--algo2-weights", help="Weights passed to the explicit player 2 script")
     parser.add_argument("--seed", type=int, default=100)
+    parser.add_argument("--bot2-seed", type=int, help="Override player 2 bot RNG; evaluations use map seed + 1")
+    parser.add_argument("--swap-spawns", action="store_true", help="Swap spawn sides as in paired evaluations")
     parser.add_argument("--max-seconds", type=float, default=C.MAX_EPISODE_SECONDS)
     parser.add_argument("--fps", type=int, default=60)
     parser.add_argument("--exit-on-finish", action="store_true")
@@ -182,6 +189,8 @@ def main() -> None:
         algo1_script=args.algo1_script, algo1_weights=args.algo1_weights,
         algo2_script=args.algo2_script, algo2_weights=args.algo2_weights,
         seed=args.seed, max_seconds=args.max_seconds, fps=args.fps,
+        bot2_seed=args.bot2_seed,
+        swap_spawns=args.swap_spawns,
         linger=not args.exit_on_finish)
     print(summary)
 

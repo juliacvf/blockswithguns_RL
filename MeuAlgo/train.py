@@ -25,8 +25,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(HERE))
 
-from algo1 import (Agent, NUM_OPTIONS, STRAFE_PROFILE, CHASE, POWERUP, SAFE_CENTER,
-                   policy_class, strafe_potential, _world_xy)  # noqa: E402
+from algo1 import CHASE, POWERUP, SAFE_CENTER, policy_class, _world_xy  # noqa: E402
 from bots import BOT_NAMES  # noqa: E402
 from rl.bot_training_env import BlocksWithGunsBotTrainingEnv  # noqa: E402
 from rl.progress import TrainingProgress  # noqa: E402
@@ -129,7 +128,7 @@ def train(episodes: int, opponent: str, seed: int,
           profile: str = "general") -> np.ndarray:
     policy = policy_class(profile)()
     profile = policy.profile
-    specialist = profile == STRAFE_PROFILE
+    specialist = policy.learned_tactics
     q = policy.q
     visits = np.zeros_like(q, dtype=np.uint32 if specialist else np.uint16)
     completed_episodes = 0
@@ -193,24 +192,21 @@ def train(episodes: int, opponent: str, seed: int,
         done = False
         while not done:
             key = policy.state_key(obs)
+            options = policy.available_options(obs)
             if rng.random() < epsilon:
-                option = int(rng.integers(NUM_OPTIONS))
+                option = int(options[rng.integers(len(options))])
             else:
-                option = int(np.argmax(q[key]))
+                option = policy.best_option(obs, key)
             learned_reward = episode_reward = 0.0
             discount = 1.0
-            before_potential = strafe_potential(obs) if specialist else 0.0
-            context = (key[1], key[2], key[5], key[7]) if specialist else None
+            before_potential = policy.learning_potential(obs) if specialist else 0.0
+            context = policy.learning_context(key), tuple(options)
             for _ in range(policy.decision_ticks):
                 action = policy.action_for_option(obs, option)
                 next_obs, reward, terminated, truncated, step_info = env.step(action)
                 extra = 0.0
                 if specialist:
-                    for event in step_info["events"]:
-                        if event[0] == "hit":
-                            extra += 0.5 if event[2] == 0 else -0.5
-                        elif event[0] == "heat_hit" and event[1] == 0:
-                            extra -= 0.5
+                    extra = policy.learning_extra_reward(step_info["events"])
                 else:
                     extra = _shaping(obs, next_obs)
                 learned_reward += discount * (reward + extra)
@@ -218,18 +214,18 @@ def train(episodes: int, opponent: str, seed: int,
                 discount *= gamma
                 obs = next_obs
                 next_key = policy.state_key(obs)
-                next_context = (next_key[1], next_key[2], next_key[5], next_key[7]) if specialist else None
+                next_context = policy.learning_context(next_key), tuple(policy.available_options(obs))
                 if terminated or truncated or next_context != context:
                     break
             if specialist:
-                learned_reward += discount * (0.0 if terminated or truncated else strafe_potential(obs)) - before_potential
+                learned_reward += discount * (0.0 if terminated or truncated else policy.learning_potential(obs)) - before_potential
             index = key + (option,)
             visits[index] = min(np.iinfo(visits.dtype).max, int(visits[index]) + 1)
             # gentle learning rate: noisy long-episode targets must not
             # trample the heuristic priors in rarely visited states
             alpha = max(0.005 if specialist else 0.03,
                         alpha_start / (1.0 + int(visits[index]) * (0.02 if specialist else 0.01)))
-            future = 0.0 if terminated or truncated else float(np.max(q[next_key]))
+            future = 0.0 if terminated or truncated else float(np.max(q[next_key][policy.available_options(obs)]))
             target = learned_reward + discount * future
             q[key + (option,)] += alpha * (target - q[key + (option,)])
             total_reward += episode_reward
@@ -255,7 +251,7 @@ def main() -> None:
     parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default="dijkstra")
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--profile", choices=("auto", "general", "strafe"), default="auto")
+    parser.add_argument("--profile", choices=("auto", "general", "strafe", "dijkstra"), default="auto")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--eval-episodes", type=int, default=10)
@@ -267,8 +263,9 @@ def main() -> None:
 
     if min(args.episodes, args.eval_episodes) < 1:
         parser.error("episode counts must be positive")
-    args.output = args.output or (HERE / "weights/especialistas/strafe.npz" if args.profile == "strafe" else DEFAULT_WEIGHTS)
-    profile = STRAFE_PROFILE if args.profile == "strafe" else "general"
+    args.output = args.output or (HERE / "weights/especialistas" / (args.profile + ".npz")
+                                if args.profile in ("strafe", "dijkstra") else DEFAULT_WEIGHTS)
+    profile = policy_class("general" if args.profile == "auto" else args.profile).profile
     if args.evaluate_only or args.resume:
         if not args.output.is_file():
             parser.error(f"weights not found: {args.output}; train first")
@@ -277,8 +274,9 @@ def main() -> None:
         if args.profile != "auto" and saved_profile != profile:
             parser.error("selected profile does not match the checkpoint")
         profile = saved_profile
-    epsilon = args.epsilon if args.epsilon is not None else (0.20 if profile == STRAFE_PROFILE else 0.25)
-    alpha = args.alpha if args.alpha is not None else (0.04 if profile == STRAFE_PROFILE else 0.12)
+    specialist = policy_class(profile).learned_tactics
+    epsilon = args.epsilon if args.epsilon is not None else (0.20 if specialist else 0.25)
+    alpha = args.alpha if args.alpha is not None else (0.04 if specialist else 0.12)
 
     if args.evaluate_only:
         q = np.load(args.output, allow_pickle=False)["q"]
