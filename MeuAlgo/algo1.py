@@ -762,6 +762,9 @@ class DijkstraAgent(StrafeAgent):
     profile = DIJKSTRA_PROFILE
     q_shape = DIJKSTRA_Q_SHAPE
     preferred_range = 13.0
+    return_safety_seconds = 8.
+    return_release_margin = 8.
+    return_lookahead_seconds = 20.
 
     def initial_q(self):
         return dijkstra_default_q()
@@ -795,7 +798,7 @@ class DijkstraAgent(StrafeAgent):
                     C.PLAYER_SPEED * C.SPEED_MULTIPLIER)
         speed = max(speed, .1)
         now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
-        lookahead = min(20., max(0., C.MAX_EPISODE_SECONDS - now))
+        lookahead = min(self.return_lookahead_seconds, max(0., C.MAX_EPISODE_SECONDS - now))
         target_margin = 8. + C.HEAT_SHRINK_RATE * lookahead
         arrival = {start: 0.}
         came = {}
@@ -844,7 +847,10 @@ class DijkstraAgent(StrafeAgent):
         if margin >= 16. and not self._returning:
             return False
         path, slack = self._forecast_return(obs)
-        needed = slack < 8. or margin < 2. or (self._returning and margin < 8.)
+        release_margin = min(self.return_release_margin, 8. + C.HEAT_SHRINK_RATE *
+                             min(self.return_lookahead_seconds, max(0., C.MAX_EPISODE_SECONDS - now)))
+        needed = (slack < self.return_safety_seconds or margin < 2.
+                  or (self._returning and margin < release_margin))
         if needed and not path:
             path, _ = self._forecast_return(obs, allow_heat=True)
         if needed and not self._returning:
@@ -1224,6 +1230,280 @@ class AStarAgent(DijkstraAgent):
         return self._aim_after_move(obs, *move)
 
 
+MARKOV_PROFILE = "markov_v1"
+BREAK_PATTERN = NUM_OPTIONS
+MARKOV_NUM_OPTIONS = NUM_OPTIONS + 1
+# distance, sight, threat, health, score, heat, enemy radial motion,
+# enemy turn, our projectile pressure, predictable own motion, enemy heat, late.
+MARKOV_STATE_SHAPE = (5, 2, 3, 2, 3, 3, 3, 2, 2, 2, 2, 2)
+MARKOV_Q_SHAPE = MARKOV_STATE_SHAPE + (MARKOV_NUM_OPTIONS,)
+
+
+def markov_default_q():
+    q = np.zeros(MARKOV_Q_SHAPE, dtype=np.float32)
+    for key in np.ndindex(MARKOV_STATE_SHAPE):
+        distance, sight, threat, health, score, heat, radial, turn, pressure, predictable, enemy_heat, late = key
+        engaging = sight and distance <= 3
+        q[key + (CHASE,)] = .75 if not sight or distance >= 3 else .50 if distance == 2 else .15
+        if pressure and turn and distance >= 2:
+            q[key + (CHASE,)] += .20
+        q[key + (STRAFE_LEFT,)] = .65 if engaging else .05
+        q[key + (STRAFE_RIGHT,)] = .65 if engaging else .05
+        q[key + (HOLD,)] = .72 if sight and distance in (1, 2) and not turn and not pressure else .05
+        q[key + (RETREAT,)] = .95 if sight and distance == 0 else .25 if health == 0 else .02
+        q[key + (EVADE,)] = (.05, .90, 1.50)[threat]
+        q[key + (POWERUP,)] = .55 if health == 0 else .10
+        q[key + (SAFE_CENTER,)] = (1.6, .95, .02)[heat]
+        if enemy_heat and score >= 1:
+            q[key + (SAFE_CENTER,)] += .95
+        q[key + (BREAK_PATTERN,)] = .95 if predictable and sight and distance in (1, 2, 3) else .08
+        if late and score == 0 and not engaging:
+            q[key + (CHASE,)] += .15
+    return q
+
+
+class MarkovAgent(DijkstraAgent):
+    """Vary established motion using public history while respecting danger."""
+    profile = MARKOV_PROFILE
+    q_shape = MARKOV_Q_SHAPE
+    preferred_range = 11.0
+    return_safety_seconds = 12.
+    return_release_margin = 18.
+    return_lookahead_seconds = 40.
+    option_names = OPTION_NAMES + ("break_pattern",)
+
+    def initial_q(self):
+        return markov_default_q()
+
+    def reset(self):
+        super().reset()
+        self._pattern_tick = None
+        self._own_motion = deque()
+        self._last_break = -1e9
+        self._break_until = -1.
+        self._break_vector = (0., 0.)
+        self._pattern_breaks = 0
+
+    def observe(self, obs):
+        super().observe(obs)
+        if self._pattern_tick == self._observed_tick:
+            return
+        self._pattern_tick = self._observed_tick
+        now = self._previous_time
+        position = _world_xy(obs["self"])
+        if self._own_motion and math.dist(position, self._own_motion[-1][1]) > 1.:
+            self._own_motion.clear()
+            self._last_break = -1e9
+            self._break_until = -1.
+        self._own_motion.append((now, position))
+        while len(self._own_motion) > 1 and self._own_motion[1][0] < now - .85:
+            self._own_motion.popleft()
+
+    def _predictable_motion(self):
+        rows = self._own_motion
+        if len(rows) < 2 or rows[-1][0] - rows[0][0] < .65:
+            return False
+        positions = [r[1] for r in rows]
+        net = math.dist(positions[0], positions[-1])
+        travelled = sum(math.dist(a, b) for a, b in zip(positions, positions[1:]))
+        return travelled < .25 or (net > .6 and net >= .9 * travelled)
+
+    @staticmethod
+    def _target_under_pressure(obs):
+        ex, ey = _world_xy(obs["opponent"])
+        for row, valid in zip(obs["bullets"], obs["bullet_mask"]):
+            if valid < .5 or row[4] <= 0:
+                continue
+            bx, by = _world_xy(row)
+            vx, vy = float(row[2]) * C.BULLET_SPEED, float(row[3]) * C.BULLET_SPEED
+            vv = vx * vx + vy * vy
+            if vv < 1e-6:
+                continue
+            t = ((ex - bx) * vx + (ey - by) * vy) / vv
+            remaining = C.BULLET_RANGE * (1. - (float(row[6]) + 1.) * .5)
+            if 0 < t < .9 and t * C.BULLET_SPEED <= remaining:
+                if math.hypot(ex - bx - vx * t, ey - by - vy * t) < 3.:
+                    return True
+        return False
+
+    def state_key(self, obs):
+        self.observe(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        band = next((i for i, edge in enumerate((8., 12., 17., 22.)) if distance < edge), 4)
+        radial_speed = (dx * self._motion_velocity[0] + dy * self._motion_velocity[1]) / distance
+        radial = 0 if radial_speed < -.5 else 2 if radial_speed > .5 else 1
+        mine, enemy = _lives(obs["self"]), _lives(obs["opponent"])
+        return (band, int(obs["self"][14] > 0), _bullet_threat(obs), int(mine > 3),
+                1 + int(mine > enemy) - int(mine < enemy), _heat_band(obs), radial,
+                int(self._previous_time < self._turn_until), int(self._target_under_pressure(obs)),
+                int(self._predictable_motion()), int(obs["opponent"][12] > 0),
+                int(obs["game"][0] >= .8))
+
+    def learning_context(self, key):
+        return key[1], key[2], key[5], key[6], key[7], key[8], key[9], key[10]
+
+    def available_options(self, obs):
+        common = super().available_options(obs)
+        if len(common) == 1:
+            return common
+        now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
+        if now < self._break_until or now - self._last_break >= 1.2:
+            return np.arange(MARKOV_NUM_OPTIONS)
+        return common
+
+    def _choose_break_vector(self, obs):
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        first, last = self._own_motion[0], self._own_motion[-1]
+        vx, vy = last[1][0] - first[1][0], last[1][1] - first[1][1]
+        if math.hypot(vx, vy) < .3:
+            vx, vy = ex - sx, ey - sy
+        norm = max(math.hypot(vx, vy), 1e-6)
+        candidates = []
+        aim_x, aim_y = float(obs["opponent"][3]), float(obs["opponent"][2])
+        for side in (-1, 1):
+            dx, dy = -side * vy / norm, side * vx / norm
+            mx, my = self._safe_move(obs, dx, dy)
+            x, y = self._step_position(obs, mx, my)
+            if math.dist((sx, sy), (x, y)) < .03 or self._safe_margin(obs, x, y) < 2.5:
+                continue
+            # Prefer leaving the opponent's current firing lane without
+            # entering a wall or accepting unnecessary range changes.
+            px, py = sx + (x - sx) * 6, sy + (y - sy) * 6
+            lane = abs((px - ex) * aim_y - (py - ey) * aim_x)
+            score = min(lane, 3.) - .06 * abs(math.hypot(ex - px, ey - py) - self.preferred_range)
+            score -= .1 * float(obs["map"][2, int(x), int(y)])
+            candidates.append((score, side, dx, dy))
+        if not candidates:
+            return None
+        _, _, dx, dy = max(candidates)
+        return dx, dy
+
+    def _defensive_move(self, obs, baseline):
+        """Compare reachable short trajectories, including during safe return."""
+        sx, sy = _world_xy(obs["self"])
+        horizon = .6
+        projectiles = []
+        for row, valid in zip(obs["bullets"], obs["bullet_mask"]):
+            if valid < .5 or row[4] > 0:
+                continue
+            bx, by = _world_xy(row)
+            vx, vy = float(row[2]) * C.BULLET_SPEED, float(row[3]) * C.BULLET_SPEED
+            remaining = C.BULLET_RANGE * (1. - (float(row[6]) + 1.) * .5)
+            if math.hypot(sx - bx, sy - by) > min(remaining, C.BULLET_SPEED * horizon) + 3.:
+                continue
+            # Walls stop bullets; trees only constrain our body.
+            flight = []
+            for tick in range(1, round(horizon / C.FIXED_DT) + 1):
+                time = tick * C.FIXED_DT
+                if C.BULLET_SPEED * time >= remaining:
+                    break
+                x, y = bx + vx * time, by + vy * time
+                px, py = bx + vx * (time - C.FIXED_DT), by + vy * (time - C.FIXED_DT)
+                samples = max(1, math.ceil(math.hypot(x - px, y - py) / .2))
+                if any(not (0 <= qx < C.WORLD and 0 <= qy < C.WORLD)
+                       or obs["map"][0, int(qx), int(qy)]
+                       for qx, qy in ((px + (x - px) * i / samples,
+                                       py + (y - py) * i / samples)
+                                      for i in range(samples + 1))):
+                    break
+                flight.append((px, py, x, y))
+            if flight:
+                projectiles.append(flight)
+        if not projectiles:
+            return baseline
+
+        solid = np.logical_or(obs["map"][0], obs["map"][1])
+        speed = (float(obs["self"][13]) + 1.) * .5 * C.PLAYER_SPEED * C.SPEED_MULTIPLIER
+        radius = C.PLAYER_RADIUS
+
+        def blocked(x, y):
+            for cx in range(math.floor(x - radius), math.floor(x + radius) + 1):
+                for cy in range(math.floor(y - radius), math.floor(y + radius) + 1):
+                    if not (0 <= cx < C.GRID_SIZE and 0 <= cy < C.GRID_SIZE):
+                        return True
+                    if solid[cx, cy] and ((x - min(max(x, cx), cx + 1)) ** 2
+                                         + (y - min(max(y, cy), cy + 1)) ** 2 < radius ** 2):
+                        return True
+            return False
+
+        def trajectory(move):
+            mx, my = move
+            norm = max(math.hypot(mx, my), 1.)
+            x, y = sx, sy
+            positions = []
+            for _ in range(round(horizon / C.FIXED_DT)):
+                step = speed * C.FIXED_DT * (C.MUD_SLOW if obs["map"][2, int(x), int(y)] else 1.)
+                nx = x + mx / norm * step
+                if not blocked(nx, y):
+                    x = nx
+                ny = y + my / norm * step
+                if not blocked(x, ny):
+                    y = ny
+                positions.append((x, y))
+            risk = 0.
+            for flight in projectiles:
+                closest = float("inf")
+                for (x, y), (bx, by, ex, ey) in zip(positions, flight):
+                    dx, dy = ex - bx, ey - by
+                    along = max(0., min(1., ((x - bx) * dx + (y - by) * dy) / max(dx * dx + dy * dy, 1e-9)))
+                    closest = min(closest, math.hypot(x - bx - along * dx, y - by - along * dy))
+                risk += max(0., .75 - closest) / .75
+                if closest < C.PLAYER_RADIUS + C.BULLET_RADIUS + .03:
+                    risk += 4.
+            return positions[-1], risk
+
+        base_end, base_risk = trajectory(baseline)
+        if base_risk == 0:
+            return baseline
+        candidates = []
+        for my in (-1, 0, 1):
+            for mx in (-1, 0, 1):
+                end, risk = trajectory((mx, my))
+                # Do not trade a dodge for a prolonged retreat into heat.
+                heat_loss = max(0., self._safe_margin(obs, *base_end) - self._safe_margin(obs, *end))
+                deviation = math.dist(end, base_end)
+                score = risk * 10. + heat_loss * (2. if self._returning else .3) + .2 * deviation
+                candidates.append((score, (mx, my) != baseline, mx * mx + my * my, mx, my, risk))
+        _, _, _, mx, my, risk = min(candidates)
+        return (mx, my) if risk < base_risk - .05 else baseline
+
+    def action_for_option(self, obs, option):
+        action = self._pattern_action(obs, option)
+        baseline = int(action[0]) % 3 - 1, int(action[0]) // 3 - 1
+        move = self._defensive_move(obs, baseline)
+        return action if move == baseline else self._aim_after_move(obs, *move)
+
+    def _pattern_action(self, obs, option):
+        if option != BREAK_PATTERN:
+            return super().action_for_option(obs, option)
+        self.observe(obs)
+        options = self.available_options(obs)
+        if BREAK_PATTERN not in options:
+            fallback = SAFE_CENTER if len(options) == 1 else self.best_option(obs)
+            return super().action_for_option(obs, fallback)
+        if self._return_needed(obs):
+            return super().action_for_option(obs, SAFE_CENTER)
+        move = self._combat_move(obs)
+        if move is not None:
+            return self._aim_after_move(obs, *move)
+        if _bullet_threat(obs) == 2:
+            return super().action_for_option(obs, EVADE)
+        now = self._previous_time
+        if now >= self._break_until:
+            vector = self._choose_break_vector(obs)
+            if vector is None:
+                return super().action_for_option(obs, EVADE)
+            self._break_vector = vector
+            self._last_break = now
+            self._break_until = now + .4
+            self._pattern_breaks += 1
+        return self._aim_after_move(obs, *self._safe_move(obs, *self._break_vector))
+
+
 def policy_class(profile):
     """Select an implementation by checkpoint schema, never by opponent identity."""
     if profile == "general":
@@ -1234,6 +1514,8 @@ def policy_class(profile):
         return DijkstraAgent
     if profile in ("astar", ASTAR_PROFILE):
         return AStarAgent
+    if profile in ("markov", MARKOV_PROFILE):
+        return MarkovAgent
     raise ValueError(f"unsupported policy profile: {profile}")
 
 

@@ -251,7 +251,7 @@ def main() -> None:
     parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default="dijkstra")
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--profile", choices=("auto", "general", "strafe", "dijkstra", "astar"), default="auto")
+    parser.add_argument("--profile", choices=("auto", "general", "strafe", "dijkstra", "astar", "markov"), default="auto")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--eval-episodes", type=int, default=10)
@@ -264,7 +264,7 @@ def main() -> None:
     if min(args.episodes, args.eval_episodes) < 1:
         parser.error("episode counts must be positive")
     args.output = args.output or (HERE / "weights/especialistas" / (args.profile + ".npz")
-                                if args.profile in ("strafe", "dijkstra", "astar") else DEFAULT_WEIGHTS)
+                                if args.profile in ("strafe", "dijkstra", "astar", "markov") else DEFAULT_WEIGHTS)
     profile = policy_class("general" if args.profile == "auto" else args.profile).profile
     if args.evaluate_only or args.resume:
         if not args.output.is_file():

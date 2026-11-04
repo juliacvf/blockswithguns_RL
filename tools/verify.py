@@ -426,11 +426,166 @@ def test_specialist_policies():
     from rl.full_observation import FullObservationEncoder
     from rl.actions import validate_action, MOVE_LUT
     from MeuAlgo.algo1 import (StrafeAgent as Agent, DijkstraAgent, STRAFE_PROFILE as PROFILE,
-                              AStarAgent, ASTAR_PROFILE, DIJKSTRA_PROFILE, intercept_time,
+                              AStarAgent, MarkovAgent, ASTAR_PROFILE, MARKOV_PROFILE,
+                              DIJKSTRA_PROFILE, intercept_time, BREAK_PATTERN,
                               CHASE, RETREAT, STRAFE_LEFT, EVADE, SAFE_CENTER)
     ROOT = Path(__file__).resolve().parents[1]
 
     class SpecialistTests(unittest.TestCase):
+        def test_markov_finishes_return_before_resuming_pursuit(self):
+            obs = FullObservationEncoder(Engine(seed=102000)).encode(0)
+            obs["map"][:3] = 0
+            obs["game"][3] = .5
+            obs["self"][:2] = np.asarray([36.5, 50.5]) / 50 - 1
+            previous, policy = DijkstraAgent(), MarkovAgent()
+            previous._returning = policy._returning = True
+            self.assertFalse(previous._return_needed(obs))
+            self.assertTrue(policy._return_needed(obs))
+            obs["game"][0] = 1. / C.MAX_EPISODE_SECONDS
+            obs["self"][:2] = np.asarray([44.5, 50.5]) / 50 - 1
+            self.assertFalse(policy._return_needed(obs))
+
+        def test_markov_return_goal_survives_a_longer_zone_horizon(self):
+            obs = FullObservationEncoder(Engine(seed=102000)).encode(0)
+            obs["map"][:3] = 0
+            obs["game"][3] = .5
+            obs["self"][:2] = np.asarray([30.5, 50.5]) / 50 - 1
+            policy = MarkovAgent()
+            path, _ = policy._forecast_return(obs)
+            self.assertTrue(path)
+            eta = (len(path) - 1) / C.PLAYER_SPEED
+            x, y = path[-1]
+            future_margin = policy._safe_margin(obs, x + .5, y + .5) - C.HEAT_SHRINK_RATE * (eta + 40.)
+            self.assertGreaterEqual(future_margin, 8.)
+
+        def test_markov_can_resume_combat_near_the_time_limit(self):
+            obs = FullObservationEncoder(Engine(seed=102000)).encode(0)
+            obs["map"][:3] = 0
+            obs["game"][0] = 100. / C.MAX_EPISODE_SECONDS
+            obs["game"][3] = .5
+            obs["self"][:2] = np.asarray([39.5, 50.5]) / 50 - 1
+            policy = MarkovAgent()
+            policy._returning = True
+            self.assertFalse(policy._return_needed(obs))
+
+        def test_markov_dodges_during_safe_return_beside_a_wall(self):
+            from core.engine import Bullet
+            from core.mapgen import GameMap
+            from rl.actions import to_engine_action
+
+            def scenario(dodge):
+                grid = np.zeros((100, 100), dtype=np.uint8)
+                grid[40:60, 51] = 1  # The downward dodge is blocked.
+                engine = Engine(seed=3, game_map=GameMap(grid))
+                engine.players[0].x, engine.players[0].y = 50.5, 50.5
+                engine.players[1].x, engine.players[1].y = 44.5, 50.5
+                engine.bullets = [Bullet(46.5, 50.5, C.BULLET_SPEED, 0., 1)]
+                encoder = FullObservationEncoder(engine)
+                policy = MarkovAgent()
+                policy._return_needed = lambda obs: True
+                policy._returning = True
+                policy._return_goal = (40.5, 50.5)
+                fired = False
+                for _ in range(15):
+                    obs = encoder.encode(0)
+                    action = policy.action_for_option(obs, SAFE_CENTER)
+                    fired |= bool(action[2])
+                    if dodge:
+                        move = to_engine_action(action)
+                    else:
+                        move = Action(move_x=-1.)
+                    engine.step((move, Action()))
+                return engine.players[0], fired
+
+            old, _ = scenario(False)
+            defended, fired = scenario(True)
+            self.assertEqual(old.lives, C.PLAYER_LIVES - 1)
+            self.assertEqual(defended.lives, C.PLAYER_LIVES)
+            self.assertLess(defended.x, 50.5)  # Still advances toward the safe goal.
+            self.assertLess(defended.y, 50.5)  # Uses the open side of the wall.
+            self.assertTrue(fired)
+
+        def test_markov_keeps_movement_for_owned_spent_and_occluded_bullets(self):
+            obs = FullObservationEncoder(Engine(seed=102000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([50.5, 50.5]) / 50 - 1
+            obs["bullet_mask"][:] = 0
+            obs["bullet_mask"][0] = 1
+            obs["bullets"][0] = [46.5 / 50 - 1, 50.5 / 50 - 1, 1, 0, 1, 1, -1]
+            policy = MarkovAgent()
+            self.assertEqual(policy._defensive_move(obs, (-1, 0)), (-1, 0))
+            obs["bullets"][0, 4] = -1
+            obs["bullets"][0, 6] = .99  # Expires before reaching the player.
+            self.assertEqual(policy._defensive_move(obs, (-1, 0)), (-1, 0))
+            obs["bullets"][0, 6] = -1
+            obs["map"][0, 48, 50] = 1
+            self.assertEqual(policy._defensive_move(obs, (-1, 0)), (-1, 0))
+
+        def test_markov_recognizes_straight_motion_and_forgets_teleports(self):
+            encoder = FullObservationEncoder(Engine(seed=102000))
+            for style, expected in (("straight", True), ("turn", False), ("still", True)):
+                policy = MarkovAgent()
+                for tick in range(27):
+                    obs = encoder.encode(0)
+                    obs["game"][0] = tick / 3600
+                    obs["game"][2] = tick / 3600
+                    if style == "straight":
+                        x, y = 40.5 + tick * .1, 50.5
+                    elif style == "turn":
+                        x, y = 40.5 + min(tick, 13) * .1, 50.5 + max(0, tick - 13) * .1
+                    else:
+                        x, y = 40.5, 50.5
+                    obs["self"][:2] = np.asarray([x, y]) / 50 - 1
+                    policy.observe(obs)
+                self.assertEqual(policy._predictable_motion(), expected)
+                obs["game"][0] += 1 / 3600
+                obs["game"][2] += 1 / 3600
+                obs["self"][:2] = np.asarray([80.5, 70.5]) / 50 - 1
+                policy.observe(obs)
+                self.assertFalse(policy._predictable_motion())
+
+        def test_markov_pressure_uses_live_own_projectiles_and_remaining_range(self):
+            obs = FullObservationEncoder(Engine(seed=102000)).encode(0)
+            obs["opponent"][:2] = np.asarray([54.5, 50.5]) / 50 - 1
+            obs["bullet_mask"][:] = 0
+            obs["bullet_mask"][0] = 1
+            obs["bullets"][0] = [49.5 / 50 - 1, 50.5 / 50 - 1, 1, 0, 1, 1, 0]
+            self.assertTrue(MarkovAgent._target_under_pressure(obs))
+            obs["bullets"][0, 2] = -1
+            self.assertFalse(MarkovAgent._target_under_pressure(obs))
+            obs["bullets"][0, 2] = 1
+            obs["bullets"][0, 6] = .9
+            self.assertFalse(MarkovAgent._target_under_pressure(obs))
+            obs["bullets"][0, 6] = 0
+            obs["bullets"][0, 4] = -1
+            self.assertFalse(MarkovAgent._target_under_pressure(obs))
+
+        def test_markov_pattern_break_is_committed_bounded_and_yields_to_safety(self):
+            obs = FullObservationEncoder(Engine(seed=102000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40.5, 50.5]) / 50 - 1
+            obs["opponent"][:2] = np.asarray([54.5, 50.5]) / 50 - 1
+            obs["bullet_mask"][:] = 0
+            policy = MarkovAgent()
+            self.assertIn(BREAK_PATTERN, policy.available_options(obs))
+            action = policy.action_for_option(obs, BREAK_PATTERN)
+            validate_action(action)
+            self.assertNotEqual(int(action[0]), 4)
+            vector = policy._break_vector
+            self.assertEqual(policy._pattern_breaks, 1)
+            obs["game"][0] = .1 / C.MAX_EPISODE_SECONDS
+            obs["game"][2] = .1 / C.MAX_EPISODE_SECONDS
+            validate_action(policy.action_for_option(obs, BREAK_PATTERN))
+            self.assertEqual(policy._break_vector, vector)
+            self.assertEqual(policy._pattern_breaks, 1)
+            obs["game"][0] = .6 / C.MAX_EPISODE_SECONDS
+            self.assertNotIn(BREAK_PATTERN, policy.available_options(obs))
+            obs["game"][0] = 1.3 / C.MAX_EPISODE_SECONDS
+            self.assertIn(BREAK_PATTERN, policy.available_options(obs))
+            obs["game"][3] = .4
+            obs["self"][0] = 31.5 / 50 - 1
+            self.assertEqual(policy.available_options(obs).tolist(), [SAFE_CENTER])
+
         def test_astar_spacing_distinguishes_an_advancing_and_retreating_enemy(self):
             obs = FullObservationEncoder(Engine(seed=92000)).encode(0)
             obs["map"][:3] = 0
@@ -734,10 +889,11 @@ def test_specialist_policies():
             from MeuAlgo.train import train
             from MeuAlgo.algo1 import make_agent
             with tempfile.TemporaryDirectory() as tmp:
-                for profile in ("general", PROFILE, DIJKSTRA_PROFILE, ASTAR_PROFILE):
+                for profile in ("general", PROFILE, DIJKSTRA_PROFILE, ASTAR_PROFILE, MARKOV_PROFILE):
                     path = Path(tmp) / (profile + ".npz")
                     with redirect_stdout(StringIO()):
-                        opponent = "astar" if profile == ASTAR_PROFILE else "dijkstra" if profile == DIJKSTRA_PROFILE else "strafe"
+                        opponent = ("markov" if profile == MARKOV_PROFILE else "astar" if profile == ASTAR_PROFILE
+                                    else "dijkstra" if profile == DIJKSTRA_PROFILE else "strafe")
                         q = train(1, opponent,
                                   70000, path, False, 0., 0.01, profile=profile)
                     restored = make_agent(path)
