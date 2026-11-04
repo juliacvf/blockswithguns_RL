@@ -426,10 +426,44 @@ def test_specialist_policies():
     from rl.full_observation import FullObservationEncoder
     from rl.actions import validate_action, MOVE_LUT
     from MeuAlgo.algo1 import (StrafeAgent as Agent, DijkstraAgent, STRAFE_PROFILE as PROFILE,
-                              DIJKSTRA_PROFILE, intercept_time, CHASE, EVADE, SAFE_CENTER)
+                              AStarAgent, ASTAR_PROFILE, DIJKSTRA_PROFILE, intercept_time,
+                              CHASE, RETREAT, STRAFE_LEFT, EVADE, SAFE_CENTER)
     ROOT = Path(__file__).resolve().parents[1]
 
     class SpecialistTests(unittest.TestCase):
+        def test_astar_spacing_distinguishes_an_advancing_and_retreating_enemy(self):
+            obs = FullObservationEncoder(Engine(seed=92000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40.5, 50.5]) / 50 - 1
+            obs["opponent"][:2] = np.asarray([54.5, 50.5]) / 50 - 1
+            obs["self"][14] = 1
+            policy = AStarAgent()
+            policy.observe(obs)
+            policy._motion_velocity = (-3.5, 0.)
+            self.assertEqual(policy.state_key(obs)[6], 0)
+            action = policy.action_for_option(obs, STRAFE_LEFT)
+            validate_action(action)
+            self.assertLess(int(action[0]) % 3 - 1, 0)
+            policy._motion_velocity = (3.5, 0.)
+            self.assertEqual(policy.state_key(obs)[6], 2)
+            action = policy.action_for_option(obs, STRAFE_LEFT)
+            self.assertGreater(int(action[0]) % 3 - 1, 0)
+
+        def test_astar_close_range_retreat_interrupts_for_an_incoming_bullet(self):
+            obs = FullObservationEncoder(Engine(seed=92000)).encode(0)
+            obs["map"][:3] = 0
+            obs["self"][:2] = np.asarray([40.5, 50.5]) / 50 - 1
+            obs["opponent"][:2] = np.asarray([46.5, 50.5]) / 50 - 1
+            obs["self"][14] = 1
+            obs["bullet_mask"][:] = 0
+            policy = AStarAgent()
+            self.assertEqual(policy.option(obs), RETREAT)
+            obs["game"][0] += 1 / 3600
+            obs["game"][2] += 1 / 3600
+            obs["bullet_mask"][0] = 1
+            obs["bullets"][0] = [44.5 / 50 - 1, 50.5 / 50 - 1, -1, 0, -1, 1, -1]
+            self.assertEqual(policy.option(obs), EVADE)
+
         def test_dijkstra_return_destination_remains_safe_after_arrival(self):
             obs = FullObservationEncoder(Engine(seed=85000)).encode(0)
             obs["map"][:3] = 0
@@ -694,16 +728,17 @@ def test_specialist_policies():
             self.assertGreater(math.dist(start, (player.x, player.y)), 0.05)
 
 
-        def test_unified_training_roundtrip_for_both_profiles(self):
+        def test_unified_training_roundtrip_for_all_profiles(self):
             from contextlib import redirect_stdout
             from io import StringIO
             from MeuAlgo.train import train
             from MeuAlgo.algo1 import make_agent
             with tempfile.TemporaryDirectory() as tmp:
-                for profile in ("general", PROFILE, DIJKSTRA_PROFILE):
+                for profile in ("general", PROFILE, DIJKSTRA_PROFILE, ASTAR_PROFILE):
                     path = Path(tmp) / (profile + ".npz")
                     with redirect_stdout(StringIO()):
-                        q = train(1, "dijkstra" if profile == DIJKSTRA_PROFILE else "strafe",
+                        opponent = "astar" if profile == ASTAR_PROFILE else "dijkstra" if profile == DIJKSTRA_PROFILE else "strafe"
+                        q = train(1, opponent,
                                   70000, path, False, 0., 0.01, profile=profile)
                     restored = make_agent(path)
                     self.assertEqual(restored.profile, profile)

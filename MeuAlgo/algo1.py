@@ -1139,6 +1139,91 @@ class DijkstraAgent(StrafeAgent):
         return self._aim_after_move(obs, int(action[0]) % 3 - 1, int(action[0]) // 3 - 1)
 
 
+ASTAR_PROFILE = "astar_v1"
+# distance, sight, bullet threat, health, score, heat, enemy radial motion,
+# enemy aim near us, own mud, useful nearby pickup, late match.
+ASTAR_STATE_SHAPE = (5, 2, 3, 2, 3, 3, 3, 2, 2, 2, 2)
+ASTAR_Q_SHAPE = ASTAR_STATE_SHAPE + (NUM_OPTIONS,)
+
+
+def astar_default_q():
+    q = np.zeros(ASTAR_Q_SHAPE, dtype=np.float32)
+    for key in np.ndindex(ASTAR_STATE_SHAPE):
+        distance, sight, threat, health, score, heat, closing, aimed, mud, pickup, late = key
+        close = distance == 0
+        engaging = sight and distance <= 3
+        q[key + (CHASE,)] = .75 if not sight or distance >= 3 else .10
+        q[key + (STRAFE_LEFT,)] = .76 if engaging else .05
+        q[key + (STRAFE_RIGHT,)] = .76 if engaging else .05
+        if aimed and engaging:
+            q[key + (STRAFE_LEFT,)] += .08
+            q[key + (STRAFE_RIGHT,)] += .08
+        q[key + (RETREAT,)] = .95 if close and sight else .25 if health == 0 else .02
+        q[key + (EVADE,)] = (.05, .90, 1.45)[threat]
+        q[key + (HOLD,)] = .60 if sight and distance in (1, 2) and closing != 0 else .02
+        q[key + (POWERUP,)] = (.70 if health == 0 else .35) if pickup else .01
+        q[key + (SAFE_CENTER,)] = (1.5, .85, .02)[heat]
+        if mud and engaging:
+            q[key + (RETREAT,)] += .10
+        if late and score == 0 and not engaging:
+            q[key + (CHASE,)] += .15
+    return q
+
+
+class AStarAgent(DijkstraAgent):
+    """Control an advancing opponent's range while reacting to actual shots."""
+    profile = ASTAR_PROFILE
+    q_shape = ASTAR_Q_SHAPE
+    preferred_range = 14.0
+
+    def initial_q(self):
+        return astar_default_q()
+
+    def state_key(self, obs):
+        self.observe(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        band = next((i for i, edge in enumerate((8., 12., 17., 22.)) if distance < edge), 4)
+        radial = (dx * self._motion_velocity[0] + dy * self._motion_velocity[1]) / distance
+        closing = 0 if radial < -.5 else 2 if radial > .5 else 1
+        mine, enemy = _lives(obs["self"]), _lives(obs["opponent"])
+        row = obs["opponent"]
+        aimed = int(_aim_error(row[2], row[3], -dx, -dy) < .35)
+        target = self._powerup_target(obs)
+        return (band, int(obs["self"][14] > 0), _bullet_threat(obs), int(mine > 3),
+                1 + int(mine > enemy) - int(mine < enemy), _heat_band(obs), closing, aimed,
+                int(obs["map"][2, int(sx), int(sy)] > .5),
+                int(target is not None and math.dist((sx, sy), target) < 10.),
+                int(obs["game"][0] >= .8))
+
+    def learning_context(self, key):
+        return key[1], key[2], key[5], key[6], key[7], key[8]
+
+    def action_for_option(self, obs, option):
+        if option not in (STRAFE_LEFT, STRAFE_RIGHT):
+            return super().action_for_option(obs, option)
+        self.observe(obs)
+        if self._return_needed(obs) or option not in self.available_options(obs):
+            return super().action_for_option(obs, SAFE_CENTER)
+        move = self._combat_move(obs)
+        if move is not None:
+            return self._aim_after_move(obs, *move)
+        if obs["self"][14] <= 0:
+            return super().action_for_option(obs, CHASE)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        incoming = (dx * self._motion_velocity[0] + dy * self._motion_velocity[1]) / distance
+        radial = max(-2., min(1., (distance - self.preferred_range) / 4. + incoming / C.PLAYER_SPEED))
+        side = 1 if option == STRAFE_LEFT else -1
+        move = self._safe_move(obs, radial * dx / distance - side * dy / distance,
+                               radial * dy / distance + side * dx / distance)
+        return self._aim_after_move(obs, *move)
+
+
 def policy_class(profile):
     """Select an implementation by checkpoint schema, never by opponent identity."""
     if profile == "general":
@@ -1147,6 +1232,8 @@ def policy_class(profile):
         return StrafeAgent
     if profile in ("dijkstra", DIJKSTRA_PROFILE):
         return DijkstraAgent
+    if profile in ("astar", ASTAR_PROFILE):
+        return AStarAgent
     raise ValueError(f"unsupported policy profile: {profile}")
 
 
