@@ -1,0 +1,29 @@
+Algoritmo de concurso — generalista com defesa corrigida
+
+Use uma pasta de acordo com o slot solicitado pelo concurso:
+
+slot1/
+  algo1.py
+  weights/qtable.npz
+
+slot2/
+  algo2.py
+  weights/qtable.npz
+
+Os dois slots contêm a mesma política; muda apenas o nome do script.
+Cada script expõe Agent e make_agent. Ambas as entradas carregam o
+generalista correto usando o diretório weights/ recebido pelo concurso.
+act(obs) retorna um array int64 de formato (3,) dentro de [9,16,2].
+reset() limpa o estado de cada episódio. Os valores da Q-table são os
+mesmos do generalista corrigido; o envio omite histórico de treino e
+caminhos pessoais. Dependência externa: NumPy. Python 3.10 ou superior.
+Os scripts não dependem de core/, rl/, bots/ ou MeuAlgo/ para importar.
+
+Na pasta principal do projeto, valide os dois slots com:
+ .venv\Scripts\python.exe -m rl.contest --algo1-folder Concurso/slot1 --algo2-folder Concurso/slot2 --validate-only
+
+Para assistir ao slot 1 contra o Camper:
+ .venv\Scripts\python.exe -m rl.visualize --player1 custom --algo1-folder Concurso/slot1 --player2 camper --seed 1020100 --bot2-seed 1020101
+
+Os ZIPs prontos para envio têm o script e weights/ diretamente na raiz.
+Envie somente a versão do slot solicitado pelo concurso.

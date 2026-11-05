@@ -1,0 +1,49 @@
+{
+  "profile": "generalista_v1",
+  "dependencies": [
+    "numpy"
+  ],
+  "q_values_unchanged": true,
+  "official_valid": true,
+  "isolated_valid": true,
+  "full_match_action_parity_games": 6,
+  "strict_full_contest_episodes": 2,
+  "archives": [
+    {
+      "slot": 1,
+      "bytes": 51049,
+      "validation": {
+        "slot": 1,
+        "folder": "C:\\Users\\juliacvf\\Documents\\Codex\\2026-11-04\\ag\\work\\contest_submission\\extracted_slot1",
+        "script": "algo1.py",
+        "weights_dir": "C:\\Users\\juliacvf\\Documents\\Codex\\2026-11-04\\ag\\work\\contest_submission\\extracted_slot1\\weights",
+        "files": 2,
+        "bytes": 129564,
+        "sample_action": [
+          5,
+          2,
+          0
+        ],
+        "valid": true
+      }
+    },
+    {
+      "slot": 2,
+      "bytes": 51049,
+      "validation": {
+        "slot": 2,
+        "folder": "C:\\Users\\juliacvf\\Documents\\Codex\\2026-11-04\\ag\\work\\contest_submission\\extracted_slot2",
+        "script": "algo2.py",
+        "weights_dir": "C:\\Users\\juliacvf\\Documents\\Codex\\2026-11-04\\ag\\work\\contest_submission\\extracted_slot2\\weights",
+        "files": 2,
+        "bytes": 129564,
+        "sample_action": [
+          3,
+          10,
+          0
+        ],
+        "valid": true
+      }
+    }
+  ]
+}

@@ -75,7 +75,7 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
         policy.q = q.copy()
         wins = losses = draws = 0
         total_reward = 0.0
-        hits = damage = heat = alerts = recoveries = 0
+        hits = damage = heat = alerts = recoveries = range_control_ticks = 0
         by_side = {side: dict(wins=0, draws=0, losses=0) for side in spawn_sides}
         try:
             for seed, side in ((base_seed + episode, side)
@@ -109,6 +109,7 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
                 draws += winner == -1
                 by_side[side]["wins" if winner == 0 else "losses" if winner == 1 else "draws"] += 1
                 recoveries += getattr(policy, "_route_recoveries", 0)
+                range_control_ticks += getattr(policy, "_range_control_ticks", 0)
         finally:
             env.close()
         if not np.array_equal(q, policy.q):
@@ -118,6 +119,7 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
             "avg_reward": round(total_reward / (episodes * len(spawn_sides)), 3),
             "hits": hits, "damage": damage, "heat": heat,
             "navigation_alerts": alerts, "route_recoveries": recoveries,
+            "range_control_ticks": range_control_ticks,
             "by_side": by_side,
         }
     return results
@@ -125,13 +127,23 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
 
 def train(episodes: int, opponent: str, seed: int,
           output: Path, resume: bool, epsilon_start: float, alpha_start: float,
-          profile: str = "general") -> np.ndarray:
+          profile: str = "general", init_from: Path | None = None) -> np.ndarray:
     policy = policy_class(profile)()
     profile = policy.profile
     specialist = policy.learned_tactics
     q = policy.q
     visits = np.zeros_like(q, dtype=np.uint32 if specialist else np.uint16)
     completed_episodes = 0
+
+    if init_from is not None:
+        if resume or profile != "generalista_v1":
+            raise ValueError("--init-from requires a new generalista training run")
+        from algo1 import generalist_q_from_markov, MARKOV_PROFILE
+        with np.load(init_from, allow_pickle=False) as checkpoint:
+            if str(checkpoint["profile"].item()) != MARKOV_PROFILE:
+                raise ValueError("--init-from requires a Markov specialist checkpoint")
+            q = generalist_q_from_markov(checkpoint["q"])
+        policy.q = q
 
     if resume:
         if not output.is_file():
@@ -156,6 +168,8 @@ def train(episodes: int, opponent: str, seed: int,
 
             if "episodes" in checkpoint.files:
                 completed_episodes = int(checkpoint["episodes"])
+            if "init_source" in checkpoint.files:
+                init_from = str(checkpoint["init_source"].item()) or None
 
     rng = np.random.default_rng(seed + completed_episodes)
     env = BlocksWithGunsBotTrainingEnv(opponent=opponent)
@@ -177,11 +191,18 @@ def train(episodes: int, opponent: str, seed: int,
             alpha_start=np.asarray(alpha_start),
             profile=np.asarray(profile),
             decision_ticks=np.asarray(policy.decision_ticks),
+            init_source=np.asarray(str(init_from) if init_from else ""),
         )
     for episode in range(episodes):
         global_episode = completed_episodes + episode
 
-        obs, info = env.reset(seed=seed + global_episode)
+        if profile == "generalista_v1":
+            # Paired map/spawn exposures, with exactly balanced bots in blocks
+            # of ten episodes when opponent="all". Evaluation uses other seeds.
+            obs, info = reset_evaluation_match(
+                env, seed + global_episode // 2, swapped=bool(global_episode % 2))
+        else:
+            obs, info = env.reset(seed=seed + global_episode)
         policy.reset()
 
         epsilon = max(
@@ -248,11 +269,12 @@ def main() -> None:
         description="Train or evaluate MeuAlgo checkpoint profiles over full matches "
                     "(Dijkstra by default)")
     parser.add_argument("--episodes", type=int, default=100)
-    parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default="dijkstra")
+    parser.add_argument("--opponent", choices=["all", *BOT_NAMES], default=None)
     parser.add_argument("--seed", type=int, default=123)
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--profile", choices=("auto", "general", "strafe", "dijkstra", "astar", "markov"), default="auto")
+    parser.add_argument("--profile", choices=("auto", "general", "strafe", "dijkstra", "astar", "markov", "generalista"), default="auto")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--init-from", type=Path, help="Initialize generalista from a Markov checkpoint")
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--eval-episodes", type=int, default=10)
     parser.add_argument("--eval-seed", type=int, default=10000)
@@ -263,8 +285,13 @@ def main() -> None:
 
     if min(args.episodes, args.eval_episodes) < 1:
         parser.error("episode counts must be positive")
-    args.output = args.output or (HERE / "weights/especialistas" / (args.profile + ".npz")
-                                if args.profile in ("strafe", "dijkstra", "astar", "markov") else DEFAULT_WEIGHTS)
+    if args.output is None:
+        if args.profile == "generalista":
+            args.output = HERE / "weights/generalista/qtable.npz"
+        elif args.profile in ("strafe", "dijkstra", "astar", "markov"):
+            args.output = HERE / "weights/especialistas" / (args.profile + ".npz")
+        else:
+            args.output = DEFAULT_WEIGHTS
     profile = policy_class("general" if args.profile == "auto" else args.profile).profile
     if args.evaluate_only or args.resume:
         if not args.output.is_file():
@@ -274,15 +301,18 @@ def main() -> None:
         if args.profile != "auto" and saved_profile != profile:
             parser.error("selected profile does not match the checkpoint")
         profile = saved_profile
+    args.opponent = args.opponent or ("all" if profile == "generalista_v1" else "dijkstra")
     specialist = policy_class(profile).learned_tactics
-    epsilon = args.epsilon if args.epsilon is not None else (0.20 if specialist else 0.25)
-    alpha = args.alpha if args.alpha is not None else (0.04 if specialist else 0.12)
+    epsilon = args.epsilon if args.epsilon is not None else (0.12 if profile == "generalista_v1" else 0.20 if specialist else 0.25)
+    alpha = args.alpha if args.alpha is not None else (0.01 if profile == "generalista_v1" else 0.04 if specialist else 0.12)
 
+    if args.init_from is not None and (args.evaluate_only or args.resume or profile != "generalista_v1"):
+        parser.error("--init-from requires a new --profile generalista training run")
     if args.evaluate_only:
         q = np.load(args.output, allow_pickle=False)["q"]
     else:
         q = train(args.episodes, args.opponent, args.seed,
-                  args.output, args.resume, epsilon, alpha, profile=profile)
+                  args.output, args.resume, epsilon, alpha, profile=profile, init_from=args.init_from)
     print("evaluation:")
     results = evaluate(q, args.opponent, args.eval_episodes,
                        base_seed=args.eval_seed, profile=profile, sides=args.eval_sides)

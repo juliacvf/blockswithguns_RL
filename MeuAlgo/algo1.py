@@ -1504,8 +1504,294 @@ class MarkovAgent(DijkstraAgent):
         return self._aim_after_move(obs, *self._safe_move(obs, *self._break_vector))
 
 
+GENERALIST_PROFILE = "generalista_v1"
+CONTROL_RANGE = MARKOV_NUM_OPTIONS
+GENERALIST_NUM_OPTIONS = MARKOV_NUM_OPTIONS + 1
+GENERALIST_Q_SHAPE = MARKOV_STATE_SHAPE + (GENERALIST_NUM_OPTIONS,)
+
+
+def generalist_q_from_markov(q):
+    """Keep the nine learned Markov actions and seed one new range action."""
+    if q.shape != MARKOV_Q_SHAPE or not np.isfinite(q).all():
+        raise ValueError("generalist initialization requires a valid Markov Q-table")
+    result = np.empty(GENERALIST_Q_SHAPE, dtype=np.float32)
+    result[..., :MARKOV_NUM_OPTIONS] = q
+    lateral = np.maximum(q[..., STRAFE_LEFT], q[..., STRAFE_RIGHT])
+    result[..., CONTROL_RANGE] = lateral - .10
+    # Only prefer range control against an observed approach at combat range.
+    # Keep defensive, heat-return and pattern-breaking actions independent.
+    for band in (1, 2, 3):
+        for threat in (0, 1):
+            region = (band, 1, threat, slice(None), slice(None), slice(None), 0)
+            result[region + (Ellipsis, CONTROL_RANGE)] = np.maximum(
+                lateral[region], q[region + (Ellipsis, HOLD)]) + .03
+    return result
+
+
+class GeneralistAgent(MarkovAgent):
+    """Learn when to combine Markov tactics with A* approach-range control."""
+    profile = GENERALIST_PROFILE
+    q_shape = GENERALIST_Q_SHAPE
+    option_names = MarkovAgent.option_names + ("control_range",)
+    control_range = 14.0
+    defense_horizon = .8
+
+    def initial_q(self):
+        return generalist_q_from_markov(markov_default_q())
+
+    def reset(self):
+        super().reset()
+        self._range_control_ticks = 0
+        self._defense_tick = None
+        self._defense_flights = ()
+        self._defense_paths = {}
+        self._defense_risks = {}
+        self._defense_last_move = (0, 0)
+        self._combat_side = 1
+        self._defense_overrides = 0
+        self._lateral_combat_ticks = 0
+
+    def _incoming_flights(self, obs):
+        """Predict the same live bullet substeps as Engine._update_bullets."""
+        tick = float(obs["game"][2])
+        if self._defense_tick == tick:
+            return self._defense_flights
+        self._defense_tick = tick
+        self._defense_paths = {}
+        self._defense_risks = {}
+        flights = []
+        sx, sy = _world_xy(obs["self"])
+        dt = C.FIXED_DT
+        ticks = round(self.defense_horizon / dt)
+        substeps = max(1, math.ceil(C.BULLET_SPEED * dt / .4))
+        sub_dt = dt / substeps
+        walls = obs["map"][0]
+        self._defense_solid = np.logical_or(walls, obs["map"][1])
+        for row, valid in zip(obs["bullets"], obs["bullet_mask"]):
+            if valid < .5 or row[4] > 0:
+                continue
+            x, y = _world_xy(row)
+            vx, vy = float(row[2]) * C.BULLET_SPEED, float(row[3]) * C.BULLET_SPEED
+            distance = (float(row[6]) + 1.) * .5 * C.BULLET_RANGE
+            ttl = (float(row[5]) + 1.) * .5 * C.BULLET_TTL
+            reach = min(C.BULLET_RANGE - distance, C.BULLET_SPEED * self.defense_horizon)
+            if math.hypot(sx - x, sy - y) > reach + C.PLAYER_SPEED * C.SPEED_MULTIPLIER * self.defense_horizon + 1.:
+                continue
+            flight = []
+            alive = True
+            for step in range(ticks):
+                ttl -= dt
+                if ttl <= 1e-7:
+                    break
+                points = []
+                for _ in range(substeps):
+                    x += vx * sub_dt
+                    y += vy * sub_dt
+                    distance += C.BULLET_SPEED * sub_dt
+                    # Range/TTL and walls are checked BEFORE body collision.
+                    # Keep a valid first substep even if the second expires.
+                    if (distance >= C.BULLET_RANGE - 1e-6 or
+                            not (0 <= x < C.WORLD and 0 <= y < C.WORLD) or
+                            walls[int(x), int(y)]):
+                        alive = False
+                        break
+                    points.append((x, y))
+                if points:
+                    flight.append((step, tuple(points)))
+                if not alive:
+                    break
+            if flight:
+                flights.append(tuple(flight))
+        self._defense_flights = tuple(flights)
+        return self._defense_flights
+
+    def _future_positions(self, obs, move):
+        if move in self._defense_paths:
+            return self._defense_paths[move]
+        x, y = _world_xy(obs["self"])
+        mx, my = move
+        norm = max(math.hypot(mx, my), 1.)
+        radius, solid = C.PLAYER_RADIUS, self._defense_solid
+        speed_timer = (float(obs["self"][7]) + 1.) * .5 * C.SPEED_DURATION
+        heat_timer = (float(obs["self"][8]) + 1.) * .5 * C.HEAT_DAMAGE_PERIOD
+        positions, heat_hits = [], 0
+
+        def blocked(px, py):
+            for cx in range(math.floor(px - radius), math.floor(px + radius) + 1):
+                for cy in range(math.floor(py - radius), math.floor(py + radius) + 1):
+                    if not (0 <= cx < C.GRID_SIZE and 0 <= cy < C.GRID_SIZE):
+                        return True
+                    if solid[cx, cy] and ((px - min(max(px, cx), cx + 1)) ** 2 +
+                                         (py - min(max(py, cy), cy + 1)) ** 2 < radius ** 2):
+                        return True
+            return False
+
+        for step in range(round(self.defense_horizon / C.FIXED_DT)):
+            speed = C.PLAYER_SPEED * (C.SPEED_MULTIPLIER if speed_timer > 1e-7 else 1.)
+            stride = speed * C.FIXED_DT * (C.MUD_SLOW if obs["map"][2, int(x), int(y)] else 1.)
+            nx = x + mx / norm * stride
+            if not blocked(nx, y):
+                x = nx
+            ny = y + my / norm * stride
+            if not blocked(x, ny):
+                y = ny
+            speed_timer = max(0., speed_timer - C.FIXED_DT)
+            positions.append((x, y))
+            safe = float(obs["game"][3]) * C.WORLD * .5 - C.HEAT_SHRINK_RATE * (step + 1) * C.FIXED_DT
+            if max(abs(x - 50.), abs(y - 50.)) > safe:
+                heat_timer += C.FIXED_DT
+                if heat_timer >= C.HEAT_DAMAGE_PERIOD:
+                    heat_hits += 1
+                    heat_timer -= C.HEAT_DAMAGE_PERIOD
+            else:
+                heat_timer = 0.
+        result = positions, heat_hits
+        self._defense_paths[move] = result
+        return result
+
+    def _movement_risk(self, obs, move):
+        if move in self._defense_risks:
+            return self._defense_risks[move]
+        positions, heat = self._future_positions(obs, move)
+        hits, near, first = 0, 0., float("inf")
+        radius = C.PLAYER_RADIUS + C.BULLET_RADIUS
+        for flight in self._defense_flights:
+            closest, collision = float("inf"), None
+            for step, points in flight:
+                x, y = positions[step]
+                gap = min(math.hypot(x - bx, y - by) for bx, by in points)
+                closest = min(closest, gap)
+                if gap < radius + .025 and collision is None:
+                    collision = (step + 1) * C.FIXED_DT
+            near += max(0., radius + .25 - closest)
+            if collision is not None:
+                hits += 1
+                first = min(first, collision)
+        result = hits, heat, near, first, positions[-1]
+        self._defense_risks[move] = result
+        return result
+
+    def _bullet_threat(self, obs):
+        # A bullet need not reach our CENTER to hit our body, and our own
+        # next movement can take us into its last valid substep.
+        if not self._incoming_flights(obs):
+            return 0
+        standing = self._movement_risk(obs, (0, 0))
+        moving = self._movement_risk(obs, self._defense_last_move)
+        first = min(standing[3], moving[3])
+        return 2 if first <= .3 else 1 if math.isfinite(first) else 0
+
+    def state_key(self, obs):
+        key = list(super().state_key(obs))
+        key[2] = self._bullet_threat(obs)
+        return tuple(key)
+
+    def _defensive_move(self, obs, baseline):
+        flights = self._incoming_flights(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        shot_age = (1. - float(obs["opponent"][11])) * 5.
+        aimed = _aim_error(obs["opponent"][2], obs["opponent"][3], -dx, -dy) < .3
+        lateral_combat = (not self._returning and obs["self"][14] > 0 and
+                          6. <= distance <= 21.5 and aimed and (shot_age <= 1.2 or bool(flights)))
+        if not flights and not lateral_combat:
+            self._defense_last_move = baseline
+            return baseline
+        base = self._movement_risk(obs, baseline)
+        if not lateral_combat and base[0] == 0 and base[2] == 0:
+            self._defense_last_move = baseline
+            return baseline
+        base_margin = self._safe_margin(obs, *base[4])
+        start_margin = self._safe_margin(obs, sx, sy)
+        candidates = []
+        for my in (-1, 0, 1):
+            for mx in (-1, 0, 1):
+                move = mx, my
+                risk = self._movement_risk(obs, move)
+                x, y = risk[4]
+                margin = self._safe_margin(obs, x, y)
+                # Respect an urgent safe-return route; allow a brief dodge
+                # sideways but do not reverse into heat for optional strafing.
+                if self._returning and margin < min(start_margin, base_margin) - .25:
+                    continue
+                heat_loss = max(0., base_margin - margin)
+                deviation = math.dist(risk[4], base[4])
+                score = risk[2] * 3. + heat_loss * (2. if self._returning else .35) + .12 * deviation
+                if lateral_combat:
+                    side = ((x - sx) * -dy + (y - sy) * dx) / distance
+                    # Favor a sustained side step while closing to a useful
+                    # firing distance, rather than charging down the barrel.
+                    score += .22 * abs(math.hypot(ex - x, ey - y) - self.preferred_range)
+                    score -= .45 * abs(side) + .08 * self._combat_side * side
+                    if move == (0, 0):
+                        score += .3
+                candidates.append((risk[0] + risk[1], score, move != baseline,
+                                   mx * mx + my * my, mx, my))
+        if not candidates:
+            move = baseline
+        else:
+            _, _, _, _, mx, my = min(candidates)
+            move = mx, my
+        if move != baseline:
+            self._defense_overrides += 1
+        if lateral_combat:
+            lateral = (move[0] * -dy + move[1] * dx) / distance
+            if abs(lateral) > .1:
+                self._combat_side = 1 if lateral > 0 else -1
+                self._lateral_combat_ticks += 1
+        self._defense_last_move = move
+        return move
+
+
+    def available_options(self, obs):
+        common = super().available_options(obs)
+        if len(common) == 1 or obs["self"][14] <= 0 or self._bullet_threat(obs) == 2:
+            return common
+        self.observe(obs)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        radial = (dx * self._motion_velocity[0] + dy * self._motion_velocity[1]) / distance
+        if 8. <= distance < 22. and radial < -.5:
+            return np.append(common, CONTROL_RANGE)
+        return common
+
+    def _pattern_action(self, obs, option):
+        # Markov.action_for_option still applies its trajectory-based bullet
+        # defense to the movement returned here, including the new action.
+        if option != CONTROL_RANGE:
+            return super()._pattern_action(obs, option)
+        self.observe(obs)
+        options = self.available_options(obs)
+        if CONTROL_RANGE not in options:
+            fallback = SAFE_CENTER if len(options) == 1 else self.best_option(obs)
+            return super()._pattern_action(obs, fallback)
+        move = self._combat_move(obs)
+        if move is not None:
+            return self._aim_after_move(obs, *move)
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        dx, dy = ex - sx, ey - sy
+        distance = max(math.hypot(dx, dy), 1e-6)
+        incoming = (dx * self._motion_velocity[0] + dy * self._motion_velocity[1]) / distance
+        # Same radial controller as AStarAgent, without changing Markov's
+        # preferred range for its existing actions.
+        radial = max(-2., min(1., (distance - self.control_range) / 4. + incoming / C.PLAYER_SPEED))
+        key = self.state_key(obs)
+        side = 1 if self.q[key + (STRAFE_LEFT,)] >= self.q[key + (STRAFE_RIGHT,)] else -1
+        move = self._safe_move(obs, radial * dx / distance - side * dy / distance,
+                               radial * dy / distance + side * dx / distance)
+        self._range_control_ticks += 1
+        return self._aim_after_move(obs, *move)
+
+
 def policy_class(profile):
     """Select an implementation by checkpoint schema, never by opponent identity."""
+    if profile in ("generalista", GENERALIST_PROFILE):
+        return GeneralistAgent
     if profile == "general":
         return Agent
     if profile in ("strafe", STRAFE_PROFILE):

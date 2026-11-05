@@ -1,0 +1,811 @@
+{
+  "selected": "trained",
+  "validation_scores": {
+    "initial": [
+      100,
+      0,
+      -3,
+      -32
+    ],
+    "trained": [
+      100,
+      0,
+      -3,
+      -26
+    ]
+  },
+  "summary": {
+    "generalista": {
+      "wins": 250,
+      "draws": 0,
+      "losses": 0,
+      "heat": 11,
+      "damage": 94,
+      "range_control_ticks": 11145
+    },
+    "markov": {
+      "wins": 250,
+      "draws": 0,
+      "losses": 0,
+      "heat": 12,
+      "damage": 91,
+      "range_control_ticks": 0
+    },
+    "dijkstra": {
+      "wins": 250,
+      "draws": 0,
+      "losses": 0,
+      "heat": 13,
+      "damage": 72,
+      "range_control_ticks": 0
+    }
+  },
+  "training_matches": 100,
+  "validation_matches": 200,
+  "test_matches": 750,
+  "originals_unchanged": true,
+  "details": [
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 12.11,
+      "hits": 161,
+      "damage": 0,
+      "heat": 0,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 1174,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "initial",
+      "bot": "markov",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 9.742,
+      "hits": 159,
+      "damage": 0,
+      "heat": 2,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 889,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "initial",
+      "bot": "strafe",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 10.931,
+      "hits": 159,
+      "damage": 5,
+      "heat": 1,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 2432,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "initial",
+      "bot": "astar",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 5.387,
+      "hits": 137,
+      "damage": 23,
+      "heat": 0,
+      "navigation_alerts": 22,
+      "route_recoveries": 0,
+      "range_control_ticks": 471,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "initial",
+      "bot": "camper",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 7.898,
+      "hits": 145,
+      "damage": 4,
+      "heat": 0,
+      "navigation_alerts": 4,
+      "route_recoveries": 0,
+      "range_control_ticks": 134,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "initial",
+      "bot": "dijkstra",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 11.018,
+      "hits": 387,
+      "damage": 2,
+      "heat": 2,
+      "navigation_alerts": 20,
+      "route_recoveries": 0,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "markov",
+      "bot": "markov",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 10.74,
+      "hits": 384,
+      "damage": 18,
+      "heat": 2,
+      "navigation_alerts": 20,
+      "route_recoveries": 1,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "markov",
+      "bot": "astar",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 9.306,
+      "hits": 383,
+      "damage": 4,
+      "heat": 2,
+      "navigation_alerts": 21,
+      "route_recoveries": 6,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "markov",
+      "bot": "strafe",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 7.429,
+      "hits": 355,
+      "damage": 49,
+      "heat": 3,
+      "navigation_alerts": 58,
+      "route_recoveries": 5,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "markov",
+      "bot": "camper",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 11.478,
+      "hits": 385,
+      "damage": 4,
+      "heat": 3,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "dijkstra",
+      "bot": "markov",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 11.068,
+      "hits": 390,
+      "damage": 17,
+      "heat": 3,
+      "navigation_alerts": 1,
+      "route_recoveries": 2,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "dijkstra",
+      "bot": "astar",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 9.393,
+      "hits": 371,
+      "damage": 9,
+      "heat": 3,
+      "navigation_alerts": 0,
+      "route_recoveries": 1,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "dijkstra",
+      "bot": "strafe",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 6.849,
+      "hits": 364,
+      "damage": 18,
+      "heat": 3,
+      "navigation_alerts": 8,
+      "route_recoveries": 0,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "markov",
+      "bot": "dijkstra",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 9.53,
+      "hits": 371,
+      "damage": 11,
+      "heat": 3,
+      "navigation_alerts": 17,
+      "route_recoveries": 2,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "dijkstra",
+      "bot": "camper",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 5.775,
+      "hits": 317,
+      "damage": 31,
+      "heat": 1,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 0,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "dijkstra",
+      "bot": "dijkstra",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 12.305,
+      "hits": 161,
+      "damage": 0,
+      "heat": 0,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 1143,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "trained",
+      "bot": "markov",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 10.117,
+      "hits": 159,
+      "damage": 0,
+      "heat": 2,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 715,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "trained",
+      "bot": "strafe",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 11.03,
+      "hits": 160,
+      "damage": 4,
+      "heat": 1,
+      "navigation_alerts": 0,
+      "route_recoveries": 0,
+      "range_control_ticks": 2415,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "trained",
+      "bot": "astar",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 5.888,
+      "hits": 138,
+      "damage": 18,
+      "heat": 0,
+      "navigation_alerts": 22,
+      "route_recoveries": 0,
+      "range_control_ticks": 664,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "trained",
+      "bot": "camper",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 20,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 7.512,
+      "hits": 143,
+      "damage": 4,
+      "heat": 0,
+      "navigation_alerts": 2,
+      "route_recoveries": 0,
+      "range_control_ticks": 126,
+      "by_side": {
+        "normal": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 10,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "validation",
+      "model": "trained",
+      "bot": "dijkstra",
+      "maps": 10,
+      "seed": 710000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 11.276,
+      "hits": 382,
+      "damage": 2,
+      "heat": 2,
+      "navigation_alerts": 22,
+      "route_recoveries": 0,
+      "range_control_ticks": 2497,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "generalista",
+      "bot": "markov",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 9.476,
+      "hits": 378,
+      "damage": 4,
+      "heat": 2,
+      "navigation_alerts": 31,
+      "route_recoveries": 0,
+      "range_control_ticks": 1869,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "generalista",
+      "bot": "strafe",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 9.96,
+      "hits": 380,
+      "damage": 24,
+      "heat": 2,
+      "navigation_alerts": 19,
+      "route_recoveries": 1,
+      "range_control_ticks": 5267,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "generalista",
+      "bot": "astar",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 7.265,
+      "hits": 353,
+      "damage": 51,
+      "heat": 3,
+      "navigation_alerts": 57,
+      "route_recoveries": 3,
+      "range_control_ticks": 1127,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "generalista",
+      "bot": "camper",
+      "maps": 25,
+      "seed": 810000
+    },
+    {
+      "wins": 50,
+      "losses": 0,
+      "draws": 0,
+      "avg_reward": 6.679,
+      "hits": 360,
+      "damage": 13,
+      "heat": 2,
+      "navigation_alerts": 6,
+      "route_recoveries": 0,
+      "range_control_ticks": 385,
+      "by_side": {
+        "normal": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        },
+        "swapped": {
+          "wins": 25,
+          "draws": 0,
+          "losses": 0
+        }
+      },
+      "phase": "test",
+      "model": "generalista",
+      "bot": "dijkstra",
+      "maps": 25,
+      "seed": 810000
+    }
+  ],
+  "seeds": {
+    "training": [
+      610000,
+      610049
+    ],
+    "validation": [
+      710000,
+      710009
+    ],
+    "test": [
+      810000,
+      810024
+    ]
+  },
+  "selection_rule": "validation: wins descending, losses ascending, heat events ascending, projectile damage ascending; independent final test",
+  "reference_checkpoints": {
+    "markov": {
+      "profile": "markov_v1",
+      "episodes": 0,
+      "seed": 101000,
+      "sha256": "a64c7153cfcbe95a64add30d359feaa1ba3582b1fa9a5c40251ac2cd1299cdea"
+    },
+    "dijkstra": {
+      "profile": "dijkstra_v1",
+      "episodes": 20,
+      "seed": 80000,
+      "sha256": "b0789af86c92bd2a8ea8a1293a810d9d1e12310a19441d4d3de78af33a830553"
+    }
+  },
+  "files_sha256": {
+    "MeuAlgo\\algo1.py": "2c2590aaec53c1afe5bbde7bd1845648dda467868304db31eb4f2f58f9fe29ab",
+    "MeuAlgo\\train.py": "189b9089f5e062997add5411f5b53e8c11f8e5c70b0bb9a1849db8c1fcc2ccf6",
+    "tools\\test_generalista.py": "dfb00fd4622002098e0d0440010d8d836ee6fc5abf072439f51ea08c0ae533ab",
+    "MeuAlgo\\weights\\generalista\\initial.npz": "2a15036e0629747858a6598cc94bdf0135e6b14323eb54d630e2be8bcf1c4ae7",
+    "MeuAlgo\\weights\\generalista\\qtable.npz": "cf8b4041efe86e6654fd426b80592d71aaf54af72e154c21eae1dd620ff3aafa",
+    "MeuAlgo\\weights\\generalista\\trained_100.npz": "cf8b4041efe86e6654fd426b80592d71aaf54af72e154c21eae1dd620ff3aafa"
+  }
+}
