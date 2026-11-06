@@ -1,3 +1,7 @@
-Place slot-2 model files in this directory. `Agent` receives this directory
-path as its `weights_path` constructor argument.
+# Pesos do exemplo do slot 2
 
+O script `algo2/algo2.py` é o exemplo determinístico de movimento orbital e disparo do desafio. Ele não precisa de pesos treinados.
+
+O diretório `weights/` faz parte do contrato do concurso mesmo quando a política não usa arquivos de modelo. Este README mantém a pasta no repositório.
+
+[Contrato do algoritmo de concurso](../../README.md#como-criar-um-algoritmo-de-concurso)

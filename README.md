@@ -1,10 +1,5 @@
 # Blocks With Guns — Edição RL
 
-> **Desafio do Insper Academy 2026.2 — Blocks With Guns RL edition.**
-> A recomendação do desafio é construir **um único algoritmo** capaz de
-> enfrentar os **cinco algoritmos determinísticos** embutidos (Dijkstra, A*,
-> Strafe, Camper e Markov) — não um algoritmo por adversário.
-
 Um jogo determinístico de tiro em arena 1v1 feito em pygame, sobre um mapa
 Perlin de 100x100 células, estendido para um ambiente de aprendizado por
 reforço (RL): visões superior e poligonal 3D em tela dividida, paredes,

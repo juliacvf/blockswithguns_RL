@@ -765,6 +765,7 @@ class DijkstraAgent(StrafeAgent):
     return_safety_seconds = 8.
     return_release_margin = 8.
     return_lookahead_seconds = 20.
+    return_min_margin = 8.
 
     def initial_q(self):
         return dijkstra_default_q()
@@ -799,7 +800,7 @@ class DijkstraAgent(StrafeAgent):
         speed = max(speed, .1)
         now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
         lookahead = min(self.return_lookahead_seconds, max(0., C.MAX_EPISODE_SECONDS - now))
-        target_margin = 8. + C.HEAT_SHRINK_RATE * lookahead
+        target_margin = self.return_min_margin + C.HEAT_SHRINK_RATE * lookahead
         arrival = {start: 0.}
         came = {}
         queue = [(0., start)]
@@ -1550,6 +1551,120 @@ class GeneralistAgent(MarkovAgent):
         self._combat_side = 1
         self._defense_overrides = 0
         self._lateral_combat_ticks = 0
+        self._early_repositions = 0
+        self._safe_route_fallbacks = 0
+        self.return_release_margin = type(self).return_release_margin
+
+    def _forecast_return(self, obs, allow_heat=False):
+        # Comfort is secondary to avoiding an unnecessary heat traversal.
+        path, slack = super()._forecast_return(obs, allow_heat=False)
+        if path:
+            self.return_release_margin = type(self).return_release_margin
+            return path, slack
+        horizon = self.return_lookahead_seconds
+        minimum = self.return_min_margin
+        now = float(obs["game"][0]) * C.MAX_EPISODE_SECONDS
+        remaining = max(0., C.MAX_EPISODE_SECONDS - now)
+        self.return_min_margin = min(8., .75 + C.HEAT_SHRINK_RATE * remaining)
+        self.return_lookahead_seconds = 0.
+        try:
+            path, slack = super()._forecast_return(obs, allow_heat=False)
+            if path:
+                self.return_release_margin = self.return_min_margin
+                return path, slack
+            if allow_heat:
+                self.return_release_margin = self.return_min_margin
+                return super()._forecast_return(obs, allow_heat=True)
+            return path, slack
+        finally:
+            self.return_lookahead_seconds = horizon
+            self.return_min_margin = minimum
+
+    def _plan_path(self, solid, obs, sx, sy, gx, gy):
+        path = super()._plan_path(solid, obs, sx, sy, gx, gy)
+        if self._returning or self._safe_margin(obs, sx, sy) < 0 or not path:
+            return path
+        speed = max(.1, min(C.PLAYER_SPEED, (float(obs["self"][13]) + 1.) *
+                            .5 * C.PLAYER_SPEED * C.SPEED_MULTIPLIER))
+        eta = 0.
+        previous = (sx, sy)
+        previous_mud = bool(obs["map"][2, int(sx), int(sy)])
+        for cx, cy in path:
+            point = cx + .5, cy + .5
+            mud = bool(obs["map"][2, cx, cy])
+            eta += math.dist(previous, point) * (.5 / (C.MUD_SLOW if previous_mud else 1.) +
+                                                .5 / (C.MUD_SLOW if mud else 1.)) / speed
+            if self._safe_margin(obs, *point) - C.HEAT_SHRINK_RATE * eta < C.PLAYER_RADIUS + .1:
+                # A pursuit route must not override a still-reachable safe
+                # position just because the target lies beyond a closing exit.
+                safe_path, _ = self._forecast_return(obs)
+                if safe_path:
+                    self._safe_route_fallbacks += 1
+                    return safe_path
+                break
+            previous, previous_mud = point, mud
+        return path
+
+    def _firing_position(self, obs):
+        """Search reachable local cells instead of sparse sampled circles."""
+        sx, sy = _world_xy(obs["self"])
+        ex, ey = _world_xy(obs["opponent"])
+        solid = np.logical_or(obs["map"][0], obs["map"][1])
+        start = int(sx), int(sy)
+        costs = {start: 0.}
+        queue = [(0., start)]
+        best = None
+        while queue:
+            cost, cell = heapq.heappop(queue)
+            if cost != costs[cell] or (best is not None and cost > best[0]):
+                continue
+            cx, cy = cell
+            x, y = cx + .5, cy + .5
+            eta = cost / C.PLAYER_SPEED
+            if self._safe_margin(obs, x, y) - C.HEAT_SHRINK_RATE * eta < 3.:
+                continue
+            distance = math.hypot(ex - x, ey - y)
+            if cell != start and 5. <= distance <= 18.:
+                _, shoot, miss = self._shot(obs, x, y)
+                if shoot:
+                    candidate = cost + .25 * abs(distance - self.preferred_range) + miss, x, y
+                    if best is None or candidate < best:
+                        best = candidate
+            for nx, ny in ((cx + 1, cy), (cx - 1, cy), (cx, cy + 1), (cx, cy - 1)):
+                if not (0 <= nx < C.GRID_SIZE and 0 <= ny < C.GRID_SIZE) or solid[nx, ny]:
+                    continue
+                if math.hypot(nx + .5 - sx, ny + .5 - sy) > 9.:
+                    continue
+                step = .5 / (C.MUD_SLOW if obs["map"][2, cx, cy] else 1.)
+                step += .5 / (C.MUD_SLOW if obs["map"][2, nx, ny] else 1.)
+                next_cost = cost + step
+                if next_cost <= 16. and next_cost < costs.get((nx, ny), float("inf")):
+                    costs[nx, ny] = next_cost
+                    heapq.heappush(queue, (next_cost, (nx, ny)))
+        return None if best is None else (best[1], best[2])
+
+    def _combat_move(self, obs):
+        move = super()._combat_move(obs)
+        if move is not None or self._returning or self._return_needed(obs):
+            return move
+        if obs["opponent"][12] > 0 and _lives(obs["self"]) >= _lives(obs["opponent"]):
+            return None  # Preserve a useful safe position against an exposed enemy.
+        now = self._previous_time
+        rows = [r for r in self._combat_history if r[0] >= now - 3.1]
+        if (len(rows) < 2 or now - rows[0][0] < 2.95
+                or sum(r[3] for r in rows) < .7 * len(rows)
+                or max(math.dist(r[1], rows[-1][1]) for r in rows) > 1.5):
+            return None
+        goal = self._firing_position(obs)
+        self._combat_history.clear()
+        if goal is None:
+            return None
+        self._reposition_goal = goal
+        self._reposition_until = now + 5.
+        self._early_repositions += 1
+        self._combat_repositions += 1
+        self._path = []
+        return self._path_move(obs, goal, "firing_position")
 
     def _incoming_flights(self, obs):
         """Predict the same live bullet substeps as Engine._update_bullets."""
@@ -1705,6 +1820,13 @@ class GeneralistAgent(MarkovAgent):
             return baseline
         base_margin = self._safe_margin(obs, *base[4])
         start_margin = self._safe_margin(obs, sx, sy)
+        return_target = None
+        if self._returning and self._return_path:
+            nearest = min(range(len(self._return_path)), key=lambda i:
+                          math.hypot(self._return_path[i][0] + .5 - sx,
+                                     self._return_path[i][1] + .5 - sy))
+            cell = self._return_path[min(nearest + 3, len(self._return_path) - 1)]
+            return_target = cell[0] + .5, cell[1] + .5
         candidates = []
         for my in (-1, 0, 1):
             for mx in (-1, 0, 1):
@@ -1719,6 +1841,8 @@ class GeneralistAgent(MarkovAgent):
                 heat_loss = max(0., base_margin - margin)
                 deviation = math.dist(risk[4], base[4])
                 score = risk[2] * 3. + heat_loss * (2. if self._returning else .35) + .12 * deviation
+                if return_target is not None:
+                    score += .8 * max(0., math.dist((x, y), return_target) - math.dist(base[4], return_target))
                 if lateral_combat:
                     side = ((x - sx) * -dy + (y - sy) * dx) / distance
                     # Favor a sustained side step while closing to a useful

@@ -1,21 +1,43 @@
-# Algo Test
+# Exemplo de aprendizado por reforço
 
-This is a deliberately small, trainable slot-1 contest algorithm. A Q-table
-chooses among eight tactical behaviors while simple deterministic helpers aim,
-avoid blocked cells, align legal aim bins, and follow paths. It trains against
-Dijkstra by default.
+`Algo Test` é o exemplo treinável fornecido pelo desafio. Uma Q-table escolhe entre oito táticas; regras de mira, movimento e navegação executam a ação escolhida. Este exemplo é separado do [generalista desenvolvido em MeuAlgo](../MeuAlgo/README.md).
 
-From the project root:
+## Arquivos
 
-```bash
-.venv/bin/python "Algo Test/train.py" --episodes 100 --seed 456
-.venv/bin/python -m rl.contest --algo1-folder "Algo Test" --algo2-folder algo2 --validate-only
-.venv/bin/python -m rl.visualize --player1 custom --algo1-folder "Algo Test" --player2 dijkstra
-.venv/bin/python "Algo Test/train.py" --evaluate-only --opponent all
+| Arquivo | Finalidade |
+|---|---|
+| [algo1.py](algo1.py) | Política do exemplo para o slot 1. |
+| [train.py](train.py) | Treino e avaliação sem interface gráfica; usa Dijkstra como adversário padrão. |
+| [weights/qtable.npz](weights/qtable.npz) | Checkpoint carregado quando a pasta é usada como entrada de concurso. |
+
+Todos os comandos abaixo partem da pasta principal do projeto e usam PowerShell.
+
+## Assistir ao exemplo
+
+```powershell
+.\.venv\Scripts\python.exe -m rl.visualize --player1 custom --algo1-folder "Algo Test" --player2 dijkstra
 ```
 
-Use another built-in name with `--opponent` to train or evaluate against it.
-The saved `weights/qtable.npz` is the playable policy used by `algo1.py`.
+## Avaliar os pesos incluídos
 
-The included checkpoint's ten held-out 45-second Dijkstra episodes produced
-9 draws and 1 loss, versus 5 draws and 5 losses from its untrained prior.
+```powershell
+.\.venv\Scripts\python.exe "Algo Test/train.py" --evaluate-only --opponent all --eval-episodes 10
+```
+
+Com `all`, a avaliação executa dez partidas contra cada um dos cinco bots. Cada partida segue até nocaute ou até o limite oficial de 120 segundos, com desempate por vidas.
+
+## Experimentar um treino
+
+```powershell
+.\.venv\Scripts\python.exe "Algo Test/train.py" --episodes 100 --opponent dijkstra --output "$env:TEMP\algo_test\qtable.npz"
+```
+
+O destino temporário preserva os pesos incluídos no projeto. Use `--opponent all` para alternar entre os cinco bots. O treino salva o checkpoint após cada partida e avalia o resultado ao terminar. `--resume` continua a partir do checkpoint no destino escolhido.
+
+## Validar como entrada de concurso
+
+```powershell
+.\.venv\Scripts\python.exe -m rl.contest --algo1-folder "Algo Test" --algo2-folder algo2 --validate-only
+```
+
+[Voltar à documentação do desafio](../README.md)
