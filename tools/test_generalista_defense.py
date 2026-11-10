@@ -100,4 +100,41 @@ class DefenseTests(unittest.TestCase):
         agent._returning=True
         self.assertEqual(agent._defensive_move(obs,(-1,0)),(-1,0))
 
+    def test_quiet_movement_does_not_cross_the_closing_zone(self):
+        eng,agent=self.scenario()
+        eng.time=100.;eng.tick=3000
+        eng.players[0].x=74.8
+        eng.players[1].x=90.
+        obs=self.encode(eng)
+        move=agent._defensive_move(obs,(1,0))
+        positions,_=agent._future_positions(obs,move)
+        for step,(x,y) in enumerate(positions,1):
+            self.assertGreaterEqual(agent._safe_margin(obs,x,y)-.25*step/30,0.)
+        eng.step((Action(move_x=move[0],move_y=move[1]),Action()))
+        self.assertFalse(eng.in_heat(eng.players[0].x,eng.players[0].y))
+
+    def test_quiet_escape_prevents_imminent_heat_damage(self):
+        eng,agent=self.scenario()
+        eng.time=100.;eng.tick=3000
+        eng.players[0].x=75.05
+        eng.players[0].heat_timer=4.98
+        eng.players[1].x=90.
+        obs=self.encode(eng)
+        move=agent._defensive_move(obs,(0,0))
+        eng.step((Action(move_x=move[0],move_y=move[1]),Action()))
+        self.assertEqual(eng.players[0].lives,8)
+        self.assertFalse(eng.in_heat(eng.players[0].x,eng.players[0].y))
+
+    def test_planned_return_keeps_a_necessary_outward_detour(self):
+        eng,agent=self.scenario()
+        eng.time=100.;eng.tick=3000
+        eng.players[0].x=75.5
+        eng.players[1].x=90.
+        # A wall on the safe side forces the route around its lower end.
+        eng.map.grid[74,45:53]=eng.map.solid[74,45:53]=1
+        obs=self.encode(eng)
+        agent._returning=True
+        agent._return_path=[(75,50),(76,50),(76,51),(76,52),(76,53),(75,53),(74,53),(73,53)]
+        self.assertEqual(agent._defensive_move(obs,(1,0)),(1,0))
+
 if __name__=='__main__':unittest.main()

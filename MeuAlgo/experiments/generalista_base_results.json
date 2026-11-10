@@ -1,0 +1,7765 @@
+{
+  "status": "baseline_before_camper_experiments",
+  "date": "2026-11-10",
+  "policy_sha256": "dabf239010834215a6a156c635b9774a066680f858b6c13424d3b974e069c522",
+  "description": "Frozen experimental generalist selected before Camper spacing changes. Separate from official MeuAlgo/algo1.py; intended starting point for Markov work.",
+  "weights": "MeuAlgo/weights/generalista/qtable.npz",
+  "total": {
+    "matches": 350,
+    "wins": 272,
+    "draws": 37,
+    "losses": 41,
+    "win_rate": 77.7143
+  },
+  "opponents": {
+    "camper": {
+      "matches": 70,
+      "wins": 64,
+      "draws": 2,
+      "losses": 4,
+      "win_rate": 91.4286
+    },
+    "strafe": {
+      "matches": 70,
+      "wins": 56,
+      "draws": 6,
+      "losses": 8,
+      "win_rate": 80.0
+    },
+    "dijkstra": {
+      "matches": 70,
+      "wins": 51,
+      "draws": 6,
+      "losses": 13,
+      "win_rate": 72.8571
+    },
+    "astar": {
+      "matches": 70,
+      "wins": 68,
+      "draws": 0,
+      "losses": 2,
+      "win_rate": 97.1429
+    },
+    "markov": {
+      "matches": 70,
+      "wins": 33,
+      "draws": 23,
+      "losses": 14,
+      "win_rate": 47.1429
+    }
+  },
+  "inputs": {
+    "core/engine.py": "d562f81ebdcfe1a21e9b616243f817c121047fcc256785d06a4a103ba7da9efa",
+    "core/constants.py": "105c66b982b3c0753839ac71087ac2aed4ade1f865920dc28ac307a3412cb7cf",
+    "MeuAlgo/algo1.py": "851b410d7fa5a92451cc981382d98a017526e73774b62073a1a9faf5deccd970",
+    "MeuAlgo/weights/qtable.npz": "29cbdab45c4fa9af5e87a62dc718aa449a8d6519285316564aa5c658eab04a28",
+    "MeuAlgo/weights/especialistas/astar.npz": "41692f7954e5902a75b28ff87648e869c638342313a8b062c648868733c04c9f",
+    "MeuAlgo/weights/especialistas/camper.npz": "0abac64d7a0f67c43e2e24529aa7d076a6fcef3c99d253beb66eb10b61a8210d",
+    "MeuAlgo/weights/especialistas/dijkstra.npz": "b0789af86c92bd2a8ea8a1293a810d9d1e12310a19441d4d3de78af33a830553",
+    "MeuAlgo/weights/especialistas/markov.npz": "a64c7153cfcbe95a64add30d359feaa1ba3582b1fa9a5c40251ac2cd1299cdea",
+    "MeuAlgo/weights/especialistas/strafe.npz": "5f79cbacdc937deb94e7efd318a36a155928ce3ba728e9e5d814f6d2e88322b1",
+    "MeuAlgo/weights/generalista/qtable.npz": "cf8b4041efe86e6654fd426b80592d71aaf54af72e154c21eae1dd620ff3aafa"
+  },
+  "matches": [
+    {
+      "opponent": "strafe",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        87,
+        102
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        96,
+        103
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        101,
+        97
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        101,
+        105
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        55,
+        65
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "shots": [
+        14,
+        10
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        2,
+        6
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        74,
+        82
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        71,
+        86
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        15,
+        19
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        5
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        94,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        46,
+        50
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        98,
+        105
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        74,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        83,
+        106
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        94,
+        90
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        68,
+        70
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        77,
+        75
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        115,
+        110
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        86
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        89,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        71,
+        85
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        67,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        62,
+        71
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        6,
+        6
+      ],
+      "shots": [
+        113,
+        110
+      ],
+      "hits": [
+        2,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        98,
+        99
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        76,
+        77
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        67,
+        77
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        85
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        95,
+        94
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        57,
+        65
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        105,
+        111
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        29,
+        31
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        7
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        65,
+        77
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        104,
+        107
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        70,
+        77
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        5,
+        5
+      ],
+      "shots": [
+        107,
+        107
+      ],
+      "hits": [
+        3,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        48,
+        60
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        83,
+        88
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        63,
+        70
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        88,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        88,
+        110
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        96,
+        88
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        66,
+        72
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        101,
+        102
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        64,
+        67
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        92,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        94,
+        92
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        19,
+        28
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        75,
+        92
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        95,
+        96
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        78,
+        83
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        75,
+        81
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        105,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        76,
+        77
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        73,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        85,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        81,
+        92
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        71,
+        72
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        4,
+        4
+      ],
+      "shots": [
+        80,
+        91
+      ],
+      "hits": [
+        4,
+        5
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        84,
+        103
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        81,
+        88
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        102,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        86,
+        93
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        57,
+        60
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        60,
+        57
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        78,
+        76
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        13,
+        12
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        70,
+        77
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        4,
+        3
+      ],
+      "shots": [
+        77,
+        96
+      ],
+      "hits": [
+        7,
+        4
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        80,
+        96
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        81,
+        84
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        66,
+        56
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        106,
+        92
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "shots": [
+        87,
+        90
+      ],
+      "hits": [
+        4,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        75,
+        64
+      ],
+      "hits": [
+        6,
+        1
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        82,
+        76
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "shots": [
+        95,
+        99
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        3,
+        6
+      ],
+      "shots": [
+        36,
+        41
+      ],
+      "hits": [
+        2,
+        5
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        14,
+        23
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        42,
+        52
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        83,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        95,
+        86
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "shots": [
+        102,
+        96
+      ],
+      "hits": [
+        5,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        72,
+        76
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        81,
+        81
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        60,
+        78
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        80,
+        84
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        83,
+        91
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        48,
+        55
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        103
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        68,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        68,
+        70
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        117,
+        107
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        90,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        85,
+        75
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        82,
+        96
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        89,
+        103
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        83,
+        96
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        47,
+        70
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "shots": [
+        72,
+        66
+      ],
+      "hits": [
+        5,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        103,
+        98
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        95,
+        95
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        84,
+        77
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        68,
+        66
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        84,
+        95
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        75,
+        93
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        91,
+        98
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        82,
+        97
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        20,
+        21
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        63,
+        80
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        110,
+        109
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        103,
+        112
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        86,
+        82
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        76,
+        84
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        77,
+        100
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        9
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        91,
+        106
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        42,
+        56
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        90,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        87,
+        93
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        97,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        71,
+        78
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        74,
+        77
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        103
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        93,
+        98
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        35,
+        51
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        62,
+        71
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        82,
+        86
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        2
+      ],
+      "shots": [
+        88,
+        78
+      ],
+      "hits": [
+        6,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        62,
+        65
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        98,
+        90
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        79,
+        87
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        87,
+        87
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "shots": [
+        76,
+        91
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        58,
+        59
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        77,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        92,
+        107
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        106,
+        90
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        64,
+        85
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        102,
+        98
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        71,
+        70
+      ],
+      "hits": [
+        8,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        70,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        91,
+        99
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        91
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        82,
+        93
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        92,
+        114
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        113,
+        106
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        64,
+        76
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        71,
+        71
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        4,
+        7
+      ],
+      "shots": [
+        97,
+        96
+      ],
+      "hits": [
+        1,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        5,
+        6
+      ],
+      "shots": [
+        36,
+        47
+      ],
+      "hits": [
+        2,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        88,
+        90
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        83,
+        94
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        85,
+        93
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        3,
+        3
+      ],
+      "shots": [
+        11,
+        15
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        4,
+        5
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        4,
+        7
+      ],
+      "shots": [
+        27,
+        32
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        3,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        64,
+        62
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        38,
+        38
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        64,
+        66
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        88,
+        93
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        3,
+        8
+      ],
+      "shots": [
+        22,
+        26
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        3,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        34,
+        38
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        1,
+        3
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        24,
+        25
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        3,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        96,
+        106
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        5,
+        8
+      ],
+      "shots": [
+        18,
+        22
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        3,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        97,
+        90
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        73,
+        73
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        103,
+        91
+      ],
+      "hits": [
+        1,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        80,
+        84
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        91,
+        87
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        18,
+        27
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        79,
+        91
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        85,
+        88
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        96,
+        101
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        93,
+        104
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        70,
+        68
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        71,
+        76
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        106,
+        100
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        15,
+        17
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        77,
+        80
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        77,
+        88
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        92,
+        108
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        88,
+        107
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        83,
+        99
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        33,
+        35
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        105,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        84,
+        87
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        104,
+        105
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        82,
+        78
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        89,
+        98
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        90,
+        103
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        34,
+        41
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        97,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        45,
+        49
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        73,
+        85
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        109,
+        91
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        113,
+        98
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        47,
+        38
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        39,
+        42
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        0,
+        4
+      ],
+      "shots": [
+        52,
+        44
+      ],
+      "hits": [
+        5,
+        5
+      ],
+      "heat": [
+        3,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        82,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        59,
+        87
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        39,
+        49
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        94
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        89,
+        109
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        4,
+        3
+      ],
+      "shots": [
+        105,
+        90
+      ],
+      "hits": [
+        5,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        56,
+        59
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        54,
+        68
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        59,
+        52
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        85,
+        86
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        73,
+        83
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        75,
+        90
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        95,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        30,
+        23
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        95,
+        77
+      ],
+      "hits": [
+        7,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        77,
+        75
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        98
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        66,
+        75
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        80,
+        83
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        83,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        92,
+        81
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        19,
+        22
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        69,
+        98
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        83,
+        77
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        78,
+        96
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        106,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        93,
+        102
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        74,
+        82
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        68,
+        83
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        88,
+        82
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        85,
+        93
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        38,
+        40
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "shots": [
+        64,
+        62
+      ],
+      "hits": [
+        3,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        4,
+        3
+      ],
+      "shots": [
+        95,
+        97
+      ],
+      "hits": [
+        5,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        89,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        109,
+        118
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        68,
+        72
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        93,
+        101
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        77,
+        72
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        86,
+        93
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        75,
+        92
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        39,
+        78
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        78,
+        107
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        32,
+        41
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        76,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        4,
+        6
+      ],
+      "shots": [
+        105,
+        105
+      ],
+      "hits": [
+        3,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "shots": [
+        111,
+        110
+      ],
+      "hits": [
+        3,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        91,
+        94
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        73,
+        80
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        85,
+        87
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        82,
+        93
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        34,
+        44
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        57,
+        65
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        73,
+        90
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        60,
+        73
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        92,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        97,
+        84
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        65,
+        86
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        62,
+        68
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        84,
+        88
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        55,
+        71
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        85,
+        86
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        12,
+        14
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        77,
+        99
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        93,
+        97
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        104,
+        108
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        75,
+        82
+      ],
+      "hits": [
+        7,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        75,
+        79
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        78,
+        85
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        9
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        17,
+        17
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        77,
+        91
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        84,
+        105
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "shots": [
+        80,
+        111
+      ],
+      "hits": [
+        3,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        104,
+        91
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        70,
+        69
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        4,
+        5
+      ],
+      "shots": [
+        99,
+        109
+      ],
+      "hits": [
+        3,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        67,
+        70
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        13,
+        16
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        72,
+        83
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        86,
+        96
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        59,
+        72
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        78,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        79,
+        98
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        104,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        96,
+        83
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        87,
+        75
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        72,
+        76
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        70,
+        83
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        78,
+        100
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        9
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        35,
+        37
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        86,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        76,
+        85
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        102,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        100,
+        85
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        71,
+        87
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        4
+      ],
+      "shots": [
+        85,
+        82
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        88,
+        94
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        78,
+        77
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        43,
+        50
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        28,
+        37
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        7
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        93,
+        105
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        106,
+        107
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        101,
+        102
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        102,
+        103
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        74,
+        87
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        65,
+        88
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        84,
+        97
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        75,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        4,
+        5
+      ],
+      "shots": [
+        51,
+        69
+      ],
+      "hits": [
+        3,
+        3
+      ],
+      "heat": [
+        1,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        30,
+        42
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        77,
+        84
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        94,
+        114
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        109,
+        109
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        112,
+        110
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        81,
+        80
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        83,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        99,
+        83
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        70,
+        86
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        16,
+        13
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        87,
+        108
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        94,
+        100
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        102
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        63,
+        66
+      ],
+      "hits": [
+        9,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        69,
+        63
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        82,
+        89
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        78,
+        77
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        39,
+        40
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "camper",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        46,
+        53
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        85,
+        108
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "strafe",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        94,
+        101
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        110,
+        103
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        107,
+        110
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        86,
+        94
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "astar",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        84,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        89,
+        90
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "opponent": "markov",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        91,
+        92
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    }
+  ]
+}

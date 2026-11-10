@@ -1811,15 +1811,21 @@ class GeneralistAgent(MarkovAgent):
         aimed = _aim_error(obs["opponent"][2], obs["opponent"][3], -dx, -dy) < .3
         lateral_combat = (not self._returning and obs["self"][14] > 0 and
                           6. <= distance <= 21.5 and aimed and (shot_age <= 1.2 or bool(flights)))
-        if not flights and not lateral_combat:
+        start_margin = self._safe_margin(obs, sx, sy)
+        speed = C.PLAYER_SPEED * C.SPEED_MULTIPLIER
+        planned_return = self._returning and bool(self._return_path)
+        near_heat = (not planned_return and
+                     start_margin < (speed + C.HEAT_SHRINK_RATE) * self.defense_horizon + .35)
+        if not flights and not lateral_combat and not near_heat:
             self._defense_last_move = baseline
             return baseline
         base = self._movement_risk(obs, baseline)
-        if not lateral_combat and base[0] == 0 and base[2] == 0:
+        future_shrink = C.HEAT_SHRINK_RATE * self.defense_horizon
+        base_margin = self._safe_margin(obs, *base[4])
+        heat_risk = near_heat and base_margin - future_shrink < .35
+        if not lateral_combat and base[0] == 0 and base[2] == 0 and not heat_risk:
             self._defense_last_move = baseline
             return baseline
-        base_margin = self._safe_margin(obs, *base[4])
-        start_margin = self._safe_margin(obs, sx, sy)
         return_target = None
         if self._returning and self._return_path:
             nearest = min(range(len(self._return_path)), key=lambda i:
@@ -1841,6 +1847,10 @@ class GeneralistAgent(MarkovAgent):
                 heat_loss = max(0., base_margin - margin)
                 deviation = math.dist(risk[4], base[4])
                 score = risk[2] * 3. + heat_loss * (2. if self._returning else .35) + .12 * deviation
+                # Keep optional movement inside the future zone; planned
+                # return routes retain their necessary obstacle detours.
+                if near_heat:
+                    score += 4. * max(0., .35 + future_shrink - margin)
                 if return_target is not None:
                     score += .8 * max(0., math.dist((x, y), return_target) - math.dist(base[4], return_target))
                 if lateral_combat:
