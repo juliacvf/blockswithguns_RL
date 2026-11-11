@@ -60,11 +60,55 @@ Para continuar um candidato, use `--resume`, o mesmo `--output` e o mesmo `--see
 ```powershell
 .\.venv\Scripts\python.exe tools/test_generalista.py
 .\.venv\Scripts\python.exe tools/test_generalista_defense.py
+.\.venv\Scripts\python.exe tools/test_powerup_policy.py
+.\.venv\Scripts\python.exe tools/test_markov_return.py
+.\.venv\Scripts\python.exe tools/test_markov_defense.py
+.\.venv\Scripts\python.exe tools/test_contest_equivalence.py
+.\.venv\Scripts\python.exe tools/verify.py
 ```
 
 São nove testes de perfis, transferência e navegação e onze testes de colisão, esquiva, tiro em movimento e retorno seguro.
 
 ## Estado atual
+
+A versão oficial de 10 de novembro de 2026 está em `algo1.py` e nas duas
+pastas de concurso. Os pesos foram mantidos. Ela coleta vida, velocidade e
+tiro rápido por rotas próximas e seguras, aproveita imediatamente vantagens
+temporárias e preserva as correções de esquiva e retorno à zona segura.
+Não escolhe comportamentos pelo nome do adversário nem pela seed.
+
+Superou a meta de 75% de vitórias contra **cada especialista treinado**
+nas duas baterias abaixo. Cada mapa foi jogado dos dois lados; a segunda
+bateria usou 20 mapas novos, com a política congelada antes dos resultados.
+
+| Especialista | Bateria original (70 partidas cada) | Mapas novos (40 partidas cada) |
+|---|---|---|
+| Camper | 65/70 — 92,9% | 34/40 — 85% |
+| Strafe | 60/70 — 85,7% | 33/40 — 82,5% |
+| Dijkstra | 59/70 — 84,3% | 35/40 — 87,5% |
+| A* | 70/70 — 100% | 40/40 — 100% |
+| Markov | 60/70 — 85,7% | 34/40 — 85% |
+| Total | 314/350 — 89,7% | 176/200 — 88% |
+
+Contra os **bots padrão**, foram 20 vitórias em 20 partidas contra cada um
+(100/100 no total), mantendo o resultado anterior nos mesmos mapas e lados.
+Não houve dano de calor nessa bateria. A taxa de vitórias foi preservada;
+isso não significa que todos os demais indicadores sejam idênticos.
+
+Passaram 40 testes específicos, as 23 verificações gerais do projeto
+(incluindo 32 regressões dos especialistas), a validação oficial dos dois
+slots e duas partidas completas no executor de concurso. Nas 12 partidas
+de equivalência, os dois scripts de concurso produziram ações idênticas
+às do código de desenvolvimento durante todos os 41.700 passos.
+
+O [relatório completo](experiments/generalista_75_each_results.json) guarda
+placares, seeds, lados, hashes e a comparação com a candidata anterior
+(277/350; Markov 37/70). As taxas descrevem essas amostras e não garantem
+o mesmo resultado em todo mapa futuro.
+
+As seções seguintes registram etapas anteriores, preservadas para comparação.
+
+### Histórico anterior à promoção de 10 de novembro
 
 O checkpoint oficial recebeu 100 partidas de treino equilibradas entre os cinco bots. A correção de defesa alterou o código, mantendo esses pesos.
 
@@ -76,7 +120,7 @@ Na comparação de 500 partidas por versão, os acertos recebidos caíram de 161
 
 Os resultados completos e as etapas anteriores ficam no arquivo de acompanhamento do projeto. Este README descreve o uso da versão atual.
 
-## Base para os próximos testes contra especialistas
+### Base preservada dos testes contra especialistas
 
 A candidata anterior aos experimentos de aproximação contra Camper está
 preservada em [experiments/generalista_base.py](experiments/generalista_base.py).
@@ -88,5 +132,45 @@ registram 272 vitórias, 37 empates e 41 derrotas em 350 partidas (77,7%).
 Foram 70 partidas por especialista: Camper 64 vitórias, Strafe 56, Dijkstra 51,
 A* 68 e Markov 33. Essa é a base para o trabalho prioritário contra Markov.
 As alterações de espaçamento testadas contra Camper não fazem parte dela.
+
+A primeira candidata para Markov está em
+[experiments/markov_defense.py](experiments/markov_defense.py), com os mesmos
+pesos da base. Em empates de dano previsto, a esquiva prefere um movimento
+que não receba o acerto no próximo passo da simulação. Nos 70 confrontos
+originais contra Markov, passou de 33/23/14 para 34/23/13 (vitórias/empates/derrotas),
+preservando as 33 vitórias e os 23 empates. Os 40 confrontos de verificação
+contra os demais especialistas e os 20 confrontos contra Markov em dez mapas
+novos mantiveram seus resultados anteriores. A bateria equilibrada de 50
+partidas permaneceu em 68%; a bateria completa de 350 não foi repetida.
+Os [resultados e limites da avaliação](experiments/markov_defense_results.json)
+acompanham a candidata; ela ainda é separada da versão oficial e das pastas
+de concurso. Passaram 20 testes existentes e três testes de regressão
+baseados em um estado real de partida (`tools/test_markov_defense.py`).
+
+A candidata intermediária de desenvolvimento é
+[experiments/markov_return.py](experiments/markov_return.py). Além do desempate
+da esquiva, verifica a rota até uma área segura para o fim da partida e sai
+de bolsões antes que suas passagens fechem. Após teleporte, recalcula essa
+rota imediatamente. A base e a candidata anterior permanecem preservadas.
+
+Na comparação equilibrada de 350 partidas (70 por especialista), a taxa
+geral passou de 272/350 (77,7%) para 277/350 (79,1%). Contra Markov passou
+de 33/70 (47,1%) para 37/70 (52,9%), preservando suas 33 vitórias anteriores.
+Três derrotas e um empate contra Markov viraram vitórias. Os resultados por
+especialista foram Camper 65/70, Strafe 55/70, Dijkstra 51/70, A* 69/70 e
+Markov 37/70. Strafe perdeu uma vitória em relação à base e continua sendo
+uma ressalva. O dano de calor total caiu de 23 para quatro vidas.
+
+Em cinco mapas novos, nos dois lados e contra os cinco especialistas
+(50 partidas por versão), a taxa passou de 66% para 70%. Em um controle
+separado de 20 partidas contra Markov, manteve seis vitórias, nove empates
+e cinco derrotas. A revisão final foi repetida em todos os confrontos com
+teleporte; os registros sem teleporte foram reaproveitados após verificar
+que a mudança de recálculo não altera esse caminho. Os detalhes estão em
+[experiments/markov_return_results.json](experiments/markov_return_results.json).
+Passaram 29 testes: 20 existentes, três de esquiva e seis de retorno.
+Essa candidata intermediária fica preservada como referência. A versão
+oficial é a descrita no início de "Estado atual", também preservada em
+[experiments/generalista_candidate.py](experiments/generalista_candidate.py).
 
 [Voltar à documentação do desafio](../README.md)

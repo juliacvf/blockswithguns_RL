@@ -1,0 +1,57 @@
+{
+  "description": "State immediately before the only received hit in Markov loss 1310001, swapped spawns.",
+  "map_seed": 1310001,
+  "swapped": true,
+  "time": 112.16666666666286,
+  "tick": 3365,
+  "players": [
+    {
+      "x": 41.31658460449501,
+      "y": 37.64259050115265,
+      "aim": 3.5342917352885173,
+      "lives": 8,
+      "cooldown": 0.08333333333333348,
+      "quickshot_timer": 0.0,
+      "speed_timer": 4.866666666666667,
+      "heat_timer": 0.0,
+      "retreated": false,
+      "last_hit_time": -10.0,
+      "last_shot_time": 111.59999999999623
+    },
+    {
+      "x": 39.538651091754126,
+      "y": 36.79179716263403,
+      "aim": 0.39269908169872414,
+      "lives": 8,
+      "cooldown": 0.65,
+      "quickshot_timer": 0.0,
+      "speed_timer": 0.0,
+      "heat_timer": 0.0,
+      "retreated": false,
+      "last_hit_time": -10.0,
+      "last_shot_time": 112.16666666666286
+    }
+  ],
+  "bullets": [
+    {
+      "x": 40.47792861647393,
+      "y": 37.18085865220521,
+      "vx": 12.934313455158014,
+      "vy": 5.357568053111257,
+      "owner": 1,
+      "ttl": 5.966666666666667,
+      "dist": 0.4666666666666667,
+      "alive": true
+    }
+  ],
+  "own_action": [
+    7,
+    9,
+    1
+  ],
+  "enemy_action": [
+    7,
+    1,
+    1
+  ]
+}

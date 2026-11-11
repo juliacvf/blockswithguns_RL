@@ -1,0 +1,2709 @@
+{
+  "baseline_commit": "bb29290",
+  "baseline_policy": "MeuAlgo/experiments/generalista_base.py",
+  "scope": "Only the 14 Markov defeats. Draws counted but not diagnosed.",
+  "summary": {
+    "total": {
+      "matches": 70,
+      "wins": 33,
+      "draws": 23,
+      "losses": 14,
+      "shots": 5722,
+      "hits": 69,
+      "received": 42,
+      "heat": 6,
+      "enemy_heat": 1
+    },
+    "losses": {
+      "matches": 14,
+      "wins": 0,
+      "draws": 0,
+      "losses": 14,
+      "shots": 1037,
+      "hits": 11,
+      "received": 26,
+      "heat": 6,
+      "enemy_heat": 0
+    },
+    "final_margins": {
+      "1": 10,
+      "3": 2,
+      "4": 1,
+      "2": 1
+    },
+    "loss_durations": {
+      "120.0": 13,
+      "104.6": 1
+    },
+    "losses_with_own_heat": 2,
+    "first_received_hit_phases": {
+      "pressure": 9,
+      "": 4,
+      "no_bullet_hit": 1
+    },
+    "all_received_hit_phases": {
+      "pressure": 14,
+      "": 12
+    },
+    "opposite_outcomes": {
+      "0": 10,
+      "-1": 4
+    }
+  },
+  "reproduction": {
+    "matches": 14,
+    "all_outcomes_and_shot_hit_heat_counts_matched": true
+  },
+  "detailed_findings": {
+    "received_hits": 26,
+    "actual_one_step_escape_existed": 6,
+    "actual_one_step_escape_did_not_exist": 20,
+    "zero_predicted_risk_and_enemy_fired_same_step": 5,
+    "median_hit_distance": 2.0177,
+    "hits_below_3_blocks": 23,
+    "bullet_losses_without_landed_shot": 7
+  },
+  "cautions": [
+    "One-step alternatives hold the opponent action fixed, as appropriate for simultaneous actions. They establish a preventable hit on that step, not a converted win.",
+    "Long heat routes are observed failures. A shorter feasible safe route has not yet been established.",
+    "Low hit rate alone does not establish an aiming bug against an evasive opponent."
+  ],
+  "first_experiments": [
+    "When candidate moves predict equal damage counts, prefer delaying the first hit while retaining valid firing opportunities; confirm this does not sacrifice the safe return route.",
+    "Add short-range anticipation of a shot that can be fired on the current step; observed live bullets alone cannot represent these five impacts.",
+    "Investigate long detours during heat return separately, including the post-retreat route in map 5728078."
+  ],
+  "cases": [
+    {
+      "seed": 1310001,
+      "swapped": true,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        81,
+        92
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          1,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 112.2,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 1310001,
+          "swapped": true,
+          "t": 112.2,
+          "distance": 1.971,
+          "phase": "pressure",
+          "selected_move": [
+            0,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.08333333333333348,
+          "enemy_cooldown": 0.65
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 24.4,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 36.4,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 45.433,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 57.467,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 66.467,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 78.5,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 87.5,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 103.333,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 112.267,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 114.8,
+          "mode": "retreat",
+          "reason": "no_firing_gain",
+          "metrics": {
+            "duration": 2.5333285331726074,
+            "opportunity": 0.09210158532970059,
+            "visible": 0.18421164080918165,
+            "away": 2.433328628540039,
+            "pursued": 0.5890377538182973,
+            "error": 1.0039072089807997,
+            "landed": 0,
+            "received": 0,
+            "distance": 6.444310222036377,
+            "closing": 1.5824333586266701,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 114.8,
+          "mode": "normal",
+          "reason": "no_firing_gain"
+        }
+      ]
+    },
+    {
+      "seed": 1310004,
+      "swapped": false,
+      "lives": [
+        3,
+        6
+      ],
+      "seconds": 120.0,
+      "shots": [
+        36,
+        41
+      ],
+      "hits": [
+        2,
+        5
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          6,
+          3
+        ],
+        "hits": [
+          5,
+          2
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 49.367,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 51.133,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 55.7,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 56.1,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 56.333,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 56.767,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 57.0,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 1310004,
+          "swapped": false,
+          "t": 49.3666,
+          "distance": 5.1804,
+          "phase": "",
+          "selected_move": [
+            -1,
+            -1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [
+            [
+              -1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              -1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.65,
+          "enemy_cooldown": 0.41666666666666674
+        },
+        {
+          "seed": 1310004,
+          "swapped": false,
+          "t": 51.1333,
+          "distance": 4.7558,
+          "phase": "",
+          "selected_move": [
+            0,
+            -1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.05000000000000015,
+          "enemy_cooldown": 0.45000000000000007
+        },
+        {
+          "seed": 1310004,
+          "swapped": false,
+          "t": 55.7,
+          "distance": 2.038,
+          "phase": "",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.3500000000000001,
+          "enemy_cooldown": 0.6166666666666667
+        },
+        {
+          "seed": 1310004,
+          "swapped": false,
+          "t": 56.3333,
+          "distance": 1.9974,
+          "phase": "",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.3833333333333334,
+          "enemy_cooldown": 0.65
+        },
+        {
+          "seed": 1310004,
+          "swapped": false,
+          "t": 57.0,
+          "distance": 1.9974,
+          "phase": "",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.3833333333333334,
+          "enemy_cooldown": 0.65
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 21.4,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 30.4,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 42.433,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 47.533,
+          "mode": "normal",
+          "reason": "safe_return"
+        }
+      ]
+    },
+    {
+      "seed": 1310005,
+      "swapped": true,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        83,
+        91
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          1,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 109.767,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 1310005,
+          "swapped": true,
+          "t": 109.7666,
+          "distance": 2.54,
+          "phase": "pressure",
+          "selected_move": [
+            0,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.08333333333333348,
+          "enemy_cooldown": 0.5833333333333334
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 18.3,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 27.3,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 39.333,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 48.333,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 61.167,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 70.2,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 82.2,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 91.233,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 103.5,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 109.833,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 112.367,
+          "mode": "retreat",
+          "reason": "no_firing_gain",
+          "metrics": {
+            "duration": 2.500004768371582,
+            "opportunity": 0.4799986267116037,
+            "visible": 1.0,
+            "away": 2.0333433151245117,
+            "pursued": 0.6393405139966652,
+            "error": 0.5607423008766617,
+            "landed": 0,
+            "received": 0,
+            "distance": 4.29410583820342,
+            "closing": 0.2237369955911519,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 112.367,
+          "mode": "normal",
+          "reason": "no_firing_gain"
+        }
+      ]
+    },
+    {
+      "seed": 1310008,
+      "swapped": true,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        89,
+        103
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          1,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 89.033,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 1310008,
+          "swapped": true,
+          "t": 89.0333,
+          "distance": 3.6025,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.28333333333333344,
+          "enemy_cooldown": 0.5166666666666667
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 20.8,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 29.8,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 41.833,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 50.867,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 63.0,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 72.0,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 84.033,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 89.1,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 91.633,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.500004768371582,
+            "opportunity": 0.039999885559300306,
+            "visible": 1.0,
+            "away": 2.2333359718322754,
+            "pursued": 0.0,
+            "error": 0.4620962707667147,
+            "landed": 0,
+            "received": 0,
+            "distance": 8.18262009231332,
+            "closing": -1.3950974154791025,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 91.633,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 103.667,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 112.667,
+          "mode": "normal",
+          "reason": "controller_completed"
+        }
+      ]
+    },
+    {
+      "seed": 1320000,
+      "swapped": true,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        75,
+        93
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          7,
+          6
+        ],
+        "hits": [
+          2,
+          1
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 113.667,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 1320000,
+          "swapped": true,
+          "t": 113.6666,
+          "distance": 1.9745,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.08333333333333348,
+          "enemy_cooldown": 0.6166666666666667
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 21.967,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 30.967,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 43.0,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 52.0,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 66.867,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 75.9,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 87.9,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 96.933,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 108.933,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 113.767,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 116.3,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.500004768371582,
+            "opportunity": 0.40000457762798763,
+            "visible": 1.0,
+            "away": 2.500004768371582,
+            "pursued": 0.10666445414647265,
+            "error": 0.4643431848597099,
+            "landed": 0,
+            "received": 0,
+            "distance": 7.3185017373388,
+            "closing": -0.6939939170929169,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 116.3,
+          "mode": "normal",
+          "reason": "not_followed"
+        }
+      ]
+    },
+    {
+      "seed": 1320005,
+      "swapped": false,
+      "lives": [
+        6,
+        7
+      ],
+      "seconds": 120.0,
+      "shots": [
+        93,
+        98
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          1,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 56.6,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 56.767,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 57.2,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 1320005,
+          "swapped": false,
+          "t": 56.6,
+          "distance": 1.9578,
+          "phase": "",
+          "selected_move": [
+            1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.18333333333333346,
+          "enemy_cooldown": 0.6166666666666667
+        },
+        {
+          "seed": 1320005,
+          "swapped": false,
+          "t": 57.2,
+          "distance": 1.2006,
+          "phase": "",
+          "selected_move": [
+            1,
+            0
+          ],
+          "predicted_selected_hits": 0,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              -1,
+              -1
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": true,
+          "own_cooldown": 0.2500000000000001,
+          "enemy_cooldown": 0.016666666666666816
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 24.133,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 33.133,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 45.167,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 54.167,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 56.7,
+          "mode": "normal",
+          "reason": "no_safe_retreat"
+        },
+        {
+          "t": 56.7,
+          "mode": "normal",
+          "reason": "short_trade_no_route"
+        },
+        {
+          "t": 68.733,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 77.733,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 90.167,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 99.2,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 112.133,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        }
+      ]
+    },
+    {
+      "seed": 4433938,
+      "swapped": false,
+      "lives": [
+        6,
+        7
+      ],
+      "seconds": 120.0,
+      "shots": [
+        88,
+        90
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": -1,
+        "lives": [
+          7,
+          7
+        ],
+        "hits": [
+          1,
+          1
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 52.433,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 74.667,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 92.433,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 4433938,
+          "swapped": false,
+          "t": 52.4333,
+          "distance": 2.3063,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.05000000000000015,
+          "enemy_cooldown": 0.6166666666666667
+        },
+        {
+          "seed": 4433938,
+          "swapped": false,
+          "t": 74.6666,
+          "distance": 2.5487,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.41666666666666674,
+          "enemy_cooldown": 0.5833333333333334
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 24.9,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 33.9,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 45.933,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 52.533,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 55.067,
+          "mode": "retreat",
+          "reason": "productive",
+          "metrics": {
+            "duration": 2.5000011920928955,
+            "opportunity": 0.1599997711182732,
+            "visible": 1.0,
+            "away": 2.366666793823242,
+            "pursued": 0.5915486998464718,
+            "error": 0.2520299960559918,
+            "landed": 0,
+            "received": 0,
+            "distance": 7.818815766446724,
+            "closing": -0.08133889723823153,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 55.833,
+          "mode": "retreat",
+          "reason": "no_firing_gain",
+          "metrics": {
+            "duration": 2.5000011920928955,
+            "opportunity": 0.14666741053227875,
+            "visible": 1.0,
+            "away": 2.366666793823242,
+            "pursued": 0.9014080463243916,
+            "error": 0.07755153970239137,
+            "landed": 0,
+            "received": 0,
+            "distance": 9.169276428586791,
+            "closing": 0.9802078683201036,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 55.833,
+          "mode": "normal",
+          "reason": "no_firing_gain"
+        },
+        {
+          "t": 67.867,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 74.767,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 77.3,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.5333285331726074,
+            "opportunity": 0.11842116408091817,
+            "visible": 1.0,
+            "away": 2.5333285331726074,
+            "pursued": 0.026313931984697263,
+            "error": 0.1356040951846343,
+            "landed": 0,
+            "received": 0,
+            "distance": 7.826840235236084,
+            "closing": -1.1348952177105287,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 77.3,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 89.3,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 92.433,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 104.467,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 113.5,
+          "mode": "normal",
+          "reason": "controller_completed"
+        }
+      ]
+    },
+    {
+      "seed": 7193382,
+      "swapped": false,
+      "lives": [
+        5,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        18,
+        22
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        3,
+        0
+      ],
+      "opposite": {
+        "winner": -1,
+        "lives": [
+          8,
+          8
+        ],
+        "hits": [
+          0,
+          0
+        ],
+        "heat": [
+          0,
+          1
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 82.533,
+          "kind": "heat_hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 87.533,
+          "kind": "heat_hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 92.533,
+          "kind": "heat_hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        }
+      ],
+      "instant_counterfactuals": [],
+      "combat_response_log": [
+        {
+          "t": 101.2,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 110.2,
+          "mode": "normal",
+          "reason": "controller_completed"
+        }
+      ]
+    },
+    {
+      "seed": 5558074,
+      "swapped": false,
+      "lives": [
+        6,
+        7
+      ],
+      "seconds": 120.0,
+      "shots": [
+        77,
+        80
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          2,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 71.433,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 71.5,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 89.9,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 5558074,
+          "swapped": false,
+          "t": 71.4333,
+          "distance": 0.3945,
+          "phase": "pressure",
+          "selected_move": [
+            1,
+            1
+          ],
+          "predicted_selected_hits": 0,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              -1,
+              -1
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": true,
+          "own_cooldown": 0.08333333333333348,
+          "enemy_cooldown": 0.016666666666666816
+        },
+        {
+          "seed": 5558074,
+          "swapped": false,
+          "t": 89.9,
+          "distance": 2.5348,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            -1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.016666666666666816,
+          "enemy_cooldown": 0.5833333333333334
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 20.767,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 29.767,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 41.8,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 50.8,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 66.533,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 71.5,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 83.6,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 90.067,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 92.6,
+          "mode": "retreat",
+          "reason": "productive",
+          "metrics": {
+            "duration": 2.5333285331726074,
+            "opportunity": 0.578946031028982,
+            "visible": 1.0,
+            "away": 2.366659641265869,
+            "pursued": 0.507040252899061,
+            "error": 0.49343961574132844,
+            "landed": 0,
+            "received": 0,
+            "distance": 4.750721395702362,
+            "closing": 0.517582511857176,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 93.367,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.5333356857299805,
+            "opportunity": 0.30263195044411695,
+            "visible": 1.0,
+            "away": 2.266666889190674,
+            "pursued": 0.26470244838325924,
+            "error": 0.66410264060558,
+            "landed": 0,
+            "received": 0,
+            "distance": 6.66609994959488,
+            "closing": -0.18663502606222837,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 93.367,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 105.467,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 114.5,
+          "mode": "normal",
+          "reason": "controller_completed"
+        }
+      ]
+    },
+    {
+      "seed": 5728078,
+      "swapped": false,
+      "lives": [
+        0,
+        4
+      ],
+      "seconds": 104.6,
+      "shots": [
+        52,
+        44
+      ],
+      "hits": [
+        5,
+        5
+      ],
+      "heat": [
+        3,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          1,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 31.8,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 32.333,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 32.467,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 33.0,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 33.8,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 34.267,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 34.433,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 34.933,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 35.1,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 87.833,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 94.6,
+          "kind": "heat_hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 99.6,
+          "kind": "heat_hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        },
+        {
+          "t": 104.6,
+          "kind": "heat_hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 5728078,
+          "swapped": false,
+          "t": 32.3333,
+          "distance": 1.8405,
+          "phase": "",
+          "selected_move": [
+            -1,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.11666666666666681,
+          "enemy_cooldown": 0.6166666666666667
+        },
+        {
+          "seed": 5728078,
+          "swapped": false,
+          "t": 33.0,
+          "distance": 1.7984,
+          "phase": "",
+          "selected_move": [
+            -1,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.11666666666666681,
+          "enemy_cooldown": 0.6166666666666667
+        },
+        {
+          "seed": 5728078,
+          "swapped": false,
+          "t": 34.2666,
+          "distance": 1.5063,
+          "phase": "",
+          "selected_move": [
+            -1,
+            -1
+          ],
+          "predicted_selected_hits": 0,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              -1,
+              -1
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": true,
+          "own_cooldown": 0.18333333333333346,
+          "enemy_cooldown": 0.016666666666666816
+        },
+        {
+          "seed": 5728078,
+          "swapped": false,
+          "t": 34.9333,
+          "distance": 1.3431,
+          "phase": "",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 0,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              -1,
+              -1
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": true,
+          "own_cooldown": 0.18333333333333346,
+          "enemy_cooldown": 0.016666666666666816
+        },
+        {
+          "seed": 5728078,
+          "swapped": false,
+          "t": 87.8333,
+          "distance": 1.8698,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              1,
+              0
+            ]
+          ],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.11666666666666681,
+          "enemy_cooldown": 0.65
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 23.733,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 31.8,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 62.567,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 71.6,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 84.7,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        }
+      ]
+    },
+    {
+      "seed": 4247086,
+      "swapped": true,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        92,
+        81
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          8,
+          7
+        ],
+        "hits": [
+          1,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 37.267,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "",
+          "mode": ""
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 4247086,
+          "swapped": true,
+          "t": 37.2666,
+          "distance": 2.1386,
+          "phase": "",
+          "selected_move": [
+            0,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.21666666666666679,
+          "enemy_cooldown": 0.6166666666666667
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 27.233,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 36.267,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 37.333,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 39.867,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.5000011920928955,
+            "opportunity": 0.10666746775271047,
+            "visible": 0.9200015449516559,
+            "away": 2.5000011920928955,
+            "pursued": 0.18666735331184706,
+            "error": 1.2441465850626197,
+            "landed": 0,
+            "received": 0,
+            "distance": 7.373723066098455,
+            "closing": -0.44711554842419476,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 39.867,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 51.9,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 60.933,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 72.933,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 81.967,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 94.0,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 103.033,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 115.033,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        }
+      ]
+    },
+    {
+      "seed": 3313218,
+      "swapped": false,
+      "lives": [
+        6,
+        7
+      ],
+      "seconds": 120.0,
+      "shots": [
+        86,
+        93
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": -1,
+        "lives": [
+          8,
+          8
+        ],
+        "hits": [
+          0,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 49.833,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 50.133,
+          "kind": "hit",
+          "victim": 1,
+          "phase": "shape",
+          "mode": "retreat"
+        },
+        {
+          "t": 111.7,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 3313218,
+          "swapped": false,
+          "t": 49.8333,
+          "distance": 0.9947,
+          "phase": "pressure",
+          "selected_move": [
+            0,
+            -1
+          ],
+          "predicted_selected_hits": 0,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              -1,
+              -1
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              -1,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              -1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": true,
+          "own_cooldown": 0.2500000000000001,
+          "enemy_cooldown": 0.016666666666666816
+        },
+        {
+          "seed": 3313218,
+          "swapped": false,
+          "t": 111.7,
+          "distance": 2.1718,
+          "phase": "pressure",
+          "selected_move": [
+            1,
+            -1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.016666666666666816,
+          "enemy_cooldown": 0.6166666666666667
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 24.7,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 33.7,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 45.733,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 49.933,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 50.133,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 62.133,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 71.167,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 83.167,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 92.2,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 104.2,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 111.867,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 114.4,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.5333285331726074,
+            "opportunity": 0.368417634851843,
+            "visible": 1.0,
+            "away": 1.5666604042053223,
+            "pursued": 0.021279704156869906,
+            "error": 0.7765800902313739,
+            "landed": 0,
+            "received": 0,
+            "distance": 6.3594071461941395,
+            "closing": -1.7742175767307782,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 114.4,
+          "mode": "normal",
+          "reason": "not_followed"
+        }
+      ]
+    },
+    {
+      "seed": 15019212,
+      "swapped": true,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        78,
+        77
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": 0,
+        "lives": [
+          7,
+          6
+        ],
+        "hits": [
+          2,
+          1
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 49.667,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 15019212,
+          "swapped": true,
+          "t": 49.6666,
+          "distance": 2.21,
+          "phase": "pressure",
+          "selected_move": [
+            0,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.5166666666666667,
+          "enemy_cooldown": 0.6166666666666667
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 20.133,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 29.133,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 42.033,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 49.767,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 52.3,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.5000011920928955,
+            "opportunity": 0.45333173116124575,
+            "visible": 1.0,
+            "away": 1.4000022411346436,
+            "pursued": 0.1190515724105868,
+            "error": 0.504508211143395,
+            "landed": 0,
+            "received": 0,
+            "distance": 5.255527848487502,
+            "closing": -1.4772774771156103,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 52.3,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 66.1,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 75.133,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 87.133,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 96.167,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 108.167,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 117.2,
+          "mode": "normal",
+          "reason": "controller_completed"
+        }
+      ]
+    },
+    {
+      "seed": 16260208,
+      "swapped": false,
+      "lives": [
+        6,
+        8
+      ],
+      "seconds": 120.0,
+      "shots": [
+        89,
+        90
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "opposite": {
+        "winner": -1,
+        "lives": [
+          8,
+          8
+        ],
+        "hits": [
+          0,
+          0
+        ],
+        "heat": [
+          0,
+          0
+        ]
+      },
+      "damage_events": [
+        {
+          "t": 44.967,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        },
+        {
+          "t": 85.833,
+          "kind": "hit",
+          "victim": 0,
+          "phase": "pressure",
+          "mode": "pressure"
+        }
+      ],
+      "instant_counterfactuals": [
+        {
+          "seed": 16260208,
+          "swapped": false,
+          "t": 44.9666,
+          "distance": 2.5002,
+          "phase": "pressure",
+          "selected_move": [
+            0,
+            1
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "predicted_moves_avoiding_immediate_hit": [
+            [
+              0,
+              -1
+            ],
+            [
+              1,
+              -1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.11666666666666681,
+          "enemy_cooldown": 0.6166666666666667
+        },
+        {
+          "seed": 16260208,
+          "swapped": false,
+          "t": 85.8333,
+          "distance": 2.674,
+          "phase": "pressure",
+          "selected_move": [
+            -1,
+            0
+          ],
+          "predicted_selected_hits": 1,
+          "safe_moves_in_actual_one_step": [],
+          "predicted_moves_avoiding_immediate_hit": [],
+          "enemy_fired_same_step": false,
+          "own_cooldown": 0.65,
+          "enemy_cooldown": 0.5833333333333334
+        }
+      ],
+      "combat_response_log": [
+        {
+          "t": 21.067,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 30.1,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 42.133,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 45.033,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 47.567,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.5000011920928955,
+            "opportunity": 0.2400010871882023,
+            "visible": 1.0,
+            "away": 2.5000011920928955,
+            "pursued": 0.34666712443012027,
+            "error": 1.0906575544388255,
+            "landed": 0,
+            "received": 0,
+            "distance": 6.855051451284514,
+            "closing": -0.36437070312525066,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 47.567,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 59.867,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 68.867,
+          "mode": "normal",
+          "reason": "controller_completed"
+        },
+        {
+          "t": 80.9,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 86.0,
+          "mode": "retreat",
+          "reason": "response_short_trade_lost"
+        },
+        {
+          "t": 88.5,
+          "mode": "retreat",
+          "reason": "not_followed",
+          "metrics": {
+            "duration": 2.500004768371582,
+            "opportunity": 0.039999885559300306,
+            "visible": 1.0,
+            "away": 2.1000123023986816,
+            "pursued": 0.36507801350803637,
+            "error": 0.7746046359948506,
+            "landed": 0,
+            "received": 0,
+            "distance": 8.347084070558159,
+            "closing": -1.3411681505614887,
+            "exposure": 0.0
+          }
+        },
+        {
+          "t": 88.5,
+          "mode": "normal",
+          "reason": "not_followed"
+        },
+        {
+          "t": 100.533,
+          "mode": "pressure",
+          "reason": "pressure_default"
+        },
+        {
+          "t": 109.567,
+          "mode": "normal",
+          "reason": "controller_completed"
+        }
+      ]
+    }
+  ],
+  "raw_replays_directory": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\markov_loss_replays",
+  "policy_changed": false
+}

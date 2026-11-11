@@ -195,7 +195,7 @@ def default_q() -> np.ndarray:
             q[key + (CHASE,)] += 0.03
 
         # No fim da partida, se estiver empatado ou perdendo,
-        # prioriza ações ofensivas e reduz a passividade.
+        # Prefer offensive actions and avoid passivity.
         if time_band == 2 and lives_diff <= 1:
             q[key + (CHASE,)] += 0.15
             q[key + (STRAFE_LEFT,)] += 0.05
@@ -1861,12 +1861,16 @@ class GeneralistAgent(MarkovAgent):
                     score -= .45 * abs(side) + .08 * self._combat_side * side
                     if move == (0, 0):
                         score += .3
-                candidates.append((risk[0] + risk[1], score, move != baseline,
+                # A later collision leaves another decision before impact.
+                # Preserve total-damage priority and existing tactical scores
+                # whenever neither move is hit on the next engine step.
+                immediate = int(risk[3] <= C.FIXED_DT + 1e-6)
+                candidates.append((risk[0] + risk[1], immediate, score, move != baseline,
                                    mx * mx + my * my, mx, my))
         if not candidates:
             move = baseline
         else:
-            _, _, _, _, mx, my = min(candidates)
+            _, _, _, _, _, mx, my = min(candidates)
             move = mx, my
         if move != baseline:
             self._defense_overrides += 1
@@ -1952,3 +1956,1286 @@ def make_agent(weights_path=None):
     with np.load(model, allow_pickle=False) as checkpoint:
         profile = str(checkpoint["profile"].item()) if "profile" in checkpoint.files else "general"
     return policy_class(profile)(model)
+
+
+_PursuitBase = GeneralistAgent
+
+
+class GeneralistAgent(_PursuitBase):
+    """Shape a pursuit into a useful firing lane, rather than disengage."""
+
+    def reset(self):
+        super().reset()
+        self._tactic_tick = None
+        self._tactic_history = deque()
+        self._tactic_phase = ''
+        self._tactic_until = -1.
+        self._tactic_last = -1e9
+        self._tactic_goal = None
+        self._tactic_plan_time = -1e9
+        self._tactic_events = []
+        self._tactic_lives = None
+        self._tactic_enemy_previous = None
+        self._tactic_stable = 0.
+        self._tactic_following = 0.
+        self._tactic_attack_since = -1e9
+        self._tactic_side = 0
+
+    def _tactic_event(self, phase, reason, obs):
+        self._tactic_phase = phase
+        sx, sy = _world_xy(obs['self'])
+        ex, ey = _world_xy(obs['opponent'])
+        self._tactic_events.append(dict(t=round(self._previous_time,3), phase=phase,
+            reason=reason, own=(sx,sy), enemy=(ex,ey), goal=self._tactic_goal,
+            stable=round(self._tactic_stable,3), following=round(self._tactic_following,3)))
+
+    def observe(self, obs):
+        super().observe(obs)
+        if self._tactic_tick == self._observed_tick:
+            return
+        self._tactic_tick = self._observed_tick
+        now = self._previous_time
+        own, enemy = _world_xy(obs['self']), _world_xy(obs['opponent'])
+        lives = _lives(obs['self']), _lives(obs['opponent'])
+        if self._tactic_enemy_previous is not None:
+            before, when = self._tactic_enemy_previous
+            dt = max(now-when, 1e-6)
+            velocity = tuple((v-b)/dt for v,b in zip(enemy,before))
+            delta = math.dist(velocity, self._motion_velocity)
+            self._tactic_stable = self._tactic_stable+dt if delta<.65 else 0.
+            dx, dy = enemy[0]-own[0], enemy[1]-own[1]
+            closing = -(dx*velocity[0]+dy*velocity[1])/max(math.hypot(dx,dy),1e-6)
+            self._tactic_following = min(1.,self._tactic_following+dt) if closing>.7 else max(0.,self._tactic_following-2*dt)
+            if math.dist(enemy,before)>1. or (self._tactic_history and math.dist(own,self._tactic_history[-1][3])>1.):
+                self._tactic_history.clear()
+                self._tactic_goal = None
+                if self._tactic_phase:self._tactic_event('', 'teleport', obs)
+        if lives != self._tactic_lives:
+            self._tactic_history.clear()
+            if self._tactic_lives and lives[1]<self._tactic_lives[1] and self._tactic_phase:
+                self._tactic_event('', 'attack_progress', obs)
+                self._tactic_last=now
+        self._tactic_lives=lives
+        self._tactic_enemy_previous=enemy,now
+        self._tactic_history.append((now,self._combat_shots,lives,own))
+        while len(self._tactic_history)>1 and self._tactic_history[1][0]<now-9.:
+            self._tactic_history.popleft()
+
+    def _tactic_trigger(self, obs):
+        now=self._previous_time
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        distance=math.hypot(ex-sx,ey-sy)
+        if now-self._tactic_last<12. or obs['self'][14]<=0 or not 6.<=distance<=19.:
+            return None
+        if obs['opponent'][12]>0 and _lives(obs['self'])>=_lives(obs['opponent']):
+            return None
+        recent_shot=(1.-float(obs['opponent'][11]))*5.<1.2
+        aimed=_aim_error(obs['opponent'][2],obs['opponent'][3],sx-ex,sy-ey)<.3
+        radial=((ex-sx)*self._motion_velocity[0]+(ey-sy)*self._motion_velocity[1])/max(distance,1e-6)
+        pressure=recent_shot and aimed and distance<10. and (radial<-.7 or self._bullet_threat(obs)==2)
+        h=self._tactic_history
+        stalled=(len(h)>1 and now-h[0][0]>=8. and self._combat_shots-h[0][1]>=6 and recent_shot)
+        return 'close_pressure' if pressure else 'ineffective_exchange' if stalled else None
+
+    def _tactic_destination(self, obs):
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        solid=np.logical_or(obs['map'][0],obs['map'][1])
+        start=int(sx),int(sy);costs={start:0.};queue=[(0.,start)];best=None
+        old_margin=self._safe_margin(obs,sx,sy)
+        enemy_margin=self._safe_margin(obs,ex,ey)
+        old_dx,old_dy=sx-ex,sy-ey
+        old_distance=max(math.hypot(old_dx,old_dy),1e-6)
+        while queue:
+            cost,(cx,cy)=heapq.heappop(queue)
+            if cost!=costs[cx,cy]:continue
+            x,y=cx+.5,cy+.5
+            eta=cost/C.PLAYER_SPEED
+            margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*(eta+3.)
+            if margin<3.:continue
+            distance=math.hypot(x-ex,y-ey)
+            if 5.<=math.hypot(x-sx,y-sy)<=16. and 10.<=distance<=17.:
+                # Lateral routes can swap who holds the inside of the zone;
+                # raw separation is not a reward.
+                bearing=(old_dx*(y-ey)-old_dy*(x-ex))/old_distance
+                if self._tactic_side and bearing*self._tactic_side<0.:continue
+                safety_gain=min(margin-old_margin,8.)
+                inversion=max(0.,min(8.,margin-enemy_margin)) if old_margin<enemy_margin+2. else 0.
+                # Estimate continued outward pursuit from observed velocity,
+                # as an opportunity only; our own route must remain safe.
+                toward=((x-ex)/distance,(y-ey)/distance)
+                vx,vy=self._motion_velocity
+                projected=(ex+vx*2.,ey+vy*2.)
+                edge_pressure=max(0.,-self._safe_margin(obs,*projected))*max(0.,(toward[0]*vx+toward[1]*vy)/C.PLAYER_SPEED)
+                visible=has_line_of_sight(obs['map'][0],x,y,ex,ey)
+                _,_,miss=self._shot(obs,x,y,velocity=(toward[0]*C.PLAYER_SPEED,toward[1]*C.PLAYER_SPEED))
+                score=.45*abs(bearing)+.4*safety_gain+.65*inversion+.4*edge_pressure+2.*visible
+                score-=.22*cost+.3*abs(distance-13.)+min(miss,2.)
+                candidate=score,-cost,x,y
+                if best is None or candidate>best:best=candidate
+            for nx,ny in ((cx+1,cy),(cx-1,cy),(cx,cy+1),(cx,cy-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                if math.hypot(nx+.5-ex,ny+.5-ey)<min(7.,old_distance):continue
+                edge=.5/(C.MUD_SLOW if obs['map'][2,cx,cy] else 1.)+.5/(C.MUD_SLOW if obs['map'][2,nx,ny] else 1.)
+                new=cost+edge
+                if new<=32. and new<costs.get((nx,ny),float('inf')):
+                    costs[nx,ny]=new;heapq.heappush(queue,(new,(nx,ny)))
+        return None if best is None else (best[2],best[3])
+
+    def _tactic_move(self, obs):
+        now=self._previous_time
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        if self._return_needed(obs) or self._safe_margin(obs,sx,sy)<4.:
+            if self._tactic_phase:self._tactic_event('', 'safe_return',obs);self._tactic_last=now
+            return None
+        if not self._tactic_phase:
+            reason=self._tactic_trigger(obs)
+            if reason is None:return None
+            self._tactic_side=0
+            self._tactic_goal=self._tactic_destination(obs)
+            if self._tactic_goal is None:return None
+            self._tactic_until=now+9.;self._tactic_last=now;self._tactic_plan_time=now
+            cross=(sx-ex)*(self._tactic_goal[1]-ey)-(sy-ey)*(self._tactic_goal[0]-ex)
+            self._tactic_side=1 if cross>=0 else -1
+            self._tactic_following=0.
+            self._tactic_event('shape',reason,obs)
+        if now>=self._tactic_until or distance>22.:
+            self._tactic_event('', 'expired_or_contact_lost',obs);self._tactic_last=now
+            return None
+        if self._safe_margin(obs,*self._tactic_goal)-C.HEAT_SHRINK_RATE*3.<3.:
+            self._tactic_event('', 'unsafe_destination',obs);self._tactic_last=now
+            return None
+        # Fire as soon as pursuit becomes predictable. No mandatory flight
+        # duration, minimum distance travelled or stationary waiting stage.
+        attack=(self._tactic_following>=.3 and self._tactic_stable>=.3 and 9.<=distance<=17. and obs['self'][14]>0)
+        if self._tactic_phase=='attack' and now-self._tactic_attack_since<.6 and 8.<=distance<=18.:attack=True
+        phase='attack' if attack else 'shape'
+        if phase=='attack' and self._tactic_phase!='attack':self._tactic_attack_since=now
+        if phase!=self._tactic_phase:self._tactic_event(phase,'firing_window' if attack else 'recalculate',obs)
+        if now-self._tactic_plan_time>4.:
+            goal=self._tactic_destination(obs)
+            if goal is not None:self._tactic_goal=goal
+            self._tactic_plan_time=now
+        desired=self._path_move(obs,self._tactic_goal,'pursuit_geometry')
+        # Range follows the actual pursuer. Avoid outrunning him and avoid
+        # blindly charging him at the counter-attack transition.
+        vx,vy=self._motion_velocity
+        radial_enemy=((ex-sx)*vx+(ey-sy)*vy)/distance
+        target=12. if attack else 14.
+        desired_range=max(-1.5,min(1.5,(distance-target)/3.+radial_enemy/C.PLAYER_SPEED))
+        self._incoming_flights(obs)
+        choices=[]
+        for my in (-1,0,1):
+            for mx in (-1,0,1):
+                move=mx,my;risk=self._movement_risk(obs,move);x,y=risk[4]
+                margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*self.defense_horizon
+                if margin<2.:continue
+                dist=math.hypot(ex+vx*self.defense_horizon-x,ey+vy*self.defense_horizon-y)
+                progress=(mx*desired[0]+my*desired[1])/max(math.hypot(mx,my),1.)
+                radial=(mx*(ex-sx)+my*(ey-sy))/distance/max(math.hypot(mx,my),1.)
+                _,shoot,miss=self._shot(obs,x,y)
+                score=2.5*max(0.,10.-dist)+1.3*max(0.,dist-16.)
+                score+=1.1*math.dist((x,y),self._tactic_goal)+.2*abs(radial-desired_range)+2.*risk[2]
+                if attack:score+=1.5*min(miss,2.)-.6*shoot
+                if move==(0,0):score+=.75
+                choices.append((risk[0]+risk[1],score,mx,my))
+        if not choices:return desired
+        _,_,mx,my=min(choices)
+        return mx,my
+
+    def _pattern_action(self, obs, option):
+        self.observe(obs)
+        move=self._tactic_move(obs)
+        return super()._pattern_action(obs,option) if move is None else self._aim_after_move(obs,*move)
+
+    def _defensive_move(self, obs, baseline):
+        # Tactical candidate scoring already includes physical bullet paths.
+        return baseline if self._tactic_phase else super()._defensive_move(obs,baseline)
+
+    def action_for_option(self, obs, option):
+        action=super().action_for_option(obs,option)
+        if self._tactic_phase:
+            # In the shaping stage a genuinely good shot is still allowed;
+            # uncertainty, not a timer, determines whether to hold fire.
+            ex,ey=_world_xy(obs['opponent']);sx,sy=_world_xy(obs['self'])
+            flight=math.dist((sx,sy),(ex,ey))/C.BULLET_SPEED
+            if self._tactic_stable<min(.4,flight*.45):action[2]=0
+        return action
+
+_PressureBase = GeneralistAgent
+
+
+class GeneralistAgent(_PressureBase):
+    """Experimental forward pressure with lateral movement and safe exits."""
+
+    def reset(self):
+        super().reset()
+        self._pressure_entry_lives = None
+
+    def _tactic_destination(self, obs):
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        solid=np.logical_or(obs['map'][0],obs['map'][1])
+        start=int(sx),int(sy);costs={start:0.};queue=[(0.,start)];best=None
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        # Hold the inside lane when feasible; do not chase an enemy into heat.
+        center_length=max(math.hypot(50.-ex,50.-ey),1e-6)
+        inside=((50.-ex)/center_length,(50.-ey)/center_length)
+        while queue:
+            cost,(cx,cy)=heapq.heappop(queue)
+            if cost!=costs[cx,cy]:continue
+            x,y=cx+.5,cy+.5
+            margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*(cost/C.PLAYER_SPEED+3.)
+            if margin<3.:continue
+            separation=math.hypot(x-ex,y-ey)
+            if 5.5<=separation<=9.5 and math.hypot(x-sx,y-sy)<=16.:
+                visible=has_line_of_sight(obs['map'][0],x,y,ex,ey)
+                _,_,miss=self._shot(obs,x,y)
+                lateral=((x-sx)*-(ey-sy)+(y-sy)*(ex-sx))/distance
+                inside_lane=((x-ex)*inside[0]+(y-ey)*inside[1])/separation
+                score=2.*visible-.9*min(miss,2.)-.4*abs(separation-7.5)
+                score+=.65*inside_lane+.08*min(margin,15.)+.12*min(abs(lateral),6.)-.18*cost
+                candidate=score,-cost,x,y
+                if best is None or candidate>best:best=candidate
+            for nx,ny in ((cx+1,cy),(cx-1,cy),(cx,cy+1),(cx,cy-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                if math.hypot(nx+.5-ex,ny+.5-ey)<min(4.5,distance):continue
+                edge=.5/(C.MUD_SLOW if obs['map'][2,cx,cy] else 1.)+.5/(C.MUD_SLOW if obs['map'][2,nx,ny] else 1.)
+                new=cost+edge
+                if new<=24. and new<costs.get((nx,ny),float('inf')):
+                    costs[nx,ny]=new;heapq.heappush(queue,(new,(nx,ny)))
+        return None if best is None else (best[2],best[3])
+
+    def _tactic_move(self, obs):
+        now=self._previous_time
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        if self._return_needed(obs) or self._safe_margin(obs,sx,sy)<4.:
+            if self._tactic_phase:self._tactic_event('', 'safe_return',obs);self._tactic_last=now
+            return None
+        if not self._tactic_phase:
+            # Keep the pursuit prototype's trigger, duration and cooldown:
+            # compare the posture rather than a different firing schedule.
+            reason=self._tactic_trigger(obs)
+            if reason is None:return None
+            self._tactic_goal=self._tactic_destination(obs)
+            if self._tactic_goal is None:return None
+            self._pressure_entry_lives=_lives(obs['self'])
+            self._tactic_until=now+9.;self._tactic_last=now;self._tactic_plan_time=now
+            self._tactic_event('pressure',reason,obs)
+        if (_lives(obs['self'])<=self._pressure_entry_lives-2 or now>=self._tactic_until or distance>22.):
+            reason='damage_limit' if _lives(obs['self'])<=self._pressure_entry_lives-2 else 'expired_or_contact_lost'
+            self._tactic_event('',reason,obs);self._tactic_last=now
+            return None
+        if now-self._tactic_plan_time>1.:
+            goal=self._tactic_destination(obs)
+            if goal is None:
+                self._tactic_event('', 'no_safe_pressure_route',obs);self._tactic_last=now
+                return None
+            self._tactic_goal=goal;self._tactic_plan_time=now
+        if self._safe_margin(obs,*self._tactic_goal)-C.HEAT_SHRINK_RATE*3.<3.:
+            self._tactic_event('', 'unsafe_destination',obs);self._tactic_last=now
+            return None
+        desired=self._path_move(obs,self._tactic_goal,'forward_pressure')
+        self._incoming_flights(obs)
+        vx,vy=self._motion_velocity
+        closing=((ex-sx)*vx+(ey-sy)*vy)/distance
+        radial=max(-1.5,min(1.5,(distance-7.5)/3.+closing/C.PLAYER_SPEED))
+        dx,dy=(ex-sx)/distance,(ey-sy)/distance
+        choices=[]
+        for my in (-1,0,1):
+            for mx in (-1,0,1):
+                move=mx,my;risk=self._movement_risk(obs,move);x,y=risk[4]
+                margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*self.defense_horizon
+                if margin<2.:continue
+                future=math.hypot(ex+vx*self.defense_horizon-x,ey+vy*self.defense_horizon-y)
+                length=max(math.hypot(mx,my),1.)
+                forward=(mx*dx+my*dy)/length
+                sideways=(-mx*dy+my*dx)/length
+                _,shoot,miss=self._shot(obs,x,y)
+                score=1.2*math.dist((x,y),self._tactic_goal)+2.*risk[2]
+                score+=3.*max(0.,5.5-future)+.8*max(0.,future-9.)
+                score+=.45*abs(forward-radial)-.4*abs(sideways)+.7*min(miss,2.)-.3*shoot
+                if move==(0,0):score+=.75
+                choices.append((risk[0]+risk[1],score,mx,my))
+        if not choices:
+            self._tactic_event('', 'no_safe_pressure_move',obs);self._tactic_last=now
+            return None
+        _,_,mx,my=min(choices)
+        return mx,my
+
+    def action_for_option(self, obs, option):
+        # Keep physical interception and line checks, but do not hold fire
+        # waiting for pursuit: this experiment pressures while approaching.
+        return _PursuitBase.action_for_option(self,obs,option)
+
+_ResponsePressure = GeneralistAgent
+_ResponseRetreat = _PressureBase
+
+
+class GeneralistAgent(_ResponsePressure):
+    """Select a posture from its observed effect within this match."""
+
+    def reset(self):
+        super().reset()
+        self._response_tick = None
+        self._response_previous = None
+        self._response_rows = deque()
+        self._response_forecasts = deque()
+        self._response_errors = deque()
+        self._response_next_forecast = -1e9
+        self._response_mode = ''
+        self._response_since = -1e9
+        self._response_next_review = -1e9
+        self._response_baseline = None
+        self._response_tried = set()
+        self._response_events = []
+        self._response_best = None
+        self._response_credit_mode = ''
+        self._response_credit_until = -1e9
+        self._response_last_move = (0,0)
+
+    def observe(self, obs):
+        super().observe(obs)
+        if self._response_tick == self._observed_tick:return
+        self._response_tick = self._observed_tick
+        now=self._previous_time
+        own,enemy=_world_xy(obs['self']),_world_xy(obs['opponent'])
+        lives=(_lives(obs['self']),_lives(obs['opponent']))
+        previous=self._response_previous
+        if previous is not None:
+            dt=now-previous['t']
+            teleported=(dt>0 and any(math.dist(a,b)>6.*dt+.1 for a,b in zip((own,enemy),previous['positions'])))
+            if teleported:
+                self._response_rows.clear();self._response_errors.clear();self._response_forecasts.clear()
+                self._response_mode='';self._response_best=None;self._response_credit_mode=''
+                self._response_tried.clear()
+            elif dt>0:
+                dx,dy=enemy[0]-own[0],enemy[1]-own[1];distance=max(math.hypot(dx,dy),1e-6)
+                ov=tuple((a-b)/dt for a,b in zip(own,previous['positions'][0]))
+                ev=tuple((a-b)/dt for a,b in zip(enemy,previous['positions'][1]))
+                forward=(ov[0]*dx+ov[1]*dy)/distance
+                closing=-(ev[0]*dx+ev[1]*dy)/distance
+                # Cures are not hits; heat and teleport damage are not
+                # evidence that this combat posture improved our shooting.
+                heat=[obs[k][12]>0 or previous['heat'][i] for i,k in enumerate(('self','opponent'))]
+                lost=[max(0,previous['lives'][i]-lives[i]) if not heat[i] else 0 for i in (0,1)]
+                mode=self._response_mode or (self._response_credit_mode if now<=self._response_credit_until else '')
+                while self._response_forecasts and self._response_forecasts[0][0]<=now:
+                    when,target,forecast_mode=self._response_forecasts.popleft()
+                    self._response_errors.append((now,math.dist(target,enemy),forecast_mode))
+                mx,my=self._response_last_move
+                px,py=self._step_position(obs,mx,my)
+                _,valid,miss=self._shot(obs,px,py)
+                self._response_rows.append(dict(t=now,dt=min(dt,.1),mode=mode,forward=forward,closing=closing,
+                    visible=obs['self'][14]>0,opportunity=bool(valid),miss=miss,distance=distance,
+                    received=lost[0],landed=lost[1],own_margin=self._safe_margin(obs,*own),
+                    advantage=self._safe_margin(obs,*own)-self._safe_margin(obs,*enemy)))
+        while self._response_rows and self._response_rows[0]['t']<now-12.:self._response_rows.popleft()
+        while self._response_errors and self._response_errors[0][0]<now-12.:self._response_errors.popleft()
+        if now>=self._response_next_forecast:
+            flight=max(.2,min(1.4,math.dist(own,enemy)/C.BULLET_SPEED))
+            vx,vy=self._motion_velocity
+            self._response_forecasts.append((now+flight,(enemy[0]+vx*flight,enemy[1]+vy*flight),self._response_mode))
+            self._response_next_forecast=now+.15
+        self._response_previous=dict(t=now,positions=(own,enemy),lives=lives,heat=(obs['self'][12]>0,obs['opponent'][12]>0))
+
+    def _response_window(self, mode=None, since=None):
+        now=self._previous_time
+        since=now-2.5 if since is None else since
+        rows=[r for r in self._response_rows if r['t']>=since and (mode is None or r['mode']==mode)]
+        duration=sum(r['dt'] for r in rows)
+        visible=sum(r['dt'] for r in rows if r['visible'])
+        away=sum(r['dt'] for r in rows if r['forward']<-.5)
+        followed=sum(r['dt'] for r in rows if r['forward']<-.5 and r['closing']>.7)
+        errors=[r[1] for r in self._response_errors if r[0]>=since and (mode is None or r[2]==mode)]
+        return dict(duration=duration,opportunity=sum(r['dt'] for r in rows if r['opportunity'])/max(duration,.001),
+            visible=visible/max(duration,.001),away=away,pursued=followed/max(away,.001),
+            error=float(np.median(errors)) if len(errors)>=3 else None,
+            landed=sum(r['landed'] for r in rows),received=sum(r['received'] for r in rows),
+            distance=sum(r['distance']*r['dt'] for r in rows)/max(duration,.001),
+            closing=sum(r['closing']*r['dt'] for r in rows)/max(duration,.001))
+
+    def _response_assess(self, mode, current, baseline):
+        if current['received']>current['landed']:return 'unfavorable_trade'
+        if current['landed']>0:return 'productive'
+        if current['duration']<1.5:return 'unknown'
+        radius=C.PLAYER_RADIUS+C.BULLET_RADIUS
+        predictable=current['error'] is not None and current['error']<=radius
+        better_prediction=(baseline['error'] is not None and current['error'] is not None and current['error']<baseline['error']-.15)
+        better_shot=current['opportunity']>=baseline['opportunity']+.10
+        if mode=='retreat':
+            if current['away']<.3 or current['pursued']<.5:return 'not_followed'
+            prediction_not_worse=(baseline['error'] is not None and current['error'] is not None and current['error']<=baseline['error'])
+            if current['opportunity']>=.15 and (predictable or better_prediction or (better_shot and prediction_not_worse)):return 'productive'
+            return 'no_firing_gain'
+        useful=current['opportunity']>=.20 and current['visible']>=.5
+        if useful and (better_shot or (predictable and better_prediction)):return 'productive'
+        return 'no_firing_gain'
+
+    def _response_start(self, obs, mode, reason):
+        now=self._previous_time
+        self._response_mode=mode
+        goal=self._tactic_destination(obs)
+        if goal is None:
+            self._response_mode='';return False
+        self._response_tried.add(mode)
+        self._tactic_goal=goal;self._tactic_plan_time=now;self._tactic_until=now+9.
+        self._pressure_entry_lives=_lives(obs['self']);self._tactic_following=0.
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        cross=(sx-ex)*(goal[1]-ey)-(sy-ey)*(goal[0]-ex)
+        self._tactic_side=1 if cross>=0 else -1
+        self._response_since=now;self._response_next_review=now+2.5
+        self._path=[];self._reposition_goal=None
+        self._tactic_event('pressure' if mode=='pressure' else 'shape',reason,obs)
+        self._response_events.append(dict(t=round(now,3),mode=mode,reason=reason))
+        return True
+
+    def _response_finish(self, obs, reason):
+        now=self._previous_time
+        recent=self._response_window(self._response_mode,since=max(self._response_since,now-2.5))
+        if reason=='controller_completed' and recent['landed']>recent['received']:
+            self._response_best=self._response_mode,now
+        self._response_events.append(dict(t=round(now,3),mode='normal',reason=reason))
+        self._response_credit_mode=self._response_mode;self._response_credit_until=now+2.
+        self._response_mode='';self._tactic_last=now
+        if self._tactic_phase:self._tactic_event('',reason,obs)
+
+    def _tactic_destination(self, obs):
+        implementation=_ResponseRetreat if self._response_mode=='retreat' else _ResponsePressure
+        return implementation._tactic_destination(self,obs)
+
+    def _tactic_move(self, obs):
+        now=self._previous_time
+        if self._response_mode and not self._tactic_phase:
+            # Includes a successful hit, a teleport, or a controller exit.
+            self._response_finish(obs,'controller_completed')
+        if self._return_needed(obs) or self._safe_margin(obs,*_world_xy(obs['self']))<4.:
+            if self._response_mode:self._response_finish(obs,'safe_return')
+            return None
+        if not self._response_mode:
+            # Continue monitoring the position after the last maneuver.
+            recent=self._response_window(since=now-2.)
+            if recent['received']>recent['landed'] and self._response_best is not None:self._response_best=None
+            reason=self._tactic_trigger(obs)
+            if reason is None:return None
+            self._response_baseline=self._response_window()
+            self._response_tried=set()
+            preferred='pressure'
+            if self._response_best is not None and now-self._response_best[1]<25.:
+                preferred=self._response_best[0]
+            if not self._response_start(obs,preferred,'probe_'+reason):return None
+        if now>=self._response_next_review:
+            current=self._response_window(self._response_mode,since=max(self._response_since,now-2.5))
+            assessment=self._response_assess(self._response_mode,current,self._response_baseline)
+            self._response_events.append(dict(t=round(now,3),mode=self._response_mode,reason=assessment,metrics=current))
+            if assessment=='productive':
+                self._response_best=self._response_mode,now
+                self._response_next_review=now+.75
+            elif assessment=='unknown':self._response_next_review=now+.5
+            else:
+                alternative='retreat' if self._response_mode=='pressure' else 'pressure'
+                # Judge the response to the new posture against the posture
+                # it replaces, rather than a stale pre-combat reference.
+                self._response_baseline=current
+                if alternative in self._response_tried or not self._response_start(obs,alternative,'response_'+assessment):
+                    self._response_finish(obs,assessment);return None
+        implementation=_ResponseRetreat if self._response_mode=='retreat' else _ResponsePressure
+        move=implementation._tactic_move(self,obs)
+        if not self._tactic_phase:self._response_finish(obs,'controller_completed')
+        return move
+
+    def action_for_option(self, obs, option):
+        action=_PursuitBase.action_for_option(self,obs,option)
+        if self._response_mode=='retreat':
+            sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+            if self._tactic_stable<min(.4,math.hypot(ex-sx,ey-sy)/C.BULLET_SPEED*.45):action[2]=0
+        self._response_last_move=int(action[0])%3-1,int(action[0])//3-1
+        return action
+
+_FirstSelector = GeneralistAgent
+
+
+class GeneralistAgent(_FirstSelector):
+    """Keep the pressure controller's tempo; change only on adverse response."""
+
+    def reset(self):
+        super().reset()
+        self._pressure_bad_since = None
+        self._pressure_last_reason = None
+
+    def _response_window(self, mode=None, since=None):
+        current=super()._response_window(mode,since)
+        cutoff=self._previous_time-2.5 if since is None else since
+        rows=[r for r in self._response_rows if r['t']>=cutoff and (mode is None or r['mode']==mode)]
+        current['exposure']=sum(r['dt'] for r in rows if r.get('danger',False))/max(current['duration'],.001)
+        return current
+
+    def _pressure_reaction(self, current):
+        # Missing a few shots is not evidence that forward pressure is bad.
+        # A real loss in the exchange, or sustained predicted exposure to a
+        # closing opponent, is evidence worth reacting to.
+        if current['received']>current['landed']:return 'unfavorable_trade'
+        if (current['duration']>=1.5 and current['exposure']>=.35
+                and current['closing']>.7):return 'sustained_exposure'
+        return None
+
+    def _response_finish(self, obs, reason):
+        previous_mode=self._response_mode
+        pressure_clock=self._tactic_last
+        super()._response_finish(obs,reason)
+        if previous_mode=='pressure':
+            # The fixed policy does not restart its cooldown after a hit.
+            # Observing that hit must not slow down otherwise identical play.
+            self._tactic_last=pressure_clock
+            self._response_credit_until=self._previous_time+4.
+        self._pressure_bad_since=None;self._pressure_last_reason=None
+        self._response_next_review=self._previous_time+.75
+
+    def _try_retreat_response(self, obs, current, reason):
+        now=self._previous_time
+        old_mode=self._response_mode
+        self._response_baseline=current
+        if self._response_start(obs,'retreat','response_'+reason):
+            self._tactic_last=now
+            self._pressure_bad_since=None;self._pressure_last_reason=None
+            return True
+        self._response_mode=old_mode
+        self._pressure_bad_since=None;self._pressure_last_reason=None
+        self._response_next_review=now+2.
+        self._response_events.append(dict(t=round(now,3),mode=old_mode or 'normal',reason='no_safe_retreat'))
+        return False
+
+    def _review_pressure(self, obs):
+        now=self._previous_time
+        if now<self._response_next_review:return False
+        self._response_next_review=now+.75
+        current=self._response_window(since=now-2.5)
+        reason=self._pressure_reaction(current)
+        if reason is None:
+            self._pressure_bad_since=None;self._pressure_last_reason=None
+            return False
+        if self._pressure_bad_since is None or self._pressure_last_reason!=reason:
+            self._pressure_bad_since=now;self._pressure_last_reason=reason
+        flight=max(.6,min(1.4,current['distance']/C.BULLET_SPEED))
+        # Give our already-fired bullet time to answer one received hit.
+        confirmed=(current['received']>=2 or now-self._pressure_bad_since>=flight+.25)
+        self._response_events.append(dict(t=round(now,3),mode=self._response_mode or 'normal',
+            reason=reason if confirmed else 'await_exchange',metrics=current))
+        return confirmed and self._try_retreat_response(obs,current,reason)
+
+    def _retreat_response_move(self, obs):
+        now=self._previous_time
+        if now>=self._response_next_review:
+            current=self._response_window('retreat',since=max(self._response_since,now-2.5))
+            assessment=self._response_assess('retreat',current,self._response_baseline)
+            self._response_events.append(dict(t=round(now,3),mode='retreat',reason=assessment,metrics=current))
+            if assessment=='productive':
+                self._response_next_review=now+.75
+            elif assessment=='unknown':self._response_next_review=now+.5
+            else:
+                self._response_finish(obs,assessment)
+                return None
+        move=_ResponseRetreat._tactic_move(self,obs)
+        if not self._tactic_phase:self._response_finish(obs,'controller_completed')
+        return move
+
+    def _tactic_move(self, obs):
+        now=self._previous_time
+        if self._response_mode and not self._tactic_phase:
+            self._response_finish(obs,'controller_completed')
+        if self._return_needed(obs) or self._safe_margin(obs,*_world_xy(obs['self']))<4.:
+            if self._response_mode:self._response_finish(obs,'safe_return')
+            return None
+        if self._response_mode=='retreat':return self._retreat_response_move(obs)
+        aftermath=(self._response_credit_mode=='pressure' and now<=self._response_credit_until)
+        if (self._response_mode=='pressure' or aftermath) and self._review_pressure(obs):
+            return self._retreat_response_move(obs)
+        # Delegate starts, navigation, firing and cooldown to the successful
+        # fixed policy. No extra probe, path reset or early no-gain timeout.
+        move=_ResponsePressure._tactic_move(self,obs)
+        if self._tactic_phase=='pressure' and self._response_mode!='pressure':
+            self._response_mode='pressure';self._response_since=now
+            self._response_next_review=now+.75
+            self._pressure_bad_since=None;self._pressure_last_reason=None
+            self._response_events.append(dict(t=round(now,3),mode='pressure',reason='pressure_default'))
+        elif self._response_mode=='pressure' and not self._tactic_phase:
+            self._response_finish(obs,'controller_completed')
+        return move
+
+    def action_for_option(self, obs, option):
+        action=super().action_for_option(obs,option)
+        if self._response_rows and abs(self._response_rows[-1]['t']-self._previous_time)<1e-5:
+            self._incoming_flights(obs)
+            move=int(action[0])%3-1,int(action[0])//3-1
+            risk=self._movement_risk(obs,move)
+            self._response_rows[-1]['danger']=risk[0]>0
+        return action
+
+
+_PositionBase = GeneralistAgent
+
+
+class GeneralistAgent(_PositionBase):
+    """Compare reachable maneuver endpoints, without changing posture triggers."""
+
+    def reset(self):
+        super().reset()
+        self._exit_events=[]
+        self._position_previous=None
+
+    def _position_routes(self, obs):
+        own=_world_xy(obs['self']);enemy=_world_xy(obs['opponent'])
+        solid=np.logical_or(obs['map'][0],obs['map'][1])
+        start=int(own[0]),int(own[1]);costs={start:0.};came={};queue=[(0.,start)]
+        minimum=min(4.5,math.dist(own,enemy))
+        while queue:
+            cost,cell=heapq.heappop(queue)
+            if cost!=costs[cell]:continue
+            for nx,ny in ((cell[0]+1,cell[1]),(cell[0]-1,cell[1]),(cell[0],cell[1]+1),(cell[0],cell[1]-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                if math.dist((nx+.5,ny+.5),enemy)<minimum:continue
+                edge=(.5/(C.MUD_SLOW if obs['map'][2,cell[0],cell[1]] else 1.)+
+                      .5/(C.MUD_SLOW if obs['map'][2,nx,ny] else 1.))/C.PLAYER_SPEED
+                eta=cost+edge
+                if eta>24./C.PLAYER_SPEED:continue
+                if self._safe_margin(obs,nx+.5,ny+.5)-C.HEAT_SHRINK_RATE*(eta+3.)<3.:continue
+                if eta<costs.get((nx,ny),float('inf')):
+                    costs[nx,ny]=eta;came[nx,ny]=cell;heapq.heappush(queue,(eta,(nx,ny)))
+        return costs,came
+
+    def _position_return(self, obs, point, delay):
+        """Travel seconds to a future interior refuge, plus enemy-crossing risk."""
+        solid=np.logical_or(obs['map'][0],obs['map'][1]);enemy=_world_xy(obs['opponent'])
+        start=int(point[0]),int(point[1]);queue=[(0.,0.,start)];best={start:(0.,0.)}
+        while queue:
+            seconds,crossing,cell=heapq.heappop(queue)
+            if (seconds,crossing)!=best[cell]:continue
+            margin=self._safe_margin(obs,cell[0]+.5,cell[1]+.5)-C.HEAT_SHRINK_RATE*(delay+seconds+3.)
+            if margin>=6.:return seconds,crossing
+            for nx,ny in ((cell[0]+1,cell[1]),(cell[0]-1,cell[1]),(cell[0],cell[1]+1),(cell[0],cell[1]-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                edge=(.5/(C.MUD_SLOW if obs['map'][2,cell[0],cell[1]] else 1.)+
+                      .5/(C.MUD_SLOW if obs['map'][2,nx,ny] else 1.))/C.PLAYER_SPEED
+                eta=seconds+edge
+                if eta>6.:continue
+                if self._safe_margin(obs,nx+.5,ny+.5)-C.HEAT_SHRINK_RATE*(delay+eta)<.75:continue
+                danger=max(crossing,max(0.,5.-math.dist((nx+.5,ny+.5),enemy)))
+                value=eta,danger
+                if value<best.get((nx,ny),(float('inf'),float('inf'))):
+                    best[nx,ny]=value;heapq.heappush(queue,(eta,danger,(nx,ny)))
+        return 7.,3.
+
+    def _position_attack(self, obs, point):
+        # Short projection only: do not assume several seconds of linear motion.
+        ex,ey=_world_xy(obs['opponent']);vx,vy=self._motion_velocity
+        quality=[]
+        for delay in (0.,.35,.7):
+            x=min(99.5,max(.5,ex+vx*delay));y=min(99.5,max(.5,ey+vy*delay))
+            if obs['map'][0,int(x),int(y)] or obs['map'][1,int(x),int(y)]:x,y=ex,ey
+            future=dict(obs);future['opponent']=obs['opponent'].copy()
+            future['opponent'][0]=x/50.-1.;future['opponent'][1]=y/50.-1.
+            _,shoot,miss=self._shot(future,*point)
+            visible=has_line_of_sight(obs['map'][0],*point,x,y)
+            quality.append(1.2*shoot+.6*visible-.6*min(miss,2.))
+        return sum(quality)/len(quality)
+
+    def _position_exposure(self, obs, path, costs):
+        """Current bullets along the initial route; later bullets remain unknown."""
+        flights=self._incoming_flights(obs)
+        if not flights:return 0.
+        own=_world_xy(obs['self']);positions=[];segment=1
+        for step in range(round(self.defense_horizon/C.FIXED_DT)):
+            when=(step+1)*C.FIXED_DT
+            while segment<len(path) and costs[path[segment]]<when:segment+=1
+            if segment>=len(path):positions.append((path[-1][0]+.5,path[-1][1]+.5));continue
+            a=own if segment==1 else (path[segment-1][0]+.5,path[segment-1][1]+.5)
+            b=path[segment][0]+.5,path[segment][1]+.5
+            before=0. if segment==1 else costs[path[segment-1]]
+            fraction=min(1.,max(0.,(when-before)/max(costs[path[segment]]-before,1e-6)))
+            positions.append((a[0]+(b[0]-a[0])*fraction,a[1]+(b[1]-a[1])*fraction))
+        risk=0.
+        for flight in flights:
+            gap=min(math.dist(positions[step],bullet) for step,points in flight for bullet in points)
+            risk+=max(0.,C.PLAYER_RADIUS+C.BULLET_RADIUS+.25-gap)
+        return risk
+
+    def _position_score(self, obs, point, costs, came):
+        cell=int(point[0]),int(point[1]);eta=costs[cell]
+        path=[cell]
+        while path[-1] in came:path.append(came[path[-1]])
+        path.reverse()
+        own=_world_xy(obs['self']);enemy=_world_xy(obs['opponent'])
+        separation=math.dist(point,enemy);retreat=self._response_mode=='retreat'
+        target=13. if retreat else 7.5
+        margin=self._safe_margin(obs,*point)-C.HEAT_SHRINK_RATE*(eta+3.)
+        attack=self._position_attack(obs,point)
+        back,crossing=self._position_return(obs,point,eta)
+        exposure=self._position_exposure(obs,path,costs)
+        inside=((point[0]-enemy[0])*(50.-enemy[0])+(point[1]-enemy[1])*(50.-enemy[1]))/max(separation*math.dist(enemy,(50.,50.)),1e-6)
+        score=attack-.4*abs(separation-target)-.18*eta*C.PLAYER_SPEED+.65*inside+.08*min(margin,15.)
+        score-=.45*back+.55*crossing+2.*exposure
+        return dict(score=score,attack=attack,return_seconds=back,crossing=crossing,exposure=exposure)
+
+    def _tactic_destination(self, obs):
+        original=super()._tactic_destination(obs)
+        if original is None:return None
+        costs,came=self._position_routes(obs)
+        original_cell=int(original[0]),int(original[1])
+        if original_cell not in costs:return original
+        own=_world_xy(obs['self']);enemy=_world_xy(obs['opponent'])
+        low,high,target=(10.,17.,13.) if self._response_mode=='retreat' else (5.5,9.5,7.5)
+        ranked=[]
+        for cell,eta in costs.items():
+            point=cell[0]+.5,cell[1]+.5;distance=math.dist(point,enemy)
+            if not (low<=distance<=high) or math.dist(point,original)>4.:continue
+            _,shoot,miss=self._shot(obs,*point)
+            quick=1.2*shoot-.6*min(miss,2.)-.4*abs(distance-target)-.18*eta*C.PLAYER_SPEED
+            ranked.append((quick,point))
+        choices=[original]
+        previous=self._position_previous
+        if (previous is not None and (int(previous[0]),int(previous[1])) in costs
+                and math.dist(previous,original)<=4. and low<=math.dist(previous,enemy)<=high):choices.append(previous)
+        for _,point in sorted(ranked,reverse=True):
+            if all(math.dist(point,p)>=1.5 for p in choices):choices.append(point)
+            if len(choices)>=7:break
+        assessed=[(self._position_score(obs,p,costs,came),p) for p in choices]
+        baseline=assessed[0][0];best,point=max(assessed,key=lambda row:row[0]['score'])
+        if best['score']<baseline['score']+.65 or math.dist(point,original)<1.:return original
+        if previous is not None:
+            kept=next((q for q,p in assessed if p==previous),None)
+            if kept is not None and kept['score']>=best['score']-.3 and kept['score']>=baseline['score']+.65:best,point=kept,previous
+        self._position_previous=point
+        self._exit_events.append(dict(t=round(self._previous_time,3),kind='position_changed',original=original,target=point,before=baseline,after=best))
+        return point
+
+
+_ProductiveBase = GeneralistAgent
+
+
+class GeneralistAgent(_ProductiveBase):
+    """Require stronger evidence before leaving a productive combat position."""
+
+    def _position_productive(self, obs):
+        current=self._response_window(since=self._previous_time-2.5)
+        if current['duration']<1.25 or current['received'] or current['exposure']>.15:return False
+        if current['visible']<.65 or current['opportunity']<.30:return False
+        accurate=current['error'] is not None and current['error']<=C.PLAYER_RADIUS+C.BULLET_RADIUS+.1
+        return current['landed']>0 or accurate
+
+    def _tactic_destination(self, obs):
+        original=_PositionBase._tactic_destination(self,obs)
+        if original is None:return None
+        before=len(self._exit_events)
+        proposed=super()._tactic_destination(obs)
+        if proposed==original or not self._position_productive(obs):return proposed
+        own=_world_xy(obs['self'])
+        # Never keep a successful firing lane at the expense of urgent return.
+        if self._returning or self._safe_margin(obs,*own)-3.*C.HEAT_SHRINK_RATE<6.:return proposed
+        if len(self._exit_events)==before:return proposed
+        event=self._exit_events[-1]
+        old,new=event['before'],event['after']
+        gain=new['score']-old['score']
+        if gain>=1.4 and new['exposure']<=old['exposure']+.05 and new['return_seconds']<=old['return_seconds']+.25:return proposed
+        event['kind']='productive_preserved';event['proposed']=proposed;event['target']=original
+        event['gain']=gain
+        return original
+
+
+class _CloseController(_ResponsePressure):
+    """Experimental forward pressure with lateral movement and safe exits."""
+
+    def reset(self):
+        super().reset()
+        self._pressure_entry_lives = None
+
+    def _tactic_destination(self, obs):
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        solid=np.logical_or(obs['map'][0],obs['map'][1])
+        start=int(sx),int(sy);costs={start:0.};queue=[(0.,start)];best=None
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        # Hold the inside lane when feasible; do not chase an enemy into heat.
+        center_length=max(math.hypot(50.-ex,50.-ey),1e-6)
+        inside=((50.-ex)/center_length,(50.-ey)/center_length)
+        while queue:
+            cost,(cx,cy)=heapq.heappop(queue)
+            if cost!=costs[cx,cy]:continue
+            x,y=cx+.5,cy+.5
+            margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*(cost/C.PLAYER_SPEED+3.)
+            if margin<3.:continue
+            separation=math.hypot(x-ex,y-ey)
+            if 1.2<=separation<=3.0 and math.hypot(x-sx,y-sy)<=16.:
+                visible=has_line_of_sight(obs['map'][0],x,y,ex,ey)
+                _,_,miss=self._shot(obs,x,y)
+                lateral=((x-sx)*-(ey-sy)+(y-sy)*(ex-sx))/distance
+                inside_lane=((x-ex)*inside[0]+(y-ey)*inside[1])/separation
+                score=2.*visible-.9*min(miss,2.)-.4*abs(separation-2.0)
+                score+=.65*inside_lane+.08*min(margin,15.)+.12*min(abs(lateral),6.)-.18*cost
+                candidate=score,-cost,x,y
+                if best is None or candidate>best:best=candidate
+            for nx,ny in ((cx+1,cy),(cx-1,cy),(cx,cy+1),(cx,cy-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                if math.hypot(nx+.5-ex,ny+.5-ey)<min(1.2,distance):continue
+                edge=.5/(C.MUD_SLOW if obs['map'][2,cx,cy] else 1.)+.5/(C.MUD_SLOW if obs['map'][2,nx,ny] else 1.)
+                new=cost+edge
+                if new<=24. and new<costs.get((nx,ny),float('inf')):
+                    costs[nx,ny]=new;heapq.heappush(queue,(new,(nx,ny)))
+        return None if best is None else (best[2],best[3])
+
+    def _tactic_move(self, obs):
+        now=self._previous_time
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        if self._return_needed(obs) or self._safe_margin(obs,sx,sy)<4.:
+            if self._tactic_phase:self._tactic_event('', 'safe_return',obs);self._tactic_last=now
+            return None
+        if not self._tactic_phase:
+            # Keep the pursuit prototype's trigger, duration and cooldown:
+            # compare the posture rather than a different firing schedule.
+            reason=self._tactic_trigger(obs)
+            if reason is None:return None
+            self._tactic_goal=self._tactic_destination(obs)
+            if self._tactic_goal is None:return None
+            self._pressure_entry_lives=_lives(obs['self'])
+            self._tactic_until=now+9.;self._tactic_last=now;self._tactic_plan_time=now
+            self._tactic_event('pressure',reason,obs)
+        if (_lives(obs['self'])<=self._pressure_entry_lives-2 or now>=self._tactic_until or distance>22.):
+            reason='damage_limit' if _lives(obs['self'])<=self._pressure_entry_lives-2 else 'expired_or_contact_lost'
+            self._tactic_event('',reason,obs);self._tactic_last=now
+            return None
+        if now-self._tactic_plan_time>1.:
+            goal=self._tactic_destination(obs)
+            if goal is None:
+                self._tactic_event('', 'no_safe_pressure_route',obs);self._tactic_last=now
+                return None
+            self._tactic_goal=goal;self._tactic_plan_time=now
+        if self._safe_margin(obs,*self._tactic_goal)-C.HEAT_SHRINK_RATE*3.<3.:
+            self._tactic_event('', 'unsafe_destination',obs);self._tactic_last=now
+            return None
+        desired=self._path_move(obs,self._tactic_goal,'forward_pressure')
+        self._incoming_flights(obs)
+        vx,vy=self._motion_velocity
+        closing=((ex-sx)*vx+(ey-sy)*vy)/distance
+        radial=max(-1.5,min(1.5,(distance-2.0)/3.+closing/C.PLAYER_SPEED))
+        dx,dy=(ex-sx)/distance,(ey-sy)/distance
+        choices=[]
+        for my in (-1,0,1):
+            for mx in (-1,0,1):
+                move=mx,my;risk=self._movement_risk(obs,move);x,y=risk[4]
+                margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*self.defense_horizon
+                if margin<2.:continue
+                future=math.hypot(ex+vx*self.defense_horizon-x,ey+vy*self.defense_horizon-y)
+                length=max(math.hypot(mx,my),1.)
+                forward=(mx*dx+my*dy)/length
+                sideways=(-mx*dy+my*dx)/length
+                _,shoot,miss=self._shot(obs,x,y)
+                score=1.2*math.dist((x,y),self._tactic_goal)+2.*risk[2]
+                score+=3.*max(0.,1.2-future)+.8*max(0.,future-3.)
+                score+=.45*abs(forward-radial)-.4*abs(sideways)+.7*min(miss,2.)-.3*shoot
+                if move==(0,0):score+=.75
+                choices.append((risk[0]+risk[1],score,mx,my))
+        if not choices:
+            self._tactic_event('', 'no_safe_pressure_move',obs);self._tactic_last=now
+            return None
+        _,_,mx,my=min(choices)
+        return mx,my
+
+
+
+_CloseBase = GeneralistAgent
+
+
+class GeneralistAgent(_CloseBase):
+    """Shorten firing distance after a confirmed exchange without progress."""
+
+    def reset(self):
+        super().reset()
+        self._close_pressure=False
+
+    def _close_pressure_needed(self, obs):
+        own=_world_xy(obs['self']);enemy=_world_xy(obs['opponent'])
+        if self._returning or self._safe_margin(obs,*own)<8. or math.dist(own,enemy)>14.:return False
+        history=[row for row in self._combat_history if row[0]>=self._previous_time-6.]
+        if len(history)<2 or history[-1][0]-history[0][0]<5.5:return False
+        if history[-1][2]-history[0][2]<4:return False
+        current=self._response_window(since=self._previous_time-5.5)
+        return current['landed']==0 and current['received']==0 and current['visible']>=.5 and current['exposure']<.35
+
+    def _tactic_destination(self, obs):
+        if self._close_pressure and self._response_mode!='retreat':
+            controller=_BoostCloseController if self._boost_window(obs) in (1,2) else _CloseController
+            return controller._tactic_destination(self,obs)
+        return super()._tactic_destination(obs)
+
+    def _tactic_move(self, obs):
+        before=self._close_pressure
+        self._close_pressure=self._close_pressure_needed(obs)
+        if before!=self._close_pressure:
+            self._exit_events.append(dict(t=round(self._previous_time,3),kind='close_pressure_start' if self._close_pressure else 'close_pressure_stop'))
+            # The destination must use the same range as the move controller.
+            self._tactic_plan_time=-1e9
+        return self._adaptive_tactic_move(obs)
+
+
+    def _adaptive_tactic_move(self, obs):
+        now=self._previous_time
+        controller=(_BoostCloseController if self._boost_window(obs) in (1,2) else _CloseController) if self._close_pressure else _ResponsePressure
+        if self._response_mode and not self._tactic_phase:
+            self._response_finish(obs,'controller_completed')
+        if self._return_needed(obs) or self._safe_margin(obs,*_world_xy(obs['self']))<4.:
+            if self._response_mode:self._response_finish(obs,'safe_return')
+            return None
+        if self._response_mode=='retreat':return self._retreat_response_move(obs)
+        aftermath=(self._response_credit_mode=='pressure' and now<=self._response_credit_until)
+        if (self._response_mode=='pressure' or aftermath) and self._review_pressure(obs):
+            return self._retreat_response_move(obs)
+        # Delegate starts, navigation, firing and cooldown to the successful
+        # fixed policy. No extra probe, path reset or early no-gain timeout.
+        move=controller._tactic_move(self,obs)
+        if self._tactic_phase=='pressure' and self._response_mode!='pressure':
+            self._response_mode='pressure';self._response_since=now
+            self._response_next_review=now+.75
+            self._pressure_bad_since=None;self._pressure_last_reason=None
+            self._response_events.append(dict(t=round(now,3),mode='pressure',reason='pressure_default'))
+        elif self._response_mode=='pressure' and not self._tactic_phase:
+            self._response_finish(obs,'controller_completed')
+        return move
+
+
+_TieCloseBase = GeneralistAgent
+class GeneralistAgent(_TieCloseBase):
+    def _close_pressure_needed(self,obs):
+        if _lives(obs['self'])>_lives(obs['opponent']):return False
+        return super()._close_pressure_needed(obs)
+
+
+_RecoveryBase = GeneralistAgent
+
+class GeneralistAgent(_RecoveryBase):
+    """Resolve close trades at projectile time scale, with a safe-route fallback."""
+    def reset(self):
+        super().reset()
+        self._short_credit_until=-1e9
+        self._short_trade_deadline=None
+
+    def observe(self,obs):
+        super().observe(obs)
+        if not self._response_rows:
+            # Includes the inherited history reset after a teleport.
+            self._short_credit_until=-1e9
+            self._short_trade_deadline=None
+
+    def _pending_reply_delay(self,obs):
+        ex,ey=_world_xy(obs['opponent']);evx,evy=self._motion_velocity
+        delays=[]
+        for row,valid in zip(obs['bullets'],obs['bullet_mask']):
+            if valid<.5 or row[4]<=0:continue
+            x,y=_world_xy(row);vx,vy=float(row[2])*C.BULLET_SPEED,float(row[3])*C.BULLET_SPEED
+            rx,ry=ex-x,ey-y;rvx,rvy=evx-vx,evy-vy
+            t=-(rx*rvx+ry*rvy)/max(rvx*rvx+rvy*rvy,1e-9)
+            remaining=C.BULLET_RANGE*(1.-(float(row[6])+1.)*.5)
+            ttl=(float(row[5])+1.)*.5*C.BULLET_TTL
+            if not 0.<t<=min(ttl,remaining/C.BULLET_SPEED):continue
+            if math.hypot(rx+rvx*t,ry+rvy*t)>C.PLAYER_RADIUS+C.BULLET_RADIUS+.25:continue
+            steps=max(1,math.ceil(C.BULLET_SPEED*t/.2))
+            lane=[(x+vx*t*i/steps,y+vy*t*i/steps) for i in range(steps+1)]
+            if any(not (0<=px<100 and 0<=py<100) or obs['map'][0,int(px),int(py)] for px,py in lane):continue
+            delays.append(t)
+        enemy_interval=C.QUICKSHOT_COOLDOWN if obs['opponent'][6]>-1.+1e-6 else C.SHOOT_COOLDOWN
+        return min(max(delays,default=0.),max(0.,enemy_interval-3.*C.FIXED_DT))
+
+    def _tactic_move(self,obs):
+        if self._close_pressure:self._short_credit_until=self._previous_time+C.BULLET_RANGE/C.BULLET_SPEED
+        elif self._previous_time>self._short_credit_until:self._short_trade_deadline=None
+        return super()._tactic_move(obs)
+
+    def _review_pressure(self,obs):
+        now=self._previous_time
+        if now>self._short_credit_until:return super()._review_pressure(obs)
+        current=self._response_window(since=now-2.5)
+        if current['received']<=current['landed']:
+            self._short_trade_deadline=None
+            return super()._review_pressure(obs)
+        if self._short_trade_deadline is None:
+            wait=self._pending_reply_delay(obs)+2.*C.FIXED_DT
+            self._short_trade_deadline=now+wait
+            self._exit_events.append(dict(t=round(now,3),kind='close_trade_reply_wait',wait=wait))
+        # This deadline is set once; another shot cannot postpone it forever.
+        if now+1e-6<self._short_trade_deadline:return False
+        self._short_trade_deadline=None
+        self._close_pressure=False
+        self._exit_events.append(dict(t=round(now,3),kind='close_trade_exit'))
+        changed=self._try_retreat_response(obs,current,'short_trade_lost')
+        if not changed:
+            self._response_finish(obs,'short_trade_no_route')
+            self._tactic_last=now
+        return changed
+
+
+_InitiativeBase = GeneralistAgent
+
+class GeneralistAgent(_InitiativeBase):
+    def _close_pressure_needed(self,obs):
+        if not super()._close_pressure_needed(obs):return False
+        distance=math.dist(_world_xy(obs['self']),_world_xy(obs['opponent']))
+        if distance>6.:return True
+        own=(float(obs['self'][5])+1.)*.5*C.SHOOT_COOLDOWN
+        enemy=(float(obs['opponent'][5])+1.)*.5*C.SHOOT_COOLDOWN
+        # Avoid the final approach while the enemy can answer substantially
+        # earlier than us; keep normal pressure and firing in that interval.
+        return own<=enemy+distance/C.BULLET_SPEED
+
+
+_DeadlineEscapeBase = GeneralistAgent
+
+
+class GeneralistAgent(_DeadlineEscapeBase):
+    """Leave a pocket before its route to the final safe area closes."""
+
+    def reset(self):
+        super().reset()
+        self._escape_checked=-1e9
+        self._escape_active=False
+        self._escape_events=[]
+
+    def _end_safe_route(self,obs):
+        horizon=self.return_lookahead_seconds
+        minimum=self.return_min_margin
+        now=float(obs['game'][0])*C.MAX_EPISODE_SECONDS
+        try:
+            self.return_lookahead_seconds=max(0.,C.MAX_EPISODE_SECONDS-now)
+            self.return_min_margin=.75
+            return DijkstraAgent._forecast_return(self,obs,allow_heat=False)
+        finally:
+            self.return_lookahead_seconds=horizon
+            self.return_min_margin=minimum
+
+    def _return_needed(self,obs):
+        now=float(obs['game'][0])*C.MAX_EPISODE_SECONDS
+        # The inherited observer invalidates return forecasts on teleport.
+        invalidated=self._return_checked<self._escape_checked-1e-6
+        if now-self._escape_checked<.75 and self._escape_active and not invalidated:
+            return True
+        regular=super()._return_needed(obs)
+        if now-self._escape_checked<.75 and not invalidated:
+            return regular
+        self._escape_checked=now
+        sx,sy=_world_xy(obs['self'])
+        margin=self._safe_margin(obs,sx,sy)
+        remaining=max(0.,C.MAX_EPISODE_SECONDS-now)
+        # Already safe through the end, or too late for a heat-free rescue:
+        # retain the normal return controller and its obstacle handling.
+        if margin>=.75+C.HEAT_SHRINK_RATE*remaining or margin<.5:
+            if self._escape_active:self._escape_events.append(dict(t=now,event='released'))
+            self._escape_active=False
+            return regular
+        path,slack=self._end_safe_route(obs)
+        if not path or len(path)==1:
+            self._escape_active=False
+            return regular
+        if not self._escape_active and slack>=self.return_safety_seconds+.5:
+            return regular
+        if not self._escape_active:
+            self._escape_events.append(dict(t=now,event='escape',slack=slack,path_length=len(path)))
+        self._escape_active=True
+        self._returning=True
+        self._return_path=path
+        self._return_goal=path[-1][0]+.5,path[-1][1]+.5
+        return True
+
+
+_PickupOpportunityBase=GeneralistAgent
+class GeneralistAgent(_PickupOpportunityBase):
+    pickup_budget=10.0
+
+    def reset(self):
+        super().reset()
+        self._pickup_checked=-1e9
+        self._pickup_choice=None
+
+    def _nearby_advantage(self,obs):
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        own=_lives(obs['self']);enemy=_lives(obs['opponent'])
+        if own>enemy or math.hypot(ex-sx,ey-sy)<4. or self._return_needed(obs):
+            return None
+        now=self._previous_time
+        targets={}
+        for row,valid in zip(obs['powerups'],obs['powerup_mask']):
+            if valid<.5:continue
+            x,y=_world_xy(row)
+            if math.hypot(x-sx,y-sy)>self.pickup_budget or self._safe_margin(obs,x,y)<4.:continue
+            kind='life' if row[3]>.5 and own<C.PLAYER_LIVES else 'quick' if row[4]>.5 and obs['self'][6]<-.99 else 'speed' if row[5]>.5 and obs['self'][7]<-.99 else None
+            if kind is None:continue
+            ttl=(float(row[2])+1.)*.5*C.POWERUP_TTL
+            targets[int(x),int(y)]=(x,y,kind,ttl)
+        if not targets:
+            self._pickup_choice=None
+            return None
+        if now-self._pickup_checked<.5 and self._pickup_choice is not None:
+            choice=self._pickup_choice
+            if (int(choice[0]),int(choice[1])) in targets:return choice[:2]
+        self._pickup_checked=now
+        start=int(sx),int(sy);costs={start:0.};queue=[(0.,start)];best=None
+        solid=np.logical_or(obs['map'][0],obs['map'][1]);mud=obs['map'][2]
+        while queue:
+            cost,cell=heapq.heappop(queue)
+            if cost!=costs[cell]:continue
+            x,y=cell
+            eta=cost/C.PLAYER_SPEED
+            if self._safe_margin(obs,x+.5,y+.5)-C.HEAT_SHRINK_RATE*(eta+2.)<3.:continue
+            if cell in targets:
+                px,py,kind,ttl=targets[cell]
+                if eta+.5<ttl:
+                    score=cost-({'life':8.,'quick':4.,'speed':3.}[kind])
+                    candidate=score,cost,px,py,kind
+                    if best is None or candidate<best:best=candidate
+            for nx,ny in ((x+1,y),(x-1,y),(x,y+1),(x,y-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                edge=.5/(C.MUD_SLOW if mud[x,y] else 1.)+.5/(C.MUD_SLOW if mud[nx,ny] else 1.)
+                new=cost+edge
+                if new<=self.pickup_budget and new<costs.get((nx,ny),float('inf')):
+                    costs[nx,ny]=new;heapq.heappush(queue,(new,(nx,ny)))
+        self._pickup_choice=None if best is None else best[2:]
+        return None if best is None else best[2:4]
+
+    def _tactic_move(self,obs):
+        target=self._nearby_advantage(obs)
+        if target is not None:
+            self._tactic_phase=''
+            self._response_mode=''
+            self._tactic_last=min(self._tactic_last,self._previous_time-12.)
+            return self._path_move(obs,target,'collect_advantage')
+        return super()._tactic_move(obs)
+
+
+class _BoostCloseController(_ResponsePressure):
+    """Experimental forward pressure with lateral movement and safe exits."""
+
+    def reset(self):
+        super().reset()
+        self._pressure_entry_lives = None
+
+    def _tactic_destination(self, obs):
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        solid=np.logical_or(obs['map'][0],obs['map'][1])
+        start=int(sx),int(sy);costs={start:0.};queue=[(0.,start)];best=None
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        # Hold the inside lane when feasible; do not chase an enemy into heat.
+        center_length=max(math.hypot(50.-ex,50.-ey),1e-6)
+        inside=((50.-ex)/center_length,(50.-ey)/center_length)
+        while queue:
+            cost,(cx,cy)=heapq.heappop(queue)
+            if cost!=costs[cx,cy]:continue
+            x,y=cx+.5,cy+.5
+            margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*(cost/C.PLAYER_SPEED+3.)
+            if margin<3.:continue
+            separation=math.hypot(x-ex,y-ey)
+            if 0.6<=separation<=1.6 and math.hypot(x-sx,y-sy)<=16.:
+                visible=has_line_of_sight(obs['map'][0],x,y,ex,ey)
+                _,_,miss=self._shot(obs,x,y)
+                lateral=((x-sx)*-(ey-sy)+(y-sy)*(ex-sx))/distance
+                inside_lane=((x-ex)*inside[0]+(y-ey)*inside[1])/separation
+                score=2.*visible-.9*min(miss,2.)-.4*abs(separation-1.0)
+                score+=.65*inside_lane+.08*min(margin,15.)+.12*min(abs(lateral),6.)-.18*cost
+                candidate=score,-cost,x,y
+                if best is None or candidate>best:best=candidate
+            for nx,ny in ((cx+1,cy),(cx-1,cy),(cx,cy+1),(cx,cy-1)):
+                if not (0<=nx<100 and 0<=ny<100) or solid[nx,ny]:continue
+                if math.hypot(nx+.5-ex,ny+.5-ey)<min(0.6,distance):continue
+                edge=.5/(C.MUD_SLOW if obs['map'][2,cx,cy] else 1.)+.5/(C.MUD_SLOW if obs['map'][2,nx,ny] else 1.)
+                new=cost+edge
+                if new<=24. and new<costs.get((nx,ny),float('inf')):
+                    costs[nx,ny]=new;heapq.heappush(queue,(new,(nx,ny)))
+        return None if best is None else (best[2],best[3])
+
+    def _tactic_move(self, obs):
+        now=self._previous_time
+        sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
+        distance=max(math.hypot(ex-sx,ey-sy),1e-6)
+        if self._return_needed(obs) or self._safe_margin(obs,sx,sy)<4.:
+            if self._tactic_phase:self._tactic_event('', 'safe_return',obs);self._tactic_last=now
+            return None
+        if not self._tactic_phase:
+            # Keep the pursuit prototype's trigger, duration and cooldown:
+            # compare the posture rather than a different firing schedule.
+            reason=self._tactic_trigger(obs)
+            if reason is None:return None
+            self._tactic_goal=self._tactic_destination(obs)
+            if self._tactic_goal is None:return None
+            self._pressure_entry_lives=_lives(obs['self'])
+            self._tactic_until=now+9.;self._tactic_last=now;self._tactic_plan_time=now
+            self._tactic_event('pressure',reason,obs)
+        if (_lives(obs['self'])<=self._pressure_entry_lives-2 or now>=self._tactic_until or distance>22.):
+            reason='damage_limit' if _lives(obs['self'])<=self._pressure_entry_lives-2 else 'expired_or_contact_lost'
+            self._tactic_event('',reason,obs);self._tactic_last=now
+            return None
+        if now-self._tactic_plan_time>1.:
+            goal=self._tactic_destination(obs)
+            if goal is None:
+                self._tactic_event('', 'no_safe_pressure_route',obs);self._tactic_last=now
+                return None
+            self._tactic_goal=goal;self._tactic_plan_time=now
+        if self._safe_margin(obs,*self._tactic_goal)-C.HEAT_SHRINK_RATE*3.<3.:
+            self._tactic_event('', 'unsafe_destination',obs);self._tactic_last=now
+            return None
+        desired=self._path_move(obs,self._tactic_goal,'forward_pressure')
+        self._incoming_flights(obs)
+        vx,vy=self._motion_velocity
+        closing=((ex-sx)*vx+(ey-sy)*vy)/distance
+        radial=max(-1.5,min(1.5,(distance-1.0)/3.+closing/C.PLAYER_SPEED))
+        dx,dy=(ex-sx)/distance,(ey-sy)/distance
+        choices=[]
+        for my in (-1,0,1):
+            for mx in (-1,0,1):
+                move=mx,my;risk=self._movement_risk(obs,move);x,y=self._future_positions(obs,move)[0][5]
+                margin=self._safe_margin(obs,x,y)-C.HEAT_SHRINK_RATE*self.defense_horizon
+                if margin<2.:continue
+                future=math.hypot(ex+vx*0.2-x,ey+vy*0.2-y)
+                length=max(math.hypot(mx,my),1.)
+                forward=(mx*dx+my*dy)/length
+                sideways=(-mx*dy+my*dx)/length
+                _,shoot,miss=self._shot(obs,x,y)
+                score=1.2*math.dist((x,y),self._tactic_goal)+2.*risk[2]
+                score+=3.*max(0.,0.6-future)+.8*max(0.,future-1.6)
+                score+=.45*abs(forward-radial)-.4*abs(sideways)+.7*min(miss,2.)-.3*shoot
+                if move==(0,0):score+=.75
+                choices.append((risk[0]+risk[1],score,mx,my))
+        if not choices:
+            self._tactic_event('', 'no_safe_pressure_move',obs);self._tactic_last=now
+            return None
+        _,_,mx,my=min(choices)
+        return mx,my
+
+
+
+
+
+_BoostWindowBase=GeneralistAgent
+class GeneralistAgent(_BoostWindowBase):
+    def reset(self):
+        super().reset()
+        self._boost_last=0
+
+    def _boost_window(self,obs):
+        if _lives(obs['self'])>_lives(obs['opponent']) or self._return_needed(obs):return 0
+        if obs['self'][7]>-.99 and obs['opponent'][7]<=-.99:return 1
+        if obs['self'][6]>-.99 and obs['opponent'][6]<=-.99:return 2
+        return 0
+
+    def _tactic_trigger(self,obs):
+        if self._boost_window(obs) and obs['self'][14]>0 and math.dist(_world_xy(obs['self']),_world_xy(obs['opponent']))<=22.:
+            return 'temporary_power_advantage'
+        return super()._tactic_trigger(obs)
+
+    def _close_pressure_needed(self,obs):
+        boost=self._boost_window(obs)
+        if boost in (1,2):
+            sx,sy=_world_xy(obs['self'])
+            return obs['self'][14]>0 and self._safe_margin(obs,sx,sy)>=8. and math.dist((sx,sy),_world_xy(obs['opponent']))<=14.
+        if boost==2:return False
+        return super()._close_pressure_needed(obs)
+
+    def _tactic_move(self,obs):
+        boost=self._boost_window(obs)
+        if boost!=self._boost_last:
+            self._boost_last=boost;self._tactic_plan_time=-1e9
+        return super()._tactic_move(obs)

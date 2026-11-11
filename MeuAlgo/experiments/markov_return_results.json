@@ -1,0 +1,10024 @@
+{
+  "status": "selected_development_candidate",
+  "date": "2026-11-10",
+  "baseline_commit": "bb29290",
+  "policy_sha256": "efc6f4134fff4ef0015e7378a23a937041912ed366d5cc5a46572f6f68d2fe9e",
+  "source_note": "An inherited comment was normalized after evaluation; executable syntax is verified identical to the frozen evaluated policy.",
+  "changes": [
+    "Preserve the immediate-hit tie break from markov_defense.py.",
+    "Check a heat-free route to an area safe through match end, even when the current local margin looks comfortable.",
+    "Commit to an urgent escape through a closing passage until reaching the final safe area.",
+    "Invalidate the escape cache immediately when the inherited observer detects a teleport."
+  ],
+  "original350": {
+    "before": {
+      "n": 350,
+      "wins": 272,
+      "draws": 37,
+      "losses": 41,
+      "hits": 793,
+      "received": 172,
+      "heat": 23,
+      "win_rate": 77.7143
+    },
+    "after": {
+      "n": 350,
+      "wins": 277,
+      "draws": 38,
+      "losses": 35,
+      "hits": 803,
+      "received": 156,
+      "heat": 4,
+      "win_rate": 79.1429
+    },
+    "transitions": {
+      "1->0": 6,
+      "1->1": 31,
+      "0->0": 267,
+      "-1->-1": 32,
+      "-1->0": 4,
+      "0->-1": 2,
+      "-1->1": 1,
+      "0->1": 3,
+      "1->-1": 4
+    },
+    "changed": [
+      {
+        "opponent": "markov",
+        "seed": 1310004,
+        "swapped": false,
+        "before": {
+          "winner": 1,
+          "lives": [
+            3,
+            6
+          ],
+          "hits": [
+            2,
+            5
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            7,
+            3
+          ],
+          "hits": [
+            5,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "markov",
+        "seed": 7193382,
+        "swapped": false,
+        "before": {
+          "winner": 1,
+          "lives": [
+            5,
+            8
+          ],
+          "hits": [
+            0,
+            0
+          ],
+          "heat": [
+            3,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "markov",
+        "seed": 5728078,
+        "swapped": false,
+        "before": {
+          "winner": 1,
+          "lives": [
+            0,
+            4
+          ],
+          "hits": [
+            5,
+            5
+          ],
+          "heat": [
+            3,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            6,
+            3
+          ],
+          "hits": [
+            5,
+            4
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "markov",
+        "seed": 9414402,
+        "swapped": false,
+        "before": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            7,
+            6
+          ],
+          "hits": [
+            2,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "camper",
+        "seed": 1270003,
+        "swapped": false,
+        "before": {
+          "winner": 0,
+          "lives": [
+            8,
+            6
+          ],
+          "hits": [
+            0,
+            0
+          ],
+          "heat": [
+            0,
+            5
+          ]
+        },
+        "after": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            5
+          ]
+        }
+      },
+      {
+        "opponent": "dijkstra",
+        "seed": 1270003,
+        "swapped": true,
+        "before": {
+          "winner": 1,
+          "lives": [
+            6,
+            7
+          ],
+          "hits": [
+            1,
+            2
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            7,
+            6
+          ],
+          "hits": [
+            2,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "strafe",
+        "seed": 1310002,
+        "swapped": true,
+        "before": {
+          "winner": -1,
+          "lives": [
+            4,
+            4
+          ],
+          "hits": [
+            4,
+            5
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 1,
+          "lives": [
+            3,
+            6
+          ],
+          "hits": [
+            3,
+            5
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "strafe",
+        "seed": 1310004,
+        "swapped": true,
+        "before": {
+          "winner": 0,
+          "lives": [
+            8,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 1,
+          "lives": [
+            6,
+            8
+          ],
+          "hits": [
+            0,
+            2
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "dijkstra",
+        "seed": 1310004,
+        "swapped": true,
+        "before": {
+          "winner": 0,
+          "lives": [
+            6,
+            5
+          ],
+          "hits": [
+            4,
+            2
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 1,
+          "lives": [
+            5,
+            6
+          ],
+          "hits": [
+            3,
+            3
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "camper",
+        "seed": 7193382,
+        "swapped": false,
+        "before": {
+          "winner": -1,
+          "lives": [
+            3,
+            3
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            4,
+            5
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            7
+          ],
+          "hits": [
+            0,
+            0
+          ],
+          "heat": [
+            0,
+            1
+          ]
+        }
+      },
+      {
+        "opponent": "strafe",
+        "seed": 7193382,
+        "swapped": false,
+        "before": {
+          "winner": 1,
+          "lives": [
+            4,
+            7
+          ],
+          "hits": [
+            1,
+            2
+          ],
+          "heat": [
+            3,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            7
+          ],
+          "hits": [
+            1,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "dijkstra",
+        "seed": 7193382,
+        "swapped": false,
+        "before": {
+          "winner": 1,
+          "lives": [
+            3,
+            8
+          ],
+          "hits": [
+            0,
+            2
+          ],
+          "heat": [
+            3,
+            0
+          ]
+        },
+        "after": {
+          "winner": -1,
+          "lives": [
+            8,
+            8
+          ],
+          "hits": [
+            1,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "astar",
+        "seed": 7193382,
+        "swapped": false,
+        "before": {
+          "winner": 1,
+          "lives": [
+            6,
+            8
+          ],
+          "hits": [
+            0,
+            0
+          ],
+          "heat": [
+            3,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            3
+          ],
+          "hits": [
+            5,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "dijkstra",
+        "seed": 3157917,
+        "swapped": true,
+        "before": {
+          "winner": 1,
+          "lives": [
+            6,
+            7
+          ],
+          "hits": [
+            1,
+            3
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": -1,
+          "lives": [
+            6,
+            6
+          ],
+          "hits": [
+            2,
+            3
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "strafe",
+        "seed": 3313218,
+        "swapped": false,
+        "before": {
+          "winner": 0,
+          "lives": [
+            4,
+            3
+          ],
+          "hits": [
+            5,
+            4
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 1,
+          "lives": [
+            3,
+            4
+          ],
+          "hits": [
+            4,
+            5
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "strafe",
+        "seed": 8720861,
+        "swapped": false,
+        "before": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            7
+          ],
+          "hits": [
+            1,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "dijkstra",
+        "seed": 7461348,
+        "swapped": true,
+        "before": {
+          "winner": 1,
+          "lives": [
+            4,
+            5
+          ],
+          "hits": [
+            3,
+            4
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": -1,
+          "lives": [
+            6,
+            6
+          ],
+          "hits": [
+            2,
+            2
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "camper",
+        "seed": 9393278,
+        "swapped": true,
+        "before": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            7
+          ],
+          "hits": [
+            1,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "strafe",
+        "seed": 15019212,
+        "swapped": true,
+        "before": {
+          "winner": 0,
+          "lives": [
+            7,
+            6
+          ],
+          "hits": [
+            2,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "camper",
+        "seed": 16260208,
+        "swapped": true,
+        "before": {
+          "winner": 1,
+          "lives": [
+            6,
+            7
+          ],
+          "hits": [
+            1,
+            2
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      }
+    ]
+  },
+  "by_opponent": {
+    "camper": {
+      "before": {
+        "n": 70,
+        "wins": 64,
+        "draws": 2,
+        "losses": 4,
+        "hits": 86,
+        "received": 23,
+        "heat": 8,
+        "win_rate": 91.4286
+      },
+      "after": {
+        "n": 70,
+        "wins": 65,
+        "draws": 2,
+        "losses": 3,
+        "hits": 87,
+        "received": 18,
+        "heat": 4,
+        "win_rate": 92.8571
+      },
+      "transitions": {
+        "0->0": 63,
+        "0->-1": 1,
+        "1->1": 3,
+        "-1->0": 2,
+        "1->-1": 1
+      },
+      "changed": [
+        {
+          "opponent": "camper",
+          "seed": 1270003,
+          "swapped": false,
+          "before": {
+            "winner": 0,
+            "lives": [
+              8,
+              6
+            ],
+            "hits": [
+              0,
+              0
+            ],
+            "heat": [
+              0,
+              5
+            ]
+          },
+          "after": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              5
+            ]
+          }
+        },
+        {
+          "opponent": "camper",
+          "seed": 7193382,
+          "swapped": false,
+          "before": {
+            "winner": -1,
+            "lives": [
+              3,
+              3
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              4,
+              5
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              7
+            ],
+            "hits": [
+              0,
+              0
+            ],
+            "heat": [
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "opponent": "camper",
+          "seed": 9393278,
+          "swapped": true,
+          "before": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              7
+            ],
+            "hits": [
+              1,
+              0
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "camper",
+          "seed": 16260208,
+          "swapped": true,
+          "before": {
+            "winner": 1,
+            "lives": [
+              6,
+              7
+            ],
+            "hits": [
+              1,
+              2
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "strafe": {
+      "before": {
+        "n": 70,
+        "wins": 56,
+        "draws": 6,
+        "losses": 8,
+        "hits": 147,
+        "received": 36,
+        "heat": 3,
+        "win_rate": 80.0
+      },
+      "after": {
+        "n": 70,
+        "wins": 55,
+        "draws": 5,
+        "losses": 10,
+        "hits": 141,
+        "received": 33,
+        "heat": 0,
+        "win_rate": 78.5714
+      },
+      "transitions": {
+        "0->0": 53,
+        "1->1": 7,
+        "-1->1": 1,
+        "0->1": 2,
+        "-1->-1": 4,
+        "1->0": 1,
+        "-1->0": 1,
+        "0->-1": 1
+      },
+      "changed": [
+        {
+          "opponent": "strafe",
+          "seed": 1310002,
+          "swapped": true,
+          "before": {
+            "winner": -1,
+            "lives": [
+              4,
+              4
+            ],
+            "hits": [
+              4,
+              5
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 1,
+            "lives": [
+              3,
+              6
+            ],
+            "hits": [
+              3,
+              5
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "strafe",
+          "seed": 1310004,
+          "swapped": true,
+          "before": {
+            "winner": 0,
+            "lives": [
+              8,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 1,
+            "lives": [
+              6,
+              8
+            ],
+            "hits": [
+              0,
+              2
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "strafe",
+          "seed": 7193382,
+          "swapped": false,
+          "before": {
+            "winner": 1,
+            "lives": [
+              4,
+              7
+            ],
+            "hits": [
+              1,
+              2
+            ],
+            "heat": [
+              3,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              7
+            ],
+            "hits": [
+              1,
+              0
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "strafe",
+          "seed": 3313218,
+          "swapped": false,
+          "before": {
+            "winner": 0,
+            "lives": [
+              4,
+              3
+            ],
+            "hits": [
+              5,
+              4
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 1,
+            "lives": [
+              3,
+              4
+            ],
+            "hits": [
+              4,
+              5
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "strafe",
+          "seed": 8720861,
+          "swapped": false,
+          "before": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              7
+            ],
+            "hits": [
+              1,
+              0
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "strafe",
+          "seed": 15019212,
+          "swapped": true,
+          "before": {
+            "winner": 0,
+            "lives": [
+              7,
+              6
+            ],
+            "hits": [
+              2,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "dijkstra": {
+      "before": {
+        "n": 70,
+        "wins": 51,
+        "draws": 6,
+        "losses": 13,
+        "hits": 150,
+        "received": 62,
+        "heat": 3,
+        "win_rate": 72.8571
+      },
+      "after": {
+        "n": 70,
+        "wins": 51,
+        "draws": 9,
+        "losses": 10,
+        "hits": 154,
+        "received": 57,
+        "heat": 0,
+        "win_rate": 72.8571
+      },
+      "transitions": {
+        "0->0": 50,
+        "1->0": 1,
+        "1->1": 9,
+        "-1->-1": 6,
+        "0->1": 1,
+        "1->-1": 3
+      },
+      "changed": [
+        {
+          "opponent": "dijkstra",
+          "seed": 1270003,
+          "swapped": true,
+          "before": {
+            "winner": 1,
+            "lives": [
+              6,
+              7
+            ],
+            "hits": [
+              1,
+              2
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              7,
+              6
+            ],
+            "hits": [
+              2,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "dijkstra",
+          "seed": 1310004,
+          "swapped": true,
+          "before": {
+            "winner": 0,
+            "lives": [
+              6,
+              5
+            ],
+            "hits": [
+              4,
+              2
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 1,
+            "lives": [
+              5,
+              6
+            ],
+            "hits": [
+              3,
+              3
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "dijkstra",
+          "seed": 7193382,
+          "swapped": false,
+          "before": {
+            "winner": 1,
+            "lives": [
+              3,
+              8
+            ],
+            "hits": [
+              0,
+              2
+            ],
+            "heat": [
+              3,
+              0
+            ]
+          },
+          "after": {
+            "winner": -1,
+            "lives": [
+              8,
+              8
+            ],
+            "hits": [
+              1,
+              0
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "dijkstra",
+          "seed": 3157917,
+          "swapped": true,
+          "before": {
+            "winner": 1,
+            "lives": [
+              6,
+              7
+            ],
+            "hits": [
+              1,
+              3
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": -1,
+            "lives": [
+              6,
+              6
+            ],
+            "hits": [
+              2,
+              3
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "dijkstra",
+          "seed": 7461348,
+          "swapped": true,
+          "before": {
+            "winner": 1,
+            "lives": [
+              4,
+              5
+            ],
+            "hits": [
+              3,
+              4
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": -1,
+            "lives": [
+              6,
+              6
+            ],
+            "hits": [
+              2,
+              2
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "astar": {
+      "before": {
+        "n": 70,
+        "wins": 68,
+        "draws": 0,
+        "losses": 2,
+        "hits": 341,
+        "received": 9,
+        "heat": 3,
+        "win_rate": 97.1429
+      },
+      "after": {
+        "n": 70,
+        "wins": 69,
+        "draws": 0,
+        "losses": 1,
+        "hits": 348,
+        "received": 9,
+        "heat": 0,
+        "win_rate": 98.5714
+      },
+      "transitions": {
+        "0->0": 68,
+        "1->0": 1,
+        "1->1": 1
+      },
+      "changed": [
+        {
+          "opponent": "astar",
+          "seed": 7193382,
+          "swapped": false,
+          "before": {
+            "winner": 1,
+            "lives": [
+              6,
+              8
+            ],
+            "hits": [
+              0,
+              0
+            ],
+            "heat": [
+              3,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              3
+            ],
+            "hits": [
+              5,
+              0
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "markov": {
+      "before": {
+        "n": 70,
+        "wins": 33,
+        "draws": 23,
+        "losses": 14,
+        "hits": 69,
+        "received": 42,
+        "heat": 6,
+        "win_rate": 47.1429
+      },
+      "after": {
+        "n": 70,
+        "wins": 37,
+        "draws": 22,
+        "losses": 11,
+        "hits": 73,
+        "received": 39,
+        "heat": 0,
+        "win_rate": 52.8571
+      },
+      "transitions": {
+        "1->0": 3,
+        "1->1": 11,
+        "0->0": 33,
+        "-1->-1": 22,
+        "-1->0": 1
+      },
+      "changed": [
+        {
+          "opponent": "markov",
+          "seed": 1310004,
+          "swapped": false,
+          "before": {
+            "winner": 1,
+            "lives": [
+              3,
+              6
+            ],
+            "hits": [
+              2,
+              5
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              7,
+              3
+            ],
+            "hits": [
+              5,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "markov",
+          "seed": 7193382,
+          "swapped": false,
+          "before": {
+            "winner": 1,
+            "lives": [
+              5,
+              8
+            ],
+            "hits": [
+              0,
+              0
+            ],
+            "heat": [
+              3,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "markov",
+          "seed": 5728078,
+          "swapped": false,
+          "before": {
+            "winner": 1,
+            "lives": [
+              0,
+              4
+            ],
+            "hits": [
+              5,
+              5
+            ],
+            "heat": [
+              3,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              6,
+              3
+            ],
+            "hits": [
+              5,
+              4
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "markov",
+          "seed": 9414402,
+          "swapped": false,
+          "before": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              7,
+              6
+            ],
+            "hits": [
+              2,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "new_balanced50": {
+    "before": {
+      "n": 50,
+      "wins": 33,
+      "draws": 7,
+      "losses": 10,
+      "hits": 102,
+      "received": 40,
+      "heat": 1,
+      "win_rate": 66.0
+    },
+    "after": {
+      "n": 50,
+      "wins": 35,
+      "draws": 5,
+      "losses": 10,
+      "hits": 106,
+      "received": 38,
+      "heat": 1,
+      "win_rate": 70.0
+    },
+    "transitions": {
+      "0->0": 33,
+      "1->1": 10,
+      "-1->-1": 5,
+      "-1->0": 2
+    },
+    "changed": [
+      {
+        "opponent": "camper",
+        "seed": 55634530,
+        "swapped": false,
+        "before": {
+          "winner": -1,
+          "lives": [
+            7,
+            7
+          ],
+          "hits": [
+            1,
+            1
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            8,
+            6
+          ],
+          "hits": [
+            2,
+            0
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      },
+      {
+        "opponent": "camper",
+        "seed": 55634530,
+        "swapped": true,
+        "before": {
+          "winner": -1,
+          "lives": [
+            5,
+            5
+          ],
+          "hits": [
+            3,
+            3
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        },
+        "after": {
+          "winner": 0,
+          "lives": [
+            5,
+            0
+          ],
+          "hits": [
+            8,
+            3
+          ],
+          "heat": [
+            0,
+            0
+          ]
+        }
+      }
+    ]
+  },
+  "new_balanced50_by_opponent": {
+    "camper": {
+      "before": {
+        "n": 10,
+        "wins": 8,
+        "draws": 2,
+        "losses": 0,
+        "hits": 11,
+        "received": 5,
+        "heat": 1,
+        "win_rate": 80.0
+      },
+      "after": {
+        "n": 10,
+        "wins": 10,
+        "draws": 0,
+        "losses": 0,
+        "hits": 15,
+        "received": 3,
+        "heat": 1,
+        "win_rate": 100.0
+      },
+      "transitions": {
+        "0->0": 8,
+        "-1->0": 2
+      },
+      "changed": [
+        {
+          "opponent": "camper",
+          "seed": 55634530,
+          "swapped": false,
+          "before": {
+            "winner": -1,
+            "lives": [
+              7,
+              7
+            ],
+            "hits": [
+              1,
+              1
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              8,
+              6
+            ],
+            "hits": [
+              2,
+              0
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "opponent": "camper",
+          "seed": 55634530,
+          "swapped": true,
+          "before": {
+            "winner": -1,
+            "lives": [
+              5,
+              5
+            ],
+            "hits": [
+              3,
+              3
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          },
+          "after": {
+            "winner": 0,
+            "lives": [
+              5,
+              0
+            ],
+            "hits": [
+              8,
+              3
+            ],
+            "heat": [
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    "strafe": {
+      "before": {
+        "n": 10,
+        "wins": 4,
+        "draws": 2,
+        "losses": 4,
+        "hits": 13,
+        "received": 12,
+        "heat": 0,
+        "win_rate": 40.0
+      },
+      "after": {
+        "n": 10,
+        "wins": 4,
+        "draws": 2,
+        "losses": 4,
+        "hits": 13,
+        "received": 12,
+        "heat": 0,
+        "win_rate": 40.0
+      },
+      "transitions": {
+        "0->0": 4,
+        "1->1": 4,
+        "-1->-1": 2
+      },
+      "changed": []
+    },
+    "dijkstra": {
+      "before": {
+        "n": 10,
+        "wins": 5,
+        "draws": 1,
+        "losses": 4,
+        "hits": 19,
+        "received": 14,
+        "heat": 0,
+        "win_rate": 50.0
+      },
+      "after": {
+        "n": 10,
+        "wins": 5,
+        "draws": 1,
+        "losses": 4,
+        "hits": 19,
+        "received": 14,
+        "heat": 0,
+        "win_rate": 50.0
+      },
+      "transitions": {
+        "1->1": 4,
+        "0->0": 5,
+        "-1->-1": 1
+      },
+      "changed": []
+    },
+    "astar": {
+      "before": {
+        "n": 10,
+        "wins": 10,
+        "draws": 0,
+        "losses": 0,
+        "hits": 48,
+        "received": 2,
+        "heat": 0,
+        "win_rate": 100.0
+      },
+      "after": {
+        "n": 10,
+        "wins": 10,
+        "draws": 0,
+        "losses": 0,
+        "hits": 48,
+        "received": 2,
+        "heat": 0,
+        "win_rate": 100.0
+      },
+      "transitions": {
+        "0->0": 10
+      },
+      "changed": []
+    },
+    "markov": {
+      "before": {
+        "n": 10,
+        "wins": 6,
+        "draws": 2,
+        "losses": 2,
+        "hits": 11,
+        "received": 7,
+        "heat": 0,
+        "win_rate": 60.0
+      },
+      "after": {
+        "n": 10,
+        "wins": 6,
+        "draws": 2,
+        "losses": 2,
+        "hits": 11,
+        "received": 7,
+        "heat": 0,
+        "win_rate": 60.0
+      },
+      "transitions": {
+        "1->1": 2,
+        "0->0": 6,
+        "-1->-1": 2
+      },
+      "changed": []
+    }
+  },
+  "separate_markov20": {
+    "before": {
+      "n": 20,
+      "wins": 6,
+      "draws": 9,
+      "losses": 5,
+      "hits": 26,
+      "received": 27,
+      "heat": 0,
+      "win_rate": 30.0
+    },
+    "after": {
+      "n": 20,
+      "wins": 6,
+      "draws": 9,
+      "losses": 5,
+      "hits": 26,
+      "received": 27,
+      "heat": 0,
+      "win_rate": 30.0
+    },
+    "transitions": {
+      "1->1": 5,
+      "0->0": 6,
+      "-1->-1": 9
+    },
+    "changed": []
+  },
+  "previous_timing_only_markov": {
+    "n": 70,
+    "wins": 34,
+    "draws": 23,
+    "losses": 13,
+    "hits": 69,
+    "received": 43,
+    "heat": 3
+  },
+  "validation": {
+    "existing_generalist_defense_tests": 20,
+    "real_match_regression_tests": 3,
+    "future_return_tests": 6,
+    "all_passed": true,
+    "original350_final_revision_replayed": 184,
+    "original350_unchanged_no_teleport": 166,
+    "fresh50_final_revision_replayed": 25,
+    "reuse_reason": "The final patch only responds to inherited return-cache invalidation after a teleport. Source equivalence is checked, every teleport-containing match is rerun, and matches with no teleport are behaviorally identical."
+  },
+  "weights_changed": false,
+  "official_agent_changed": false,
+  "limitations": [
+    "Per-opponent tradeoffs remain; do not infer universal improvement from the aggregate.",
+    "The new balanced sample contains five maps, both spawns, for each specialist. Further independent maps may differ.",
+    "Markov draws were checked for preservation but not specifically optimized."
+  ],
+  "matches": [
+    {
+      "opponent": "markov",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        83,
+        87
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        81,
+        92
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        83,
+        91
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        75,
+        93
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        89,
+        103
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        93,
+        98
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        88,
+        90
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        88,
+        98
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        77,
+        80
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        69,
+        68
+      ],
+      "hits": [
+        5,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        92,
+        81
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        86,
+        93
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        78,
+        77
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        89,
+        90
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        86
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        94,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        98,
+        105
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        89,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        85
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        83,
+        88
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        92,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        78,
+        76
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        85,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        94,
+        92
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        4
+      ],
+      "shots": [
+        80,
+        71
+      ],
+      "hits": [
+        4,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        70,
+        77
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        80,
+        84
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        82,
+        96
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        84,
+        95
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        77,
+        100
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        103
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        91,
+        106
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        87,
+        87
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "shots": [
+        76,
+        91
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        91
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        91,
+        99
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        83,
+        94
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        64,
+        66
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        91,
+        87
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        77,
+        88
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        79,
+        91
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        89,
+        98
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        82,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        90,
+        103
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        88,
+        92
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        66,
+        69
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        83,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        88,
+        82
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        85,
+        93
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        75,
+        92
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        85,
+        87
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        82,
+        93
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        84,
+        88
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        78,
+        85
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        77,
+        91
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        72,
+        83
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        86,
+        96
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        70,
+        83
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        78,
+        100
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        88,
+        94
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        84,
+        97
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        75,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        84,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        99,
+        83
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        82,
+        89
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "markov",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        78,
+        77
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "markov",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        91,
+        92
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        87,
+        102
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        96,
+        103
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        101,
+        97
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        101,
+        105
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        55,
+        65
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        12,
+        9
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        2,
+        6
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        74,
+        82
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        71,
+        86
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        22,
+        27
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        5
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        47,
+        51
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        74,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        83,
+        106
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        94,
+        90
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        68,
+        70
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        77,
+        75
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        112,
+        106
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        67,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        71,
+        85
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        49,
+        63
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        98,
+        99
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        6,
+        6
+      ],
+      "shots": [
+        113,
+        110
+      ],
+      "hits": [
+        2,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        76,
+        77
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        95,
+        94
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        67,
+        77
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        57,
+        65
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        105,
+        111
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        29,
+        31
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        7
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        65,
+        77
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        70,
+        77
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270007,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        104,
+        107
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270007,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        5,
+        5
+      ],
+      "shots": [
+        107,
+        107
+      ],
+      "hits": [
+        3,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        49,
+        53
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        63,
+        70
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        106
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        88,
+        110
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        96,
+        88
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        66,
+        72
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        101,
+        102
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1270008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        64,
+        67
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        18,
+        25
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        75,
+        92
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        95,
+        96
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        78,
+        83
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        75,
+        81
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        105,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310001,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        76,
+        77
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310001,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        73,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        71,
+        72
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        3,
+        6
+      ],
+      "shots": [
+        80,
+        92
+      ],
+      "hits": [
+        3,
+        5
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        84,
+        103
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        81,
+        88
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        102,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        86,
+        93
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310002,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        57,
+        60
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310002,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        60,
+        57
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        20,
+        22
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        75,
+        91
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        74,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        89,
+        97
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        74,
+        80
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        97,
+        80
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        5,
+        6
+      ],
+      "shots": [
+        79,
+        97
+      ],
+      "hits": [
+        3,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        0
+      ],
+      "shots": [
+        69,
+        60
+      ],
+      "hits": [
+        7,
+        1
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "shots": [
+        95,
+        99
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        14,
+        23
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        83,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        42,
+        52
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        95,
+        86
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        72,
+        76
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "shots": [
+        102,
+        96
+      ],
+      "hits": [
+        5,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        81,
+        81
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        48,
+        55
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        60,
+        78
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        68,
+        70
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        68,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        85,
+        75
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310008,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        117,
+        107
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1310008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        90,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        83,
+        96
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        47,
+        70
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "shots": [
+        72,
+        66
+      ],
+      "hits": [
+        5,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        103,
+        98
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        95,
+        95
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320000,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        84,
+        77
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320000,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        68,
+        66
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        91,
+        98
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        82,
+        97
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        14,
+        14
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        63,
+        80
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        110,
+        109
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        103,
+        112
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320004,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        86,
+        82
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320004,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        76,
+        84
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        9
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        44,
+        55
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        90,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        87,
+        93
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        97,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320005,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        71,
+        78
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320005,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        74,
+        76
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        35,
+        51
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        62,
+        71
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        82,
+        86
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        2
+      ],
+      "shots": [
+        88,
+        78
+      ],
+      "hits": [
+        6,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320008,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        62,
+        65
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        98,
+        90
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 1320008,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        79,
+        87
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        58,
+        68
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        77,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        92,
+        107
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        106,
+        90
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        64,
+        85
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        102,
+        98
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 3540748,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        71,
+        70
+      ],
+      "hits": [
+        8,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 3540748,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        70,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        82,
+        93
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        92,
+        114
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        113,
+        106
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        64,
+        76
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        71,
+        71
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4433938,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        4,
+        7
+      ],
+      "shots": [
+        97,
+        96
+      ],
+      "hits": [
+        1,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4433938,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        5,
+        6
+      ],
+      "shots": [
+        36,
+        47
+      ],
+      "hits": [
+        2,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        85,
+        93
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        39,
+        46
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        86,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        64,
+        62
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 7193382,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        38,
+        38
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        88,
+        93
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        108,
+        107
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        4
+      ],
+      "shots": [
+        38,
+        37
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        1,
+        3
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 7193382,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        83,
+        98
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        96,
+        106
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        97,
+        90
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 3157917,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        73,
+        73
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        6,
+        6
+      ],
+      "shots": [
+        99,
+        89
+      ],
+      "hits": [
+        2,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 3157917,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        80,
+        84
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        18,
+        27
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        85,
+        88
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        96,
+        101
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        93,
+        104
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        70,
+        68
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        71,
+        76
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5558074,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "shots": [
+        106,
+        100
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        92,
+        108
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 5558074,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        15,
+        17
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        88,
+        107
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        83,
+        99
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        36,
+        33
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        105,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 2068473,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        84,
+        87
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        82,
+        78
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 2068473,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        104,
+        105
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        44,
+        42
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        97,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        44,
+        51
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        79,
+        89
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        47,
+        38
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5728078,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        109,
+        91
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "shots": [
+        114,
+        89
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 5728078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        39,
+        42
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        3
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        17,
+        24
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        62,
+        88
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        94
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        89,
+        109
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        100,
+        85
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        2
+      ],
+      "shots": [
+        55,
+        60
+      ],
+      "hits": [
+        6,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 9414402,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        70,
+        72
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 9414402,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        59,
+        52
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        75,
+        90
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        95,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        30,
+        23
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        95,
+        77
+      ],
+      "hits": [
+        7,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        77,
+        75
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        93,
+        98
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4247086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        66,
+        75
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4247086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        80,
+        83
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        19,
+        22
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        69,
+        98
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        78,
+        96
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        83,
+        77
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        106,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4897469,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        74,
+        82
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        93,
+        102
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4897469,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        68,
+        83
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        38,
+        40
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "shots": [
+        64,
+        62
+      ],
+      "hits": [
+        3,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        3,
+        4
+      ],
+      "shots": [
+        104,
+        105
+      ],
+      "hits": [
+        4,
+        5
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        89,
+        101
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        109,
+        118
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 3313218,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        73,
+        76
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        93,
+        101
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 3313218,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        77,
+        72
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "shots": [
+        64,
+        70
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        78,
+        107
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        32,
+        41
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        76,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        4,
+        7
+      ],
+      "shots": [
+        99,
+        108
+      ],
+      "hits": [
+        2,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 5844281,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        91,
+        94
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "shots": [
+        108,
+        107
+      ],
+      "hits": [
+        5,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 5844281,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        73,
+        80
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        34,
+        44
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        49,
+        64
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        73,
+        90
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        60,
+        73
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        97,
+        84
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        92,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4633354,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        65,
+        86
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 4633354,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        62,
+        68
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        55,
+        71
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        79,
+        84
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        77,
+        99
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        12,
+        14
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        2
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        93,
+        97
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        104,
+        108
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 8720861,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        1
+      ],
+      "shots": [
+        75,
+        82
+      ],
+      "hits": [
+        7,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 8720861,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        75,
+        79
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        9
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        17,
+        17
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        78,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        84,
+        105
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        104,
+        91
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 7461348,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        70,
+        69
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        6,
+        6
+      ],
+      "shots": [
+        90,
+        100
+      ],
+      "hits": [
+        2,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 7461348,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        67,
+        70
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        13,
+        16
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        71,
+        81
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        78,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        79,
+        98
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        104,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        96,
+        83
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 9393278,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        87,
+        75
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        9
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 9393278,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "shots": [
+        72,
+        76
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        35,
+        37
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        85,
+        85
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        86,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        102,
+        97
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        93,
+        80
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 15019212,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        71,
+        87
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 15019212,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        80,
+        69
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        60,
+        71
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        93,
+        105
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        28,
+        37
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        7
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        106,
+        107
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "shots": [
+        101,
+        102
+      ],
+      "hits": [
+        5,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        102,
+        103
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 12920890,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        74,
+        87
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 12920890,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        65,
+        88
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        5,
+        6
+      ],
+      "shots": [
+        44,
+        62
+      ],
+      "hits": [
+        3,
+        3
+      ],
+      "heat": [
+        1,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "shots": [
+        77,
+        84
+      ],
+      "hits": [
+        7,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "shots": [
+        94,
+        114
+      ],
+      "hits": [
+        0,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "shots": [
+        28,
+        33
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        1
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        109,
+        109
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 19501009,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        81,
+        80
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        112,
+        110
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 19501009,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        83,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "shots": [
+        16,
+        13
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "camper",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "shots": [
+        70,
+        86
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "shots": [
+        86,
+        106
+      ],
+      "hits": [
+        1,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        94,
+        100
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        90
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 17906003,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        63,
+        66
+      ],
+      "hits": [
+        9,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        100,
+        102
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 17906003,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "shots": [
+        69,
+        63
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "shots": [
+        49,
+        53
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "camper",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "shots": [
+        39,
+        40
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        85,
+        108
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "strafe",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        94,
+        101
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "shots": [
+        110,
+        103
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "shots": [
+        107,
+        110
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    },
+    {
+      "opponent": "astar",
+      "seed": 16260208,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "shots": [
+        86,
+        94
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "unchanged_without_teleport"
+    },
+    {
+      "opponent": "astar",
+      "seed": 16260208,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "shots": [
+        84,
+        97
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ],
+      "evaluation": "replayed_after_cache_fix"
+    }
+  ],
+  "raw_results_directory": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b"
+}
