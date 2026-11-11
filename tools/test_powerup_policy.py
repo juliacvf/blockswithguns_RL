@@ -44,6 +44,27 @@ class PowerupPolicyTests(unittest.TestCase):
         e.powerups.items=[Powerup(52.5,50.5,'LIFE'),Powerup(53.5,50.5,'QUICKSHOT')]
         np.testing.assert_allclose(a._nearby_advantage(self.observe(e,a)),(52.5,50.5),atol=1e-4)
 
+    def test_deny_nearby_life_when_full_and_opponent_is_injured(self):
+        e,a=self.scenario();e.players[1].lives=7
+        e.powerups.items=[Powerup(52.5,50.5,'LIFE')]
+        np.testing.assert_allclose(a._nearby_advantage(self.observe(e,a)),(52.5,50.5),atol=1e-4)
+
+    def test_preserve_injured_lead_instead_of_changing_position_for_life(self):
+        e,a=self.scenario();e.players[0].lives=7;e.players[1].lives=6
+        e.powerups.items=[Powerup(52.5,50.5,'LIFE')]
+        self.assertIsNone(a._nearby_advantage(self.observe(e,a)))
+
+    def test_denying_life_does_not_justify_a_long_detour(self):
+        e,a=self.scenario();e.players[1].lives=7
+        e.powerups.items=[Powerup(56.5,50.5,'LIFE')]
+        self.assertIsNone(a._nearby_advantage(self.observe(e,a)))
+
+    def test_urgent_return_takes_priority_over_denial(self):
+        e,a=self.scenario();e.time=100.;e.tick=3000
+        e.players[0].x=72.;e.players[1].x=55.;e.players[1].lives=7
+        e.powerups.items=[Powerup(69.5,50.5,'LIFE')]
+        self.assertIsNone(a._nearby_advantage(self.observe(e,a)))
+
     def test_ignore_expiring_bonus(self):
         e,a=self.scenario();e.powerups.items=[Powerup(54.5,50.5,'QUICKSHOT',ttl=.1)]
         self.assertIsNone(a._nearby_advantage(self.observe(e,a)))

@@ -67,12 +67,51 @@ Para continuar um candidato, use `--resume`, o mesmo `--output` e o mesmo `--see
 .\.venv\Scripts\python.exe tools/verify.py
 ```
 
-São nove testes de perfis, transferência e navegação e onze testes de colisão, esquiva, tiro em movimento e retorno seguro.
+São 44 testes específicos: nove de perfis e navegação, onze de defesa, quinze de coleta e bônus, seis de retorno e três de regressão contra Markov. A verificação geral executa outras 23 checagens do projeto.
 
 ## Estado atual
 
-A versão oficial de 10 de novembro de 2026 está em `algo1.py` e nas duas
-pastas de concurso. Os pesos foram mantidos. Ela coleta vida, velocidade e
+### Revisão dos empates
+
+A política atual coleta uma vida próxima mesmo estando com vida cheia
+quando isso impede a cura de um adversário ferido. A mudança mantém os
+limites de distância e retorno seguro e está no código principal e nos dois
+slots de concurso. Os pesos permanecem iguais aos do commit `1d53543`.
+
+Nos mesmos 500 confrontos contra especialistas, com 100 por adversário:
+
+| Resultado | Antes | Atual |
+|---|---:|---:|
+| Vitórias | 424 (84,8%) | 429 (85,8%) |
+| Empates | 48 | 45 |
+| Derrotas | 28 | 26 |
+
+Oito empates antigos viraram vitórias. O saldo inclui também quatro vitórias
+que viraram empates e uma que virou derrota; duas derrotas viraram vitórias
+e outra virou empate. A redução líquida foi de três empates, com cinco
+vitórias adicionais. As taxas por especialista foram Camper 88%, Strafe 84%,
+Dijkstra 79%, A* 98% e Markov 80%.
+
+Em cinco mapas inéditos, nos dois lados, a comparação contra especialistas
+passou de 32/50 para 33/50 vitórias, de 15 para 14 empates e manteve três
+derrotas. Contra os bots padrão, ambas as versões ganharam 50/50.
+Essa amostra nova expôs dificuldades que a bateria principal não mostrava:
+Camper 8/10, Strafe 6/10, Dijkstra 7/10, A* 7/10 e Markov 5/10 na versão
+atual. A meta de 75% por adversário foi mantida na bateria principal;
+não foi mantida em todos os adversários dessa pequena amostra inédita.
+
+As variações de mira foram descartadas porque também criavam novos
+empates em partidas anteriormente ganhas. Os resultados completos,
+as transições, hashes e limites estão no
+[relatório da revisão](experiments/generalista_draw_results.json).
+Passaram os 44 testes específicos, as 23 verificações gerais, a validação
+dos dois slots e 14 partidas de equivalência com ações idênticas entre
+o desenvolvimento e as duas entregas.
+
+### Baterias anteriores à revisão dos empates
+
+A versão do commit `1d53543`, anterior à revisão dos empates, foi validada
+nas baterias descritas abaixo. Os pesos foram mantidos. Ela coleta vida, velocidade e
 tiro rápido por rotas próximas e seguras, aproveita imediatamente vantagens
 temporárias e preserva as correções de esquiva e retorno à zona segura.
 Não escolhe comportamentos pelo nome do adversário nem pela seed.

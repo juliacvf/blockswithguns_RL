@@ -2,7 +2,7 @@
 
 Estas são as pastas prontas para entregar o generalista atualizado em 10 de novembro de 2026. Os dois slots executam a mesma política; o nome do script atende ao slot solicitado pelo concurso.
 
-A versão superou 75% de vitórias contra cada especialista treinado tanto na bateria original quanto em mapas novos e manteve 100/100 vitórias contra os bots padrão. Os [resultados por adversário](../MeuAlgo/README.md#estado-atual) e o [relatório completo](../MeuAlgo/experiments/generalista_75_each_results.json) registram as amostras avaliadas.
+A revisão dos empates passou de 424 para 429 vitórias, de 48 para 45 empates e de 28 para 26 derrotas nos mesmos 500 confrontos contra especialistas. Em mapas inéditos, passou de 32/50 para 33/50 contra especialistas e manteve 50/50 contra bots. Os [resultados por adversário e limites](../MeuAlgo/README.md#estado-atual) e o [relatório completo](../MeuAlgo/experiments/generalista_draw_results.json) registram as amostras avaliadas.
 
 ## Sumário
 
@@ -62,7 +62,7 @@ Ao terminar, Enter fecha a janela. Troque `camper` por outro bot conhecido para 
 - `reset()` limpa o estado antes de cada episódio.
 - A execução precisa de Python 3.10 ou superior e NumPy. Os scripts não importam os módulos `core`, `rl`, `bots` ou `MeuAlgo` do projeto.
 
-Os valores da Q-table são os mesmos do modelo oficial; metadados de treino e caminhos pessoais foram removidos dos arquivos de envio. As pastas passaram no validador oficial e em duas partidas completas no executor de concurso. Em 12 partidas contra especialistas, os dois scripts produziram ações idênticas às do generalista de desenvolvimento durante todos os 41.700 passos. As constantes e funções auxiliares necessárias estão incluídas nos próprios scripts.
+Os valores da Q-table são os mesmos do modelo oficial; metadados de treino e caminhos pessoais foram removidos dos arquivos de envio. As constantes e funções auxiliares necessárias estão incluídas nos próprios scripts. A verificação da política atual inclui o validador oficial e 14 partidas completas de equivalência entre os dois slots e o código de desenvolvimento.
 
 ## Atualizar uma entrega
 

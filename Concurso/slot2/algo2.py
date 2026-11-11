@@ -3135,7 +3135,7 @@ class GeneralistAgent(_PickupOpportunityBase):
     def _nearby_advantage(self,obs):
         sx,sy=_world_xy(obs['self']);ex,ey=_world_xy(obs['opponent'])
         own=_lives(obs['self']);enemy=_lives(obs['opponent'])
-        if own>enemy or math.hypot(ex-sx,ey-sy)<4. or self._return_needed(obs):
+        if (own>enemy and own<C.PLAYER_LIVES) or math.hypot(ex-sx,ey-sy)<4. or self._return_needed(obs):
             return None
         now=self._previous_time
         targets={}
@@ -3143,8 +3143,8 @@ class GeneralistAgent(_PickupOpportunityBase):
             if valid<.5:continue
             x,y=_world_xy(row)
             if math.hypot(x-sx,y-sy)>self.pickup_budget or self._safe_margin(obs,x,y)<4.:continue
-            kind='life' if row[3]>.5 and own<C.PLAYER_LIVES else 'quick' if row[4]>.5 and obs['self'][6]<-.99 else 'speed' if row[5]>.5 and obs['self'][7]<-.99 else None
-            if kind is None:continue
+            kind='life' if row[3]>.5 and (own<C.PLAYER_LIVES or enemy<C.PLAYER_LIVES) else 'quick' if row[4]>.5 and obs['self'][6]<-.99 else 'speed' if row[5]>.5 and obs['self'][7]<-.99 else None
+            if kind is None or (own>enemy and (kind!='life' or math.hypot(x-sx,y-sy)>5.)):continue
             ttl=(float(row[2])+1.)*.5*C.POWERUP_TTL
             targets[int(x),int(y)]=(x,y,kind,ttl)
         if not targets:

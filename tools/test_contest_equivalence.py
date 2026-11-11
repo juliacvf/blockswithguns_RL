@@ -32,7 +32,7 @@ def compare(job):
     return dict(opponent=opponent,seed=seed,swapped=swap,ticks=e.tick,winner=e.winner)
 
 if __name__=='__main__':
-    cases=[(n,s,swap) for n,s in [('camper',7193382),('strafe',1310003),('dijkstra',1310004),('astar',1120000),('markov',1310001),('markov',7193382)] for swap in (False,True)]
+    cases=[(n,s,swap) for n,s in [('camper',7193382),('strafe',1310003),('dijkstra',1310004),('astar',1120000),('markov',1310001),('markov',7193382),('dijkstra',1526107030)] for swap in (False,True)]
     rows=[]
     with ProcessPoolExecutor(max_workers=6) as pool:
         for f in as_completed([pool.submit(compare,c) for c in cases]):
