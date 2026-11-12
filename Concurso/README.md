@@ -1,8 +1,8 @@
 # Envios do generalista para concurso
 
-Estas são as pastas prontas para entregar o generalista atualizado em 10 de novembro de 2026. Os dois slots executam a mesma política; o nome do script atende ao slot solicitado pelo concurso.
+Estas são as pastas prontas para entregar o generalista finalizado em 11 de novembro de 2026. Os dois slots executam a mesma política; o nome do script atende ao slot solicitado pelo concurso.
 
-A revisão dos empates passou de 424 para 429 vitórias, de 48 para 45 empates e de 28 para 26 derrotas nos mesmos 500 confrontos contra especialistas. Em mapas inéditos, passou de 32/50 para 33/50 contra especialistas e manteve 50/50 contra bots. Os [resultados por adversário e limites](../MeuAlgo/README.md#estado-atual) e o [relatório completo](../MeuAlgo/experiments/generalista_draw_results.json) registram as amostras avaliadas.
+A fuga antecipada passou de 429 para 431 vitórias, de 45 para 47 empates e de 26 para 22 derrotas nos mesmos 500 confrontos contra especialistas. Na última amostra de cinco mapas de 10/11, passou de 33/50 para 36/50 e manteve 50/50 contra bots. Os pesos originais foram preservados. Os [resultados por adversário e limites](../MeuAlgo/README.md#estado-atual) e o [relatório completo](../MeuAlgo/experiments/generalista_pocket_escape_yesterday_seeds_20261111_results.json) registram as amostras avaliadas.
 
 ## Sumário
 
@@ -62,7 +62,7 @@ Ao terminar, Enter fecha a janela. Troque `camper` por outro bot conhecido para 
 - `reset()` limpa o estado antes de cada episódio.
 - A execução precisa de Python 3.10 ou superior e NumPy. Os scripts não importam os módulos `core`, `rl`, `bots` ou `MeuAlgo` do projeto.
 
-Os valores da Q-table são os mesmos do modelo oficial; metadados de treino e caminhos pessoais foram removidos dos arquivos de envio. As constantes e funções auxiliares necessárias estão incluídas nos próprios scripts. A verificação da política atual inclui o validador oficial e 14 partidas completas de equivalência entre os dois slots e o código de desenvolvimento.
+Os valores da Q-table são os mesmos do modelo oficial; metadados de treino e caminhos pessoais foram removidos dos arquivos de envio. As constantes e funções auxiliares necessárias estão incluídas nos próprios scripts. A verificação da política atual inclui o validador oficial e 22 partidas completas de equivalência entre os dois slots, o código de desenvolvimento e a variante vencedora arquivada.
 
 ## Atualizar uma entrega
 

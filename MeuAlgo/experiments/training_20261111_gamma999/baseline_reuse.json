@@ -1,0 +1,24 @@
+{
+  "training_source_changes": {
+    "MeuAlgo\\train.py": {
+      "previous": "189b9089f5e062997add5411f5b53e8c11f8e5c70b0bb9a1849db8c1fcc2ccf6",
+      "current": "62a7933897be6143367240be2744af904c71f541b63d09535de0767a7970b37c"
+    }
+  },
+  "source_manifest": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\training_20261111_round2\\manifest.json",
+  "source_manifest_sha256": "a6012b141cbbe194a3e198fad309b29f733ca972a653bda5a164239934dc21f1",
+  "reused": [
+    {
+      "source": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\training_20261111_round2\\validation_baseline.json",
+      "sha256": "70b6d688c80a09b0e4150ec3d4d315cfb7d4a3ad6ebd9d50d5b4823240921d4c",
+      "target": "validation_baseline.json",
+      "reason": "Identical frozen inference inputs, initial weights and validation maps; training source does not run during evaluation"
+    },
+    {
+      "source": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\training_20261111_round2\\validation_checkpoint_120.json",
+      "sha256": "43230a97a13714fe619577e4cae2eba7282e591436058ec1c762aa4d31b3f789",
+      "target": "validation_control_gamma099_120.json",
+      "reason": "Identical frozen inference inputs, initial weights and validation maps; training source does not run during evaluation"
+    }
+  ]
+}

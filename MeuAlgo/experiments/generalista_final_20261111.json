@@ -1,0 +1,653 @@
+{
+  "status": "final_winning_variant_promoted_and_verified",
+  "date": "2026-11-11",
+  "commit_message": "comit final",
+  "selected": "Early pocket escape with original official Q-table",
+  "policy_hashes": {
+    "MeuAlgo/algo1.py": "a4a5de3c698743bc23d61fbd7742366e423f89fdb7c84275b693be21054a3e9a",
+    "Concurso/slot1/algo1.py": "c16079a2888e1df8211608b55b90552dd1c4a50ac54e6a3ae064cf64a1161923",
+    "Concurso/slot2/algo2.py": "c16079a2888e1df8211608b55b90552dd1c4a50ac54e6a3ae064cf64a1161923"
+  },
+  "selected_candidate_sha256": "3da99d4682282494cc81da10b141add42a2ed1c3c9b25cdd5f54362b58c59f45",
+  "official_weights_preserved": true,
+  "weight_hashes": {
+    "MeuAlgo\\weights\\qtable.npz": "29cbdab45c4fa9af5e87a62dc718aa449a8d6519285316564aa5c658eab04a28",
+    "MeuAlgo\\weights\\especialistas\\astar.npz": "41692f7954e5902a75b28ff87648e869c638342313a8b062c648868733c04c9f",
+    "MeuAlgo\\weights\\especialistas\\camper.npz": "0abac64d7a0f67c43e2e24529aa7d076a6fcef3c99d253beb66eb10b61a8210d",
+    "MeuAlgo\\weights\\especialistas\\dijkstra.npz": "b0789af86c92bd2a8ea8a1293a810d9d1e12310a19441d4d3de78af33a830553",
+    "MeuAlgo\\weights\\especialistas\\markov.npz": "a64c7153cfcbe95a64add30d359feaa1ba3582b1fa9a5c40251ac2cd1299cdea",
+    "MeuAlgo\\weights\\especialistas\\strafe.npz": "5f79cbacdc937deb94e7efd318a36a155928ce3ba728e9e5d814f6d2e88322b1",
+    "MeuAlgo\\weights\\generalista\\qtable.npz": "cf8b4041efe86e6654fd426b80592d71aaf54af72e154c21eae1dd620ff3aafa",
+    "Concurso\\slot1\\weights\\qtable.npz": "4857979654d32c8b407c57435075eac069b79557a2d49f67a9a0b5c89760cbd1",
+    "Concurso\\slot2\\weights\\qtable.npz": "4857979654d32c8b407c57435075eac069b79557a2d49f67a9a0b5c89760cbd1"
+  },
+  "archived_pre_promotion_policy": "MeuAlgo/experiments/pocket_escape_20261111/official_policy_frozen.py",
+  "baseline_commit": "e7aafabe365c5538e8fea9e295d9ce33dc844a98",
+  "evidence_reports": [
+    "MeuAlgo/experiments/generalista_pocket_escape_20261111_results.json",
+    "MeuAlgo/experiments/generalista_pocket_escape_yesterday_seeds_20261111_results.json"
+  ],
+  "final_yesterday_replay": {
+    "last_new_maps": {
+      "specialists": {
+        "before": {
+          "matches": 50,
+          "wins": 33,
+          "draws": 14,
+          "losses": 3,
+          "win_rate": 0.66,
+          "hits_dealt": 94,
+          "hits_received": 38,
+          "heat_damage": 11
+        },
+        "after": {
+          "matches": 50,
+          "wins": 36,
+          "draws": 13,
+          "losses": 1,
+          "win_rate": 0.72,
+          "hits_dealt": 102,
+          "hits_received": 40,
+          "heat_damage": 1
+        },
+        "by_opponent": {
+          "camper": {
+            "before": {
+              "matches": 10,
+              "wins": 8,
+              "draws": 2,
+              "losses": 0,
+              "win_rate": 0.8,
+              "hits_dealt": 4,
+              "hits_received": 5,
+              "heat_damage": 3
+            },
+            "after": {
+              "matches": 10,
+              "wins": 8,
+              "draws": 2,
+              "losses": 0,
+              "win_rate": 0.8,
+              "hits_dealt": 5,
+              "hits_received": 6,
+              "heat_damage": 1
+            }
+          },
+          "strafe": {
+            "before": {
+              "matches": 10,
+              "wins": 6,
+              "draws": 2,
+              "losses": 2,
+              "win_rate": 0.6,
+              "hits_dealt": 18,
+              "hits_received": 11,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 7,
+              "draws": 2,
+              "losses": 1,
+              "win_rate": 0.7,
+              "hits_dealt": 19,
+              "hits_received": 9,
+              "heat_damage": 0
+            }
+          },
+          "dijkstra": {
+            "before": {
+              "matches": 10,
+              "wins": 7,
+              "draws": 2,
+              "losses": 1,
+              "win_rate": 0.7,
+              "hits_dealt": 21,
+              "hits_received": 10,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 8,
+              "draws": 2,
+              "losses": 0,
+              "win_rate": 0.8,
+              "hits_dealt": 24,
+              "hits_received": 11,
+              "heat_damage": 0
+            }
+          },
+          "astar": {
+            "before": {
+              "matches": 10,
+              "wins": 7,
+              "draws": 3,
+              "losses": 0,
+              "win_rate": 0.7,
+              "hits_dealt": 41,
+              "hits_received": 8,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 8,
+              "draws": 2,
+              "losses": 0,
+              "win_rate": 0.8,
+              "hits_dealt": 44,
+              "hits_received": 9,
+              "heat_damage": 0
+            }
+          },
+          "markov": {
+            "before": {
+              "matches": 10,
+              "wins": 5,
+              "draws": 5,
+              "losses": 0,
+              "win_rate": 0.5,
+              "hits_dealt": 10,
+              "hits_received": 4,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 5,
+              "draws": 5,
+              "losses": 0,
+              "win_rate": 0.5,
+              "hits_dealt": 10,
+              "hits_received": 5,
+              "heat_damage": 0
+            }
+          }
+        },
+        "transitions": {
+          "0": {
+            "0": 33,
+            "-1": 0,
+            "1": 0
+          },
+          "-1": {
+            "0": 1,
+            "-1": 13,
+            "1": 0
+          },
+          "1": {
+            "0": 2,
+            "-1": 0,
+            "1": 1
+          }
+        }
+      },
+      "bots": {
+        "before": {
+          "matches": 50,
+          "wins": 50,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "hits_dealt": 250,
+          "hits_received": 1,
+          "heat_damage": 10
+        },
+        "after": {
+          "matches": 50,
+          "wins": 50,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "hits_dealt": 271,
+          "hits_received": 1,
+          "heat_damage": 0
+        },
+        "by_opponent": {
+          "camper": {
+            "before": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 52,
+              "hits_received": 0,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 52,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "strafe": {
+            "before": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 56,
+              "hits_received": 0,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 56,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "dijkstra": {
+            "before": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 44,
+              "hits_received": 0,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 51,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "astar": {
+            "before": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 48,
+              "hits_received": 1,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 56,
+              "hits_received": 1,
+              "heat_damage": 0
+            }
+          },
+          "markov": {
+            "before": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 50,
+              "hits_received": 0,
+              "heat_damage": 2
+            },
+            "after": {
+              "matches": 10,
+              "wins": 10,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": 1.0,
+              "hits_dealt": 56,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          }
+        },
+        "transitions": {
+          "0": {
+            "0": 50,
+            "-1": 0,
+            "1": 0
+          },
+          "-1": {
+            "0": 0,
+            "-1": 0,
+            "1": 0
+          },
+          "1": {
+            "0": 0,
+            "-1": 0,
+            "1": 0
+          }
+        }
+      }
+    },
+    "last_large_specialists": {
+      "specialists": {
+        "before": {
+          "matches": 500,
+          "wins": 429,
+          "draws": 45,
+          "losses": 26,
+          "win_rate": 0.858,
+          "hits_dealt": 1235,
+          "hits_received": 315,
+          "heat_damage": 34
+        },
+        "after": {
+          "matches": 500,
+          "wins": 431,
+          "draws": 47,
+          "losses": 22,
+          "win_rate": 0.862,
+          "hits_dealt": 1234,
+          "hits_received": 314,
+          "heat_damage": 8
+        },
+        "by_opponent": {
+          "camper": {
+            "before": {
+              "matches": 100,
+              "wins": 88,
+              "draws": 7,
+              "losses": 5,
+              "win_rate": 0.88,
+              "hits_dealt": 111,
+              "hits_received": 42,
+              "heat_damage": 11
+            },
+            "after": {
+              "matches": 100,
+              "wins": 87,
+              "draws": 8,
+              "losses": 5,
+              "win_rate": 0.87,
+              "hits_dealt": 111,
+              "hits_received": 42,
+              "heat_damage": 7
+            }
+          },
+          "strafe": {
+            "before": {
+              "matches": 100,
+              "wins": 84,
+              "draws": 11,
+              "losses": 5,
+              "win_rate": 0.84,
+              "hits_dealt": 216,
+              "hits_received": 47,
+              "heat_damage": 6
+            },
+            "after": {
+              "matches": 100,
+              "wins": 85,
+              "draws": 11,
+              "losses": 4,
+              "win_rate": 0.85,
+              "hits_dealt": 215,
+              "hits_received": 48,
+              "heat_damage": 0
+            }
+          },
+          "dijkstra": {
+            "before": {
+              "matches": 100,
+              "wins": 79,
+              "draws": 12,
+              "losses": 9,
+              "win_rate": 0.79,
+              "hits_dealt": 252,
+              "hits_received": 114,
+              "heat_damage": 7
+            },
+            "after": {
+              "matches": 100,
+              "wins": 79,
+              "draws": 13,
+              "losses": 8,
+              "win_rate": 0.79,
+              "hits_dealt": 251,
+              "hits_received": 115,
+              "heat_damage": 1
+            }
+          },
+          "astar": {
+            "before": {
+              "matches": 100,
+              "wins": 98,
+              "draws": 1,
+              "losses": 1,
+              "win_rate": 0.98,
+              "hits_dealt": 490,
+              "hits_received": 30,
+              "heat_damage": 5
+            },
+            "after": {
+              "matches": 100,
+              "wins": 99,
+              "draws": 1,
+              "losses": 0,
+              "win_rate": 0.99,
+              "hits_dealt": 495,
+              "hits_received": 31,
+              "heat_damage": 0
+            }
+          },
+          "markov": {
+            "before": {
+              "matches": 100,
+              "wins": 80,
+              "draws": 14,
+              "losses": 6,
+              "win_rate": 0.8,
+              "hits_dealt": 166,
+              "hits_received": 82,
+              "heat_damage": 5
+            },
+            "after": {
+              "matches": 100,
+              "wins": 81,
+              "draws": 14,
+              "losses": 5,
+              "win_rate": 0.81,
+              "hits_dealt": 162,
+              "hits_received": 78,
+              "heat_damage": 0
+            }
+          }
+        },
+        "transitions": {
+          "0": {
+            "0": 427,
+            "-1": 2,
+            "1": 0
+          },
+          "-1": {
+            "0": 0,
+            "-1": 45,
+            "1": 0
+          },
+          "1": {
+            "0": 4,
+            "-1": 0,
+            "1": 22
+          }
+        }
+      },
+      "bots": {
+        "before": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        },
+        "after": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        },
+        "by_opponent": {
+          "camper": {
+            "before": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            },
+            "after": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "strafe": {
+            "before": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            },
+            "after": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "dijkstra": {
+            "before": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            },
+            "after": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "astar": {
+            "before": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            },
+            "after": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          },
+          "markov": {
+            "before": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            },
+            "after": {
+              "matches": 0,
+              "wins": 0,
+              "draws": 0,
+              "losses": 0,
+              "win_rate": null,
+              "hits_dealt": 0,
+              "hits_received": 0,
+              "heat_damage": 0
+            }
+          }
+        },
+        "transitions": {
+          "0": {
+            "0": 0,
+            "-1": 0,
+            "1": 0
+          },
+          "-1": {
+            "0": 0,
+            "-1": 0,
+            "1": 0
+          },
+          "1": {
+            "0": 0,
+            "-1": 0,
+            "1": 0
+          }
+        }
+      }
+    }
+  },
+  "verification": {
+    "unit_tests": 51,
+    "general_checks": 23,
+    "equivalence": {
+      "matches": 22,
+      "all_actions_identical": true,
+      "total_ticks": 77700
+    },
+    "source_ast_matches_fixed_candidate": true
+  },
+  "limitations": "Higher observed win count in the completed comparisons; two previous wins became draws in the 500-game replay. Sample rates are not guarantees.",
+  "training_discount_default": 0.99,
+  "discarded_training_weights_not_promoted": true
+}

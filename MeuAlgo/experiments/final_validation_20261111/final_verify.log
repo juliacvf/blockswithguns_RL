@@ -1,0 +1,30 @@
+  PASS  powerup LIFE (+1 life, capped at 8)
+----------------------------------------------------------------------
+  PASS  powerup QUICKSHOT (cooldown 0.65 -> 0.35 for 5s)
+  PASS  powerup SPEED (x1.5 for 5s)
+  PASS  powerup SWAP (positions exchanged)
+  PASS  powerup cadence 1.0s + 25s expiry
+  PASS  hit -> no shooting lockout
+  PASS  engine combat (8 hits -> game over)
+  PASS  bullet range capped at 20 blocks
+  PASS  heat zone (0.25 block/s shrink, 1 life per 5 s outside)
+  PASS  mud ponds sparse (321 cells) + trees (72) off walls
+  PASS  trees block movement like walls
+  PASS  mud slows movement x0.5
+  PASS  retreat: once per match, only at exactly 3 lives
+  PASS  gymnasium check_env
+  PASS  full-state observations + Gymnasium training against all 5 bots
+Passed Parallel API test
+  PASS  PettingZoo parallel API + deterministic self-play seeding
+  PASS  contest folders + strict actions + algo1-vs-algo2 battle
+  PASS  Algo Test trained weights + playable contest entry
+  PASS  pygame custom/built-in contest visualizer
+  PASS  bot/map cross-process determinism (same seeds -> same result (1, 35.933, [0, 6], 3))
+  PASS  bot round-robin resolves (10 pairs)
+  PASS  8-bit audio assets present (11 wavs)
+  PASS  unified specialist profiles and training (32 regressions)
+
+ALL 23 CHECKS PASSED
+Ran 32 tests in 16.961s
+
+OK

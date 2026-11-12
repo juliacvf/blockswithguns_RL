@@ -1,0 +1,1576 @@
+{
+  "complete": true,
+  "training_matches": 120,
+  "elapsed_seconds": 573,
+  "changed_q_entries": 5440,
+  "q_updates": 148977,
+  "results": {
+    "wins": 105,
+    "draws": 12,
+    "losses": 3
+  },
+  "matches": [
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000050,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        5,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000050,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000051,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000051,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000052,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000052,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000053,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 103.13333333333004,
+      "ticks": 3094
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000053,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000054,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000054,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "camper",
+      "seed": 320000055,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        0
+      ],
+      "seconds": 80.99999999999797,
+      "ticks": 2430
+    },
+    {
+      "group": "bots",
+      "opponent": "camper",
+      "seed": 320000055,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 47.16666666666655,
+      "ticks": 1415
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000056,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000056,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000057,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000057,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000058,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000058,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000059,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000059,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000060,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000060,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "strafe",
+      "seed": 320000061,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 38.666666666667034,
+      "ticks": 1160
+    },
+    {
+      "group": "bots",
+      "opponent": "strafe",
+      "seed": 320000061,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 41.56666666666687,
+      "ticks": 1247
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000062,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000062,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000063,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000063,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000064,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000064,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        4,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000065,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000065,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000066,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000066,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "dijkstra",
+      "seed": 320000067,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 91.36666666666405,
+      "ticks": 2741
+    },
+    {
+      "group": "bots",
+      "opponent": "dijkstra",
+      "seed": 320000067,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 84.86666666666441,
+      "ticks": 2546
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000068,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000068,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000069,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000069,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000070,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000070,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000071,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000071,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000072,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000072,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "astar",
+      "seed": 320000073,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 47.699999999999854,
+      "ticks": 1431
+    },
+    {
+      "group": "bots",
+      "opponent": "astar",
+      "seed": 320000073,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 42.70000000000014,
+      "ticks": 1281
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000074,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 75.46666666666495,
+      "ticks": 2264
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000074,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000075,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000075,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000076,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000076,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000077,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000077,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000078,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        4,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000078,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "markov",
+      "seed": 320000079,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 89.53333333333082,
+      "ticks": 2686
+    },
+    {
+      "group": "bots",
+      "opponent": "markov",
+      "seed": 320000079,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 39.56666666666698,
+      "ticks": 1187
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000080,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000080,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000081,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000081,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000082,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000082,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000083,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000083,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000084,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000084,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "camper",
+      "seed": 320000085,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 41.43333333333354,
+      "ticks": 1243
+    },
+    {
+      "group": "bots",
+      "opponent": "camper",
+      "seed": 320000085,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 71.46666666666518,
+      "ticks": 2144
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000086,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        5,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000086,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000087,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000087,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000088,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000088,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000089,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000089,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000090,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000090,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "strafe",
+      "seed": 320000091,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 40.36666666666694,
+      "ticks": 1211
+    },
+    {
+      "group": "bots",
+      "opponent": "strafe",
+      "seed": 320000091,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 57.73333333333262,
+      "ticks": 1732
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000092,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000092,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000093,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000093,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000094,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000094,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        7,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000095,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000095,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000096,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000096,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "dijkstra",
+      "seed": 320000097,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 39.633333333333645,
+      "ticks": 1189
+    },
+    {
+      "group": "bots",
+      "opponent": "dijkstra",
+      "seed": 320000097,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 92.59999999999731,
+      "ticks": 2778
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000098,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000098,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000099,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000099,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000100,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000100,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000101,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000101,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 90.26666666666411,
+      "ticks": 2708
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000102,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000102,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "astar",
+      "seed": 320000103,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 43.26666666666677,
+      "ticks": 1298
+    },
+    {
+      "group": "bots",
+      "opponent": "astar",
+      "seed": 320000103,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        6,
+        0
+      ],
+      "seconds": 41.83333333333352,
+      "ticks": 1255
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000104,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 320000104,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000105,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 320000105,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000106,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 320000106,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000107,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 320000107,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000108,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 320000108,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600
+    },
+    {
+      "group": "bots",
+      "opponent": "markov",
+      "seed": 320000109,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 45.83333333333329,
+      "ticks": 1375
+    },
+    {
+      "group": "bots",
+      "opponent": "markov",
+      "seed": 320000109,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 36.00000000000052,
+      "ticks": 1080
+    }
+  ],
+  "candidate_sha256": "e5947574b8e2f2ff0f4401dceeba5bbfe039fbc016b6c5ce52249a054c604560",
+  "official_inputs_verified": true
+}

@@ -1,0 +1,2333 @@
+{
+  "complete": false,
+  "manifest": {
+    "checkpoint": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\training_20261111_gamma999\\checkpoint_080.npz",
+    "weight_sha256": "bbad03916321ef5928f9808c96298dc049b74fa865cd00f775fe33d67321d5af",
+    "official_inputs": {
+      "MeuAlgo\\algo1.py": "e0b02380ebb0d4db76bf721c5327e9e866b79c6c213223dbb4935f5604041dc8",
+      "MeuAlgo\\train.py": "62a7933897be6143367240be2744af904c71f541b63d09535de0767a7970b37c",
+      "core\\constants.py": "105c66b982b3c0753839ac71087ac2aed4ade1f865920dc28ac307a3412cb7cf",
+      "core\\engine.py": "d562f81ebdcfe1a21e9b616243f817c121047fcc256785d06a4a103ba7da9efa",
+      "core\\los.py": "5d389db2fd6c6197269f188a2c1c854c2b32764a7b3ec23b80e691a459fb44d6",
+      "core\\mapgen.py": "f21884542f58f8fbb92c036cc11d1d195258540b3dca9ad2fcc3c934bc46a14e",
+      "core\\pathfinding.py": "1754a0c9301674d52ec5ce409ed30cb75628908bf44a8e0f5dd0bad769df5c25",
+      "core\\perlin.py": "7b9a312320bb68ad114702495cd81e2cc405caea20a64436d400f3983489b3bb",
+      "core\\powerups.py": "e697e6dda35f23304eaa80c0aafc2e83b295b9d4bae7226622f4d73a72966589",
+      "core\\__init__.py": "adc4bb82a5a336218bd2918dfe34690518dae3229e87ea6f480120558e07a976",
+      "bots\\astar_bot.py": "157e69dcda3c7fc2a8535893eb9b543bd10ce5ae370a85b66a15edda553847dc",
+      "bots\\base.py": "5e7608a636489b39e30e502461f1d55eccbfcec707c623f77cb489372e738229",
+      "bots\\camper_bot.py": "f7c3ca3cce146cf1f0d0b55b6a90bddcade667e97dcf88eda37dc30d7e26ba7a",
+      "bots\\dijkstra_bot.py": "dcd59139b8d71167a0ed2f457289cdf083abda01c22c4626becf76a066c5e88d",
+      "bots\\markov_bot.py": "72810a31043ddd575444b26f059da1683ab067a9f858100f096b5018da9085c4",
+      "bots\\strafe_bot.py": "e09bab04b0e06b475a1955aff6db095d30a69f446d4c0fc0ac10c1e439530ca0",
+      "bots\\__init__.py": "d353dc78b2f0eed06b9120d39f915e65e0d502e769e2ce707d4b1781b04cbb28",
+      "rl\\actions.py": "b02a1e0278a069c933794b9a17b97a416ca7e8e448d233dc0defd50dc4a3cc08",
+      "rl\\agent_interface.py": "4e2292e8ade3afb84290b628ed60c253741dbf7e471e5a86b4a84a8e099c5b80",
+      "rl\\bot_training_env.py": "dddee84ae548a69a28650aef325209357a48cbc1f81c41a081dd2d2b2e4c46e5",
+      "rl\\contest.py": "10b65a2df0c51c3b08240d45fb5ed6d2fdb05157baa149247b2e7b11c3512b50",
+      "rl\\env.py": "cb1f0df2dbbec22cad506658bfd94d8308970ea35ed8f63eb31ad1829a04dd5c",
+      "rl\\evaluate.py": "24e67402d441a6810f3a95398347b91f5024cd0603c80713d8ace7cd187cf2e4",
+      "rl\\example_agent.py": "82fa6ff0ae3a919ed55f428a068ea1c85f29976348c6af9f3afe008f5120ed2b",
+      "rl\\full_observation.py": "542d062dbcce138e9a54e94915906a0e4b7e80f9b319eaf7592aeb9b65d8f281",
+      "rl\\pettingzoo_env.py": "2e7d8254f69a5b72de24469a33b5b6683607a629d4b8a86321c16c81ba81cf6a",
+      "rl\\progress.py": "650bb17e55d761cabcd28e54dc796683ddcaea656873815591664d4bf5eaad87",
+      "rl\\rendering.py": "21ad6dbccbda59ad700c0420d0443c923e6a5d04c3a83d66aa30ffdb91ca0ac7",
+      "rl\\rewards.py": "9590bd690b71e0d3a8abec56bff41164e26bebce201a1d42769dc04e51e944dc",
+      "rl\\train_example.py": "5e998fdc6194dc1f9b94a437881ac16363d51599e0212152e3fce44e5275b086",
+      "rl\\visualize.py": "63d475ff38042dc7ce2faf14031ef6dad1736a7fcbb48f2f68b2060c49d868ce",
+      "rl\\__init__.py": "e47d9b75f1af7d4efe5578e22a0e85a98cb2c1c9a3745428ea556073670f6089",
+      "MeuAlgo\\weights\\qtable.npz": "29cbdab45c4fa9af5e87a62dc718aa449a8d6519285316564aa5c658eab04a28",
+      "MeuAlgo\\weights\\especialistas\\astar.npz": "41692f7954e5902a75b28ff87648e869c638342313a8b062c648868733c04c9f",
+      "MeuAlgo\\weights\\especialistas\\camper.npz": "0abac64d7a0f67c43e2e24529aa7d076a6fcef3c99d253beb66eb10b61a8210d",
+      "MeuAlgo\\weights\\especialistas\\dijkstra.npz": "b0789af86c92bd2a8ea8a1293a810d9d1e12310a19441d4d3de78af33a830553",
+      "MeuAlgo\\weights\\especialistas\\markov.npz": "a64c7153cfcbe95a64add30d359feaa1ba3582b1fa9a5c40251ac2cd1299cdea",
+      "MeuAlgo\\weights\\especialistas\\strafe.npz": "5f79cbacdc937deb94e7efd318a36a155928ce3ba728e9e5d814f6d2e88322b1",
+      "MeuAlgo\\weights\\generalista\\qtable.npz": "cf8b4041efe86e6654fd426b80592d71aaf54af72e154c21eae1dd620ff3aafa",
+      "Concurso\\slot1\\algo1.py": "7d6e69d5fd26738f0ac1b783cfa1aefdf5eb6138ede347594c25d13881fa8f53",
+      "Concurso\\slot2\\algo2.py": "7d6e69d5fd26738f0ac1b783cfa1aefdf5eb6138ede347594c25d13881fa8f53",
+      "Concurso\\slot1\\weights\\qtable.npz": "4857979654d32c8b407c57435075eac069b79557a2d49f67a9a0b5c89760cbd1",
+      "Concurso\\slot2\\weights\\qtable.npz": "4857979654d32c8b407c57435075eac069b79557a2d49f67a9a0b5c89760cbd1"
+    },
+    "mode": "validation",
+    "map_seeds": {
+      "specialists": [
+        414759745,
+        410732636,
+        413826462,
+        411106684,
+        417526325,
+        411510783,
+        414542585,
+        419271242,
+        418959756,
+        419369770
+      ],
+      "bots": [
+        430485985,
+        434002193,
+        437782205,
+        432275803,
+        431627849
+      ]
+    },
+    "both_spawn_sides": true,
+    "maximum_seconds": 120,
+    "weights_frozen": true,
+    "stop_rule": "Maximize specialist wins, then minimize losses; stop only when the reference is unreachable"
+  },
+  "summary": {
+    "specialists": {
+      "total": {
+        "matches": 81,
+        "wins": 71,
+        "draws": 7,
+        "losses": 3,
+        "win_rate": 0.8765432098765432,
+        "hits_dealt": 190,
+        "hits_received": 40,
+        "heat_damage": 0
+      },
+      "by_opponent": {
+        "camper": {
+          "matches": 17,
+          "wins": 15,
+          "draws": 2,
+          "losses": 0,
+          "win_rate": 0.8823529411764706,
+          "hits_dealt": 25,
+          "hits_received": 9,
+          "heat_damage": 0
+        },
+        "strafe": {
+          "matches": 16,
+          "wins": 14,
+          "draws": 2,
+          "losses": 0,
+          "win_rate": 0.875,
+          "hits_dealt": 28,
+          "hits_received": 6,
+          "heat_damage": 0
+        },
+        "dijkstra": {
+          "matches": 16,
+          "wins": 14,
+          "draws": 0,
+          "losses": 2,
+          "win_rate": 0.875,
+          "hits_dealt": 34,
+          "hits_received": 18,
+          "heat_damage": 0
+        },
+        "astar": {
+          "matches": 16,
+          "wins": 16,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": 1.0,
+          "hits_dealt": 85,
+          "hits_received": 2,
+          "heat_damage": 0
+        },
+        "markov": {
+          "matches": 16,
+          "wins": 12,
+          "draws": 3,
+          "losses": 1,
+          "win_rate": 0.75,
+          "hits_dealt": 18,
+          "hits_received": 5,
+          "heat_damage": 0
+        }
+      }
+    },
+    "bots": {
+      "total": {
+        "matches": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "win_rate": null,
+        "hits_dealt": 0,
+        "hits_received": 0,
+        "heat_damage": 0
+      },
+      "by_opponent": {
+        "camper": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        },
+        "strafe": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        },
+        "dijkstra": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        },
+        "astar": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        },
+        "markov": {
+          "matches": 0,
+          "wins": 0,
+          "draws": 0,
+          "losses": 0,
+          "win_rate": null,
+          "hits_dealt": 0,
+          "hits_received": 0,
+          "heat_damage": 0
+        }
+      }
+    }
+  },
+  "stopped_early": true,
+  "rejection": {
+    "reason": "Cannot beat reference specialist wins, then losses",
+    "maximum_possible_wins": 90,
+    "baseline_wins": 90,
+    "baseline_losses": 2,
+    "partial": {
+      "matches": 79,
+      "wins": 69,
+      "draws": 7,
+      "losses": 3,
+      "win_rate": 0.8734177215189873,
+      "hits_dealt": 186,
+      "hits_received": 38,
+      "heat_damage": 0
+    }
+  },
+  "matches": [
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 410732636,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        72,
+        73
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 410732636,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        74,
+        70
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 411106684,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 117.09999999999592,
+      "ticks": 3513,
+      "shots": [
+        67,
+        64
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 411106684,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 96.8333333333304,
+      "ticks": 2905,
+      "shots": [
+        66,
+        62
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 411510783,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        80,
+        61
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 411510783,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        67,
+        67
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 413826462,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        84,
+        77
+      ],
+      "hits": [
+        6,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 413826462,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        64,
+        68
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 414542585,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 115.43333333332934,
+      "ticks": 3463,
+      "shots": [
+        62,
+        72
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 414542585,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        74,
+        81
+      ],
+      "hits": [
+        6,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 414759745,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 89.26666666666416,
+      "ticks": 2678,
+      "shots": [
+        53,
+        57
+      ],
+      "hits": [
+        8,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 414759745,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        67,
+        68
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 417526325,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        73,
+        83
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 417526325,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        77,
+        76
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 419271242,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        75,
+        78
+      ],
+      "hits": [
+        5,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "astar",
+      "seed": 419271242,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        84,
+        86
+      ],
+      "hits": [
+        4,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 410732636,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        7,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        34,
+        72
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 410732636,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        23,
+        34
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 411106684,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        5,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        80,
+        86
+      ],
+      "hits": [
+        5,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 411106684,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        40,
+        49
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 411510783,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        53,
+        60
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 411510783,
+      "swapped": true,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        48,
+        54
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 413826462,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        19,
+        23
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 413826462,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        79,
+        84
+      ],
+      "hits": [
+        4,
+        1
+      ],
+      "heat": [
+        0,
+        1
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 414542585,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        84,
+        109
+      ],
+      "hits": [
+        3,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 414542585,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        53,
+        54
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 414759745,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        7
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 414759745,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        37,
+        45
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        6
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 417526325,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        0
+      ],
+      "seconds": 70.26666666666524,
+      "ticks": 2108,
+      "shots": [
+        0,
+        0
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 417526325,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        1
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        14,
+        22
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        8
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 418959756,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        58,
+        73
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 419271242,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        21,
+        20
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        4
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "camper",
+      "seed": 419271242,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        43,
+        65
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        3
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 410732636,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        3
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        94,
+        91
+      ],
+      "hits": [
+        5,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 410732636,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        4,
+        2
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        97,
+        99
+      ],
+      "hits": [
+        6,
+        4
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 411106684,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        97,
+        93
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 411106684,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        112,
+        91
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 411510783,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        96,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 411510783,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        109,
+        96
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 413826462,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        99,
+        105
+      ],
+      "hits": [
+        4,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 413826462,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        101,
+        86
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 414542585,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        116,
+        115
+      ],
+      "hits": [
+        1,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 414542585,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        104,
+        106
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 414759745,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        3,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        88
+      ],
+      "hits": [
+        4,
+        5
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 414759745,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        110,
+        100
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 417526325,
+      "swapped": false,
+      "winner": 1,
+      "lives": [
+        6,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        105,
+        116
+      ],
+      "hits": [
+        0,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 417526325,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        111,
+        115
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 419271242,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        97,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "dijkstra",
+      "seed": 419271242,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        105,
+        96
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 410732636,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        93,
+        93
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 410732636,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        92,
+        83
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 411106684,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        74,
+        75
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 411106684,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        93,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 411510783,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        100,
+        104
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 411510783,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        96
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 413826462,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        85,
+        88
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 413826462,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        84,
+        79
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 414542585,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        87,
+        93
+      ],
+      "hits": [
+        3,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 414542585,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        92,
+        93
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 414759745,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        82,
+        95
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 414759745,
+      "swapped": true,
+      "winner": 1,
+      "lives": [
+        5,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        86
+      ],
+      "hits": [
+        2,
+        3
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 417526325,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        91,
+        92
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 417526325,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        78,
+        93
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 419271242,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        96,
+        91
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "markov",
+      "seed": 419271242,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        88,
+        89
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 410732636,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        92,
+        111
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 410732636,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        104
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 411106684,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        99,
+        98
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 411106684,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        80,
+        97
+      ],
+      "hits": [
+        3,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 411510783,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        62,
+        77
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 411510783,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        93,
+        97
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 413826462,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        6,
+        4
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        95,
+        91
+      ],
+      "hits": [
+        4,
+        2
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 413826462,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        80,
+        93
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 414542585,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        106
+      ],
+      "hits": [
+        2,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 414542585,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        5
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        96
+      ],
+      "hits": [
+        3,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 414759745,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        7,
+        6
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        94,
+        109
+      ],
+      "hits": [
+        2,
+        1
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 414759745,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        94,
+        99
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 417526325,
+      "swapped": false,
+      "winner": -1,
+      "lives": [
+        8,
+        8
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        90,
+        113
+      ],
+      "hits": [
+        0,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 417526325,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        89,
+        104
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 419271242,
+      "swapped": false,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        79,
+        94
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    },
+    {
+      "checkpoint": "checkpoint_080",
+      "group": "specialists",
+      "opponent": "strafe",
+      "seed": 419271242,
+      "swapped": true,
+      "winner": 0,
+      "lives": [
+        8,
+        7
+      ],
+      "seconds": 119.99999999999575,
+      "ticks": 3600,
+      "shots": [
+        90,
+        105
+      ],
+      "hits": [
+        1,
+        0
+      ],
+      "heat": [
+        0,
+        0
+      ]
+    }
+  ]
+}

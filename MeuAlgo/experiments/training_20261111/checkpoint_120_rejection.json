@@ -1,0 +1,15 @@
+{
+  "reason": "Cannot reach baseline specialist wins even if all remaining matches are won",
+  "maximum_possible_wins": 89,
+  "baseline_wins": 90,
+  "partial": {
+    "matches": 81,
+    "wins": 70,
+    "draws": 5,
+    "losses": 6,
+    "win_rate": 0.8641975308641975,
+    "hits_dealt": 180,
+    "hits_received": 45,
+    "heat_damage": 0
+  }
+}

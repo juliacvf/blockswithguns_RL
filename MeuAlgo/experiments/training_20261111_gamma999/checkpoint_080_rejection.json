@@ -1,0 +1,16 @@
+{
+  "reason": "Cannot beat reference specialist wins, then losses",
+  "maximum_possible_wins": 90,
+  "baseline_wins": 90,
+  "baseline_losses": 2,
+  "partial": {
+    "matches": 79,
+    "wins": 69,
+    "draws": 7,
+    "losses": 3,
+    "win_rate": 0.8734177215189873,
+    "hits_dealt": 186,
+    "hits_received": 38,
+    "heat_damage": 0
+  }
+}

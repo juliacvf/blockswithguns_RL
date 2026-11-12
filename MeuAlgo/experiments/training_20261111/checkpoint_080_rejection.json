@@ -1,0 +1,16 @@
+{
+  "reason": "Cannot exceed baseline wins; at best equal wins with more losses",
+  "maximum_possible_wins": 90,
+  "baseline_wins": 90,
+  "baseline_losses": 2,
+  "partial": {
+    "matches": 73,
+    "wins": 63,
+    "draws": 6,
+    "losses": 4,
+    "win_rate": 0.863013698630137,
+    "hits_dealt": 157,
+    "hits_received": 30,
+    "heat_damage": 0
+  }
+}

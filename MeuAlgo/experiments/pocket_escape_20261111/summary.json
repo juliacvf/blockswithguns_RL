@@ -1,0 +1,293 @@
+{
+  "status": "diagnosis_only_official_policy_preserved",
+  "source_manifest": {
+    "policy": "Official generalista, no training or policy change",
+    "inputs": {
+      "MeuAlgo\\algo1.py": "e0b02380ebb0d4db76bf721c5327e9e866b79c6c213223dbb4935f5604041dc8",
+      "core\\constants.py": "105c66b982b3c0753839ac71087ac2aed4ade1f865920dc28ac307a3412cb7cf",
+      "core\\engine.py": "d562f81ebdcfe1a21e9b616243f817c121047fcc256785d06a4a103ba7da9efa",
+      "core\\los.py": "5d389db2fd6c6197269f188a2c1c854c2b32764a7b3ec23b80e691a459fb44d6",
+      "core\\mapgen.py": "f21884542f58f8fbb92c036cc11d1d195258540b3dca9ad2fcc3c934bc46a14e",
+      "core\\pathfinding.py": "1754a0c9301674d52ec5ce409ed30cb75628908bf44a8e0f5dd0bad769df5c25",
+      "core\\perlin.py": "7b9a312320bb68ad114702495cd81e2cc405caea20a64436d400f3983489b3bb",
+      "core\\powerups.py": "e697e6dda35f23304eaa80c0aafc2e83b295b9d4bae7226622f4d73a72966589",
+      "core\\__init__.py": "adc4bb82a5a336218bd2918dfe34690518dae3229e87ea6f480120558e07a976",
+      "bots\\astar_bot.py": "157e69dcda3c7fc2a8535893eb9b543bd10ce5ae370a85b66a15edda553847dc",
+      "bots\\base.py": "5e7608a636489b39e30e502461f1d55eccbfcec707c623f77cb489372e738229",
+      "bots\\camper_bot.py": "f7c3ca3cce146cf1f0d0b55b6a90bddcade667e97dcf88eda37dc30d7e26ba7a",
+      "bots\\dijkstra_bot.py": "dcd59139b8d71167a0ed2f457289cdf083abda01c22c4626becf76a066c5e88d",
+      "bots\\markov_bot.py": "72810a31043ddd575444b26f059da1683ab067a9f858100f096b5018da9085c4",
+      "bots\\strafe_bot.py": "e09bab04b0e06b475a1955aff6db095d30a69f446d4c0fc0ac10c1e439530ca0",
+      "bots\\__init__.py": "d353dc78b2f0eed06b9120d39f915e65e0d502e769e2ce707d4b1781b04cbb28",
+      "rl\\actions.py": "b02a1e0278a069c933794b9a17b97a416ca7e8e448d233dc0defd50dc4a3cc08",
+      "rl\\agent_interface.py": "4e2292e8ade3afb84290b628ed60c253741dbf7e471e5a86b4a84a8e099c5b80",
+      "rl\\bot_training_env.py": "dddee84ae548a69a28650aef325209357a48cbc1f81c41a081dd2d2b2e4c46e5",
+      "rl\\contest.py": "10b65a2df0c51c3b08240d45fb5ed6d2fdb05157baa149247b2e7b11c3512b50",
+      "rl\\env.py": "cb1f0df2dbbec22cad506658bfd94d8308970ea35ed8f63eb31ad1829a04dd5c",
+      "rl\\evaluate.py": "24e67402d441a6810f3a95398347b91f5024cd0603c80713d8ace7cd187cf2e4",
+      "rl\\example_agent.py": "82fa6ff0ae3a919ed55f428a068ea1c85f29976348c6af9f3afe008f5120ed2b",
+      "rl\\full_observation.py": "542d062dbcce138e9a54e94915906a0e4b7e80f9b319eaf7592aeb9b65d8f281",
+      "rl\\pettingzoo_env.py": "2e7d8254f69a5b72de24469a33b5b6683607a629d4b8a86321c16c81ba81cf6a",
+      "rl\\progress.py": "650bb17e55d761cabcd28e54dc796683ddcaea656873815591664d4bf5eaad87",
+      "rl\\rendering.py": "21ad6dbccbda59ad700c0420d0443c923e6a5d04c3a83d66aa30ffdb91ca0ac7",
+      "rl\\rewards.py": "9590bd690b71e0d3a8abec56bff41164e26bebce201a1d42769dc04e51e944dc",
+      "rl\\train_example.py": "5e998fdc6194dc1f9b94a437881ac16363d51599e0212152e3fce44e5275b086",
+      "rl\\visualize.py": "63d475ff38042dc7ce2faf14031ef6dad1736a7fcbb48f2f68b2060c49d868ce",
+      "rl\\__init__.py": "e47d9b75f1af7d4efe5578e22a0e85a98cb2c1c9a3745428ea556073670f6089",
+      "MeuAlgo\\weights\\qtable.npz": "29cbdab45c4fa9af5e87a62dc718aa449a8d6519285316564aa5c658eab04a28",
+      "MeuAlgo\\weights\\especialistas\\astar.npz": "41692f7954e5902a75b28ff87648e869c638342313a8b062c648868733c04c9f",
+      "MeuAlgo\\weights\\especialistas\\camper.npz": "0abac64d7a0f67c43e2e24529aa7d076a6fcef3c99d253beb66eb10b61a8210d",
+      "MeuAlgo\\weights\\especialistas\\dijkstra.npz": "b0789af86c92bd2a8ea8a1293a810d9d1e12310a19441d4d3de78af33a830553",
+      "MeuAlgo\\weights\\especialistas\\markov.npz": "a64c7153cfcbe95a64add30d359feaa1ba3582b1fa9a5c40251ac2cd1299cdea",
+      "MeuAlgo\\weights\\especialistas\\strafe.npz": "5f79cbacdc937deb94e7efd318a36a155928ce3ba728e9e5d814f6d2e88322b1",
+      "MeuAlgo\\weights\\generalista\\qtable.npz": "cf8b4041efe86e6654fd426b80592d71aaf54af72e154c21eae1dd620ff3aafa",
+      "Concurso\\slot1\\algo1.py": "7d6e69d5fd26738f0ac1b783cfa1aefdf5eb6138ede347594c25d13881fa8f53",
+      "Concurso\\slot2\\algo2.py": "7d6e69d5fd26738f0ac1b783cfa1aefdf5eb6138ede347594c25d13881fa8f53",
+      "Concurso\\slot1\\weights\\qtable.npz": "4857979654d32c8b407c57435075eac069b79557a2d49f67a9a0b5c89760cbd1",
+      "Concurso\\slot2\\weights\\qtable.npz": "4857979654d32c8b407c57435075eac069b79557a2d49f67a9a0b5c89760cbd1"
+    },
+    "sources": [
+      {
+        "path": "C:\\Users\\juliacvf\\OneDrive - Insper - Instituto de Ensino e Pesquisa\\Insper\\1\u00b0 semestre\\Projeto Insper Academy\\blockswithguns_RL\\MeuAlgo\\experiments\\training_20261111_round2\\validation_baseline.json",
+        "sha256": "70b6d688c80a09b0e4150ec3d4d315cfb7d4a3ad6ebd9d50d5b4823240921d4c",
+        "training_source_excluded": "Training parameterization does not execute in frozen replay"
+      },
+      {
+        "path": "C:\\Users\\juliacvf\\OneDrive - Insper - Instituto de Ensino e Pesquisa\\Insper\\1\u00b0 semestre\\Projeto Insper Academy\\blockswithguns_RL\\MeuAlgo\\experiments\\training_20261111_round2\\holdout_baseline.json",
+        "sha256": "f3dbaa47d300999d47cd47f7f2863928cd6777bed2f868af465c12073a1ae7af",
+        "training_source_excluded": "Training parameterization does not execute in frozen replay"
+      }
+    ],
+    "selection": "All 80 Markov/Dijkstra games in the two existing evaluation cohorts; wins included as controls",
+    "sample_seconds": 0.2
+  },
+  "exact_outcomes_verified": true,
+  "total_matches": 80,
+  "reference_overall_by_group": {
+    "specialists": {
+      "matches": 200,
+      "wins": 170,
+      "draws": 15,
+      "losses": 15,
+      "win_rate": 0.85
+    },
+    "bots": {
+      "matches": 100,
+      "wins": 100,
+      "draws": 0,
+      "losses": 0,
+      "win_rate": 1.0
+    }
+  },
+  "by_opponent": {
+    "markov": {
+      "matches": 40,
+      "wins": 28,
+      "draws": 8,
+      "losses": 4,
+      "own_shots": 3345,
+      "own_hits": 63,
+      "hits_per_shot": 0.01883408071748879,
+      "mean_visible_in_range_seconds": 88.36665,
+      "mean_pressure_seconds": 39.240025,
+      "mean_over_range_seconds": 20.775
+    },
+    "dijkstra": {
+      "matches": 40,
+      "wins": 31,
+      "draws": 2,
+      "losses": 7,
+      "own_shots": 3908,
+      "own_hits": 119,
+      "hits_per_shot": 0.0304503582395087,
+      "mean_visible_in_range_seconds": 89.933325,
+      "mean_pressure_seconds": 38.6383,
+      "mean_over_range_seconds": 19.964125
+    }
+  },
+  "by_outcome": {
+    "wins": {
+      "matches": 59,
+      "wins": 59,
+      "draws": 0,
+      "losses": 0,
+      "own_shots": 5415,
+      "own_hits": 148,
+      "hits_per_shot": 0.027331486611265006,
+      "mean_visible_in_range_seconds": 91.15761016949152,
+      "mean_pressure_seconds": 39.70279661016949,
+      "mean_over_range_seconds": 19.694338983050848
+    },
+    "draws": {
+      "matches": 10,
+      "wins": 0,
+      "draws": 10,
+      "losses": 0,
+      "own_shots": 889,
+      "own_hits": 12,
+      "hits_per_shot": 0.013498312710911136,
+      "mean_visible_in_range_seconds": 89.1533,
+      "mean_pressure_seconds": 40.7268,
+      "mean_over_range_seconds": 17.7833
+    },
+    "losses": {
+      "matches": 11,
+      "wins": 0,
+      "draws": 0,
+      "losses": 11,
+      "own_shots": 949,
+      "own_hits": 22,
+      "hits_per_shot": 0.023182297154899896,
+      "mean_visible_in_range_seconds": 78.37881818181818,
+      "mean_pressure_seconds": 33.21818181818182,
+      "mean_over_range_seconds": 26.342363636363636
+    }
+  },
+  "loss_observations": {
+    "matches": 11,
+    "all_at_time_limit": true,
+    "had_lead": 3,
+    "one_life_margin": 4,
+    "permanent_deficit_last_15_seconds": 1,
+    "own_heat_cases": [
+      {
+        "opponent": "dijkstra",
+        "seed": 517358468,
+        "swapped": true,
+        "heat": [
+          3,
+          0
+        ],
+        "lives": [
+          5,
+          7
+        ]
+      },
+      {
+        "opponent": "markov",
+        "seed": 517358468,
+        "swapped": true,
+        "heat": [
+          3,
+          0
+        ],
+        "lives": [
+          4,
+          7
+        ]
+      }
+    ],
+    "received_hit_events": 36,
+    "received_hit_events_with_post_step_distance_under_4": 32,
+    "distance_caveat": "Post-step distance can include automatic teleport; descriptive, not a projectile counterfactual"
+  },
+  "draw_observations": {
+    "matches": 10,
+    "minimum_visible_in_range_seconds": 80.6,
+    "had_lead": 6,
+    "zero_hits_both": 2,
+    "own_heat_cases": 0
+  },
+  "interpretation_limits": [
+    "Previously evaluated seeds, used for diagnosis rather than new confirmation",
+    "In-range line of sight is geometric visibility, not a guaranteed hit opportunity",
+    "No candidate policy or training change has been validated by these replays"
+  ],
+  "visual_review_sheets": [
+    {
+      "opponent": "dijkstra",
+      "seed": 517358468,
+      "swapped": true,
+      "path": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\diagnosis_markov_dijkstra_20261111\\dijkstra_517358468_1.png"
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 510396388,
+      "swapped": false,
+      "path": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\diagnosis_markov_dijkstra_20261111\\dijkstra_510396388_0.png"
+    },
+    {
+      "opponent": "markov",
+      "seed": 517438955,
+      "swapped": true,
+      "path": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\diagnosis_markov_dijkstra_20261111\\markov_517438955_1.png"
+    },
+    {
+      "opponent": "markov",
+      "seed": 411510783,
+      "swapped": false,
+      "path": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\diagnosis_markov_dijkstra_20261111\\markov_411510783_0.png"
+    }
+  ],
+  "visually_inspected_cases": [
+    {
+      "opponent": "dijkstra",
+      "seed": 517358468,
+      "swapped": true
+    },
+    {
+      "opponent": "dijkstra",
+      "seed": 510396388,
+      "swapped": false
+    },
+    {
+      "opponent": "markov",
+      "seed": 517438955,
+      "swapped": true
+    },
+    {
+      "opponent": "markov",
+      "seed": 411510783,
+      "swapped": false
+    }
+  ],
+  "navigation_only_probe": {
+    "kind": "Navigation-only feasibility probe; stationary unarmed opponent, no combat or win-rate inference",
+    "seed": 517358468,
+    "swapped": true,
+    "default_return_needed_at_start": false,
+    "heat_free_end_route_at_start": 0,
+    "ordinary_comfort_route_cells": 7,
+    "ordinary_slack": 61.142857142857146,
+    "earliest_allow_heat_route_cells": 80,
+    "earliest_allow_heat_slack": -8.85714285714286,
+    "completed_route": true,
+    "elapsed": 25.766666666667106,
+    "own_heat_hits": 1,
+    "endpoint": [
+      57.49752946203221,
+      62.6091287869136
+    ],
+    "events": [
+      {
+        "t": 14.866666666666625,
+        "event": [
+          "heat_hit",
+          0
+        ]
+      }
+    ]
+  },
+  "prioritized_hypotheses": [
+    {
+      "priority": 1,
+      "issue": "Long escape delayed when no heat-free end-safe route exists",
+      "evidence": "Two losses share map 517358468, swapped spawn and three own heat hits; at spawn end-safe forecast returns no path while ordinary return says not needed",
+      "proposed_experiment": "Trigger a separately tested earliest low-damage escape only in this failure condition; retain current behavior when a heat-free route exists",
+      "validation_needed": "Full combat replays of these cases, then existing wins and all opponents, followed by untouched seeds before promotion"
+    },
+    {
+      "priority": 2,
+      "issue": "Close exchanges and escape under fire",
+      "evidence": "32 of 36 received hit events in losses have post-step distance below four blocks; one lost lead occurs during a forced escape",
+      "limitation": "Proximity alone does not prove an avoidable hit; compare movement alternatives with cooldowns, bullets and wall constraints before changing aggression"
+    },
+    {
+      "priority": 3,
+      "issue": "Draws despite prolonged contact",
+      "evidence": "All ten draws have at least 80.6 seconds of geometric visibility within range; 889 own shots produced twelve hits, and two matches had zero hits for either side",
+      "limitation": "Geometric visibility does not imply a valid firing solution; inspect aim and firing-position alternatives rather than increase shooting indiscriminately"
+    }
+  ],
+  "official_policy_and_weights_preserved": true
+}

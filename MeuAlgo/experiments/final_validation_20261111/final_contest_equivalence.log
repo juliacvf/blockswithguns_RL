@@ -1,0 +1,23 @@
+{"opponent": "camper", "seed": 7193382, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "strafe", "seed": 1310003, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "dijkstra", "seed": 1310004, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "strafe", "seed": 1310003, "swapped": false, "ticks": 3600, "winner": 1}
+{"opponent": "dijkstra", "seed": 1310004, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "camper", "seed": 7193382, "swapped": true, "ticks": 2100, "winner": 0}
+{"opponent": "astar", "seed": 1120000, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "astar", "seed": 1120000, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "markov", "seed": 7193382, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "markov", "seed": 1310001, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "markov", "seed": 1310001, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "markov", "seed": 7193382, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "dijkstra", "seed": 1526107030, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "markov", "seed": 517358468, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "markov", "seed": 517358468, "swapped": false, "ticks": 3600, "winner": 1}
+{"opponent": "dijkstra", "seed": 1526107030, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "dijkstra", "seed": 1716643869, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "dijkstra", "seed": 1716643869, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "strafe", "seed": 2131977416, "swapped": false, "ticks": 3600, "winner": 0}
+{"opponent": "strafe", "seed": 2131977416, "swapped": true, "ticks": 3600, "winner": 0}
+{"opponent": "dijkstra", "seed": 1570262884, "swapped": false, "ticks": 3600, "winner": -1}
+{"opponent": "dijkstra", "seed": 1570262884, "swapped": true, "ticks": 3600, "winner": 0}
+{"matches": 22, "all_actions_identical": true, "total_ticks": 77700}

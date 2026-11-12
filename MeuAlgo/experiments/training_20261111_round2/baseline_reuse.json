@@ -1,0 +1,16 @@
+{
+  "validation": {
+    "source": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\training_20261111\\validation_baseline.json",
+    "source_sha256": "1929cd1e4026408b11edd1ad3976c9c211959e67bb4ab9256a42fef1e8cca2e9",
+    "matches": 150,
+    "complete": true,
+    "reason": "Identical frozen policy, weights, engine, opponents and evaluation seeds"
+  },
+  "holdout": {
+    "source": "C:\\Users\\juliacvf\\.codex\\visualizations\\2026\\11\\10\\01a1c661-a91e-7280-a192-409d8e7a0e1b\\training_20261111\\holdout_baseline.json",
+    "source_sha256": "d38ef4241aedeb68f8aea06296825d6455065690027c8ba0023ed7c7a2250b1f",
+    "matches": 19,
+    "complete": false,
+    "reason": "Identical frozen policy, weights, engine, opponents and evaluation seeds"
+  }
+}

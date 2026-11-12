@@ -127,7 +127,10 @@ def evaluate(q: np.ndarray, opponent: str, episodes: int,
 
 def train(episodes: int, opponent: str, seed: int,
           output: Path, resume: bool, epsilon_start: float, alpha_start: float,
-          profile: str = "general", init_from: Path | None = None) -> np.ndarray:
+          profile: str = "general", init_from: Path | None = None,
+          gamma: float = 0.99) -> np.ndarray:
+    if not np.isfinite(gamma) or not 0.0 <= gamma <= 1.0:
+        raise ValueError("gamma must be finite and between 0 and 1")
     policy = policy_class(profile)()
     profile = policy.profile
     specialist = policy.learned_tactics
@@ -173,7 +176,6 @@ def train(episodes: int, opponent: str, seed: int,
 
     rng = np.random.default_rng(seed + completed_episodes)
     env = BlocksWithGunsBotTrainingEnv(opponent=opponent)
-    gamma = 0.99
     progress = TrainingProgress(episodes)
     print(f"training MeuAlgo ({profile}) vs {opponent}: {episodes} full matches, "
           f"headless at full speed, checkpoint after every match")
@@ -189,6 +191,7 @@ def train(episodes: int, opponent: str, seed: int,
             seed=np.asarray(seed),
             epsilon_start=np.asarray(epsilon_start),
             alpha_start=np.asarray(alpha_start),
+            gamma=np.asarray(gamma),
             profile=np.asarray(profile),
             decision_ticks=np.asarray(policy.decision_ticks),
             init_source=np.asarray(str(init_from) if init_from else ""),
@@ -281,10 +284,14 @@ def main() -> None:
     parser.add_argument("--eval-sides", choices=("normal", "swapped", "both"), default="normal")
     parser.add_argument("--epsilon", type=float)
     parser.add_argument("--alpha", type=float)
+    parser.add_argument("--gamma", type=float, default=0.99,
+                        help="Discount per simulation tick (default: 0.99)")
     args = parser.parse_args()
 
     if min(args.episodes, args.eval_episodes) < 1:
         parser.error("episode counts must be positive")
+    if not np.isfinite(args.gamma) or not 0.0 <= args.gamma <= 1.0:
+        parser.error("--gamma must be finite and between 0 and 1")
     if args.output is None:
         if args.profile == "generalista":
             args.output = HERE / "weights/generalista/qtable.npz"
@@ -312,7 +319,8 @@ def main() -> None:
         q = np.load(args.output, allow_pickle=False)["q"]
     else:
         q = train(args.episodes, args.opponent, args.seed,
-                  args.output, args.resume, epsilon, alpha, profile=profile, init_from=args.init_from)
+                  args.output, args.resume, epsilon, alpha, profile=profile,
+                  init_from=args.init_from, gamma=args.gamma)
     print("evaluation:")
     results = evaluate(q, args.opponent, args.eval_episodes,
                        base_seed=args.eval_seed, profile=profile, sides=args.eval_sides)

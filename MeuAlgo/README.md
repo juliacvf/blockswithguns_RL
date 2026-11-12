@@ -71,9 +71,36 @@ São 44 testes específicos: nove de perfis e navegação, onze de defesa, quinz
 
 ## Estado atual
 
-### Revisão dos empates
+### Versão final — 11 de novembro de 2026
 
-A política atual coleta uma vida próxima mesmo estando com vida cheia
+A versão final acrescenta a fuga antecipada quando não existe uma rota sem
+dano de calor até uma área segura para o restante da partida. Mantém os
+pesos originais: os candidatos de treino, inclusive com desconto 0,999,
+não foram promovidos. A mesma política está nos dois slots de concurso.
+
+Na repetição das últimas seeds de 10/11, a bateria de 500 partidas contra
+especialistas passou de 429 vitórias, 45 empates e 26 derrotas para
+**431 vitórias (86,2%), 47 empates e 22 derrotas**. Camper ficou em 87%,
+Strafe 85%, Dijkstra 79%, A* 99% e Markov 81%. Quatro derrotas viraram
+vitórias e duas vitórias viraram empates; nenhuma vitória virou derrota.
+
+Na última amostra de cinco mapas de 10/11, foram 36/50 vitórias contra
+especialistas, ante 33/50; os bots mantiveram 50/50. Markov continuou com
+5/10 vitórias e cinco empates nessa amostra. Em uma confirmação separada,
+com mapas novos de 11/11, foram 92/100 vitórias contra especialistas,
+ante 91/100, e 50/50 contra bots nas duas versões.
+
+São ganhos pequenos e dependentes da amostra, com regressões pontuais.
+As taxas não garantem 75% contra cada especialista em qualquer conjunto
+de mapas. Os resultados e as comparações partida a partida estão nos
+[testes das seeds de ontem](experiments/generalista_pocket_escape_yesterday_seeds_20261111_results.json)
+e na [confirmação da fuga antecipada](experiments/generalista_pocket_escape_20261111_results.json).
+Os relatórios anteriores preservam os hashes das versões avaliadas antes
+da promoção, e os candidatos descartados continuam arquivados.
+
+### Revisão anterior dos empates — 10 de novembro
+
+A política dessa revisão coleta uma vida próxima mesmo estando com vida cheia
 quando isso impede a cura de um adversário ferido. A mudança mantém os
 limites de distância e retorno seguro e está no código principal e nos dois
 slots de concurso. Os pesos permanecem iguais aos do commit `1d53543`.
